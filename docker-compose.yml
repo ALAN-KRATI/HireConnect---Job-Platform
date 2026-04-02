@@ -1,12 +1,35 @@
-version: '3.8'
-
 services:
+  mysql:
+    image: mysql:8
+    container_name: hireconnect-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: hireconnect_auth
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pAlan@2004"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   discovery-server:
-    build: ./discovery-server
+    build: ./discover-server
+    container_name: hireconnect-discovery-server
     ports:
       - "8761:8761"
 
-  api-gateway:
-    build: ./api-gateway
+  auth-service:
+    build: ./auth-service
+    container_name: hireconnect-auth-service
     ports:
-      - "8080:8080"
+      - "8081:8081"
+    environment:
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}  
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
