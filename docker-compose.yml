@@ -48,3 +48,18 @@ services:
       discovery-server:
         condition: service_started
     restart: always
+    
+  job-service:
+    build: ./job-service
+    container_name: hireconnect-job-service
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/hireconnectdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://host.docker.internal:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
+    restart: always
