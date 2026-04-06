@@ -18,6 +18,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - hireconnect-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -26,6 +28,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - hireconnect-network
 
   discovery-server:
     build: ./discover-server
@@ -33,6 +37,12 @@ services:
     restart: always
     ports:
       - "8761:8761"
+    environment:
+      SPRING_APPLICATION_NAME: discovery-server
+      EUREKA_INSTANCE_HOSTNAME: discovery-server
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+    networks:
+      - hireconnect-network
 
   auth-service:
     build: ./auth-service
@@ -41,6 +51,8 @@ services:
     ports:
       - "8081:8081"
     environment:
+      SPRING_APPLICATION_NAME: auth-service
+
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
 
@@ -50,12 +62,14 @@ services:
 
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: auth-service
-
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8081
     depends_on:
       mysql:
         condition: service_healthy
       discovery-server:
         condition: service_started
+    networks:
+      - hireconnect-network
 
   profile-service:
     build: ./profile-service
@@ -64,15 +78,22 @@ services:
     ports:
       - "8082:8082"
     environment:
+      SPRING_APPLICATION_NAME: profile-service
+
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: profile-service
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8082
     depends_on:
       mysql:
         condition: service_healthy
       discovery-server:
         condition: service_started
+    networks:
+      - hireconnect-network
 
   job-service:
     build: ./job-service
@@ -81,15 +102,22 @@ services:
     ports:
       - "8083:8083"
     environment:
+      SPRING_APPLICATION_NAME: job-service
+
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: job-service
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8083
     depends_on:
       mysql:
         condition: service_healthy
       discovery-server:
         condition: service_started
+    networks:
+      - hireconnect-network
 
   application-service:
     build: ./application-service
@@ -98,6 +126,8 @@ services:
     ports:
       - "8084:8084"
     environment:
+      SPRING_APPLICATION_NAME: application-service
+
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
@@ -109,6 +139,7 @@ services:
 
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: application-service
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8084
     depends_on:
       mysql:
         condition: service_healthy
@@ -116,7 +147,9 @@ services:
         condition: service_started
       discovery-server:
         condition: service_started
-  
+    networks:
+      - hireconnect-network
+
   interview-service:
     build: ./interview-microservice
     container_name: hireconnect-interview-service
@@ -124,6 +157,9 @@ services:
     ports:
       - "8085:8085"
     environment:
+      SPRING_APPLICATION_NAME: interview-service
+      SERVER_PORT: 8085
+
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
@@ -135,7 +171,7 @@ services:
 
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: interview-service
-
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8085
     depends_on:
       mysql:
         condition: service_healthy
@@ -145,6 +181,51 @@ services:
         condition: service_started
       application-service:
         condition: service_started
+    networks:
+      - hireconnect-network
+
+  notification-service:
+    build: ./notification-service
+    container_name: hireconnect-notification-service
+    restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_APPLICATION_NAME: notification-service
+      SERVER_PORT: 8086
+
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+      SPRING_MAIL_HOST: smtp.gmail.com
+      SPRING_MAIL_PORT: 587
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: true
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: true
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: notification-service
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8086
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+    networks:
+      - hireconnect-network
 
 volumes:
   mysql-data:
+
+networks:
+  hireconnect-network:
+    driver: bridge
