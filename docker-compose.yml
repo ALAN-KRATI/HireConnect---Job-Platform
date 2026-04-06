@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: hireconnect_auth
+      MYSQL_DATABASE: hireconnectdb
     ports:
       - "3307:3306"
     volumes:
@@ -44,7 +44,7 @@ services:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
 
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnect_auth
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
 
@@ -115,6 +115,35 @@ services:
       rabbitmq:
         condition: service_started
       discovery-server:
+        condition: service_started
+  
+  interview-service:
+    build: ./interview-microservice
+    container_name: hireconnect-interview-service
+    restart: always
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: interview-service
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      application-service:
         condition: service_started
 
 volumes:
