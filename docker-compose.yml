@@ -223,6 +223,35 @@ services:
     networks:
       - hireconnect-network
 
+  subscription-service:
+    build: ./subscription-service
+    container_name: hireconnect-subscription-service
+    restart: always
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_APPLICATION_NAME: subscription-service
+      SERVER_PORT: 8087
+
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: subscription-service
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8087
+
+      SPRINGDOC_API_DOCS_PATH: /api-docs
+      SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+    networks:
+      - hireconnect-network
+
 volumes:
   mysql-data:
 
