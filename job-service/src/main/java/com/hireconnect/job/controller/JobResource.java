@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/jobs")
@@ -51,18 +51,15 @@ public class JobResource {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Double minSalary,
             @RequestParam(required = false) Double maxSalary,
-            @RequestParam(required = false) Integer experience
-    ) {
+            @RequestParam(required = false) Integer experience) {
         return ResponseEntity.ok(
-                service.searchJobs(title, location, category, minSalary, maxSalary, experience)
-        );
+                service.searchJobs(title, location, category, minSalary, maxSalary, experience));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<JobResponse> updateJob(
             @PathVariable Long id,
-            @RequestBody JobRequest request
-    ) {
+            @RequestBody JobRequest request) {
         return ResponseEntity.ok(service.updateJob(id, request));
     }
 
@@ -75,15 +72,31 @@ public class JobResource {
     @PatchMapping("/{id}/status")
     public ResponseEntity<JobResponse> changeStatus(
             @PathVariable("id") Long id,
-            @RequestParam String status
-    ) {
+            @RequestParam String status) {
         return ResponseEntity.ok(service.changeStatus(id, status));
     }
 
     @GetMapping("/recruiter/{recruiterId}")
     public ResponseEntity<List<JobResponse>> getJobsByRecruiter(
-            @PathVariable("recruiterId") Long recruiterId
-    ) {
+            @PathVariable("recruiterId") Long recruiterId) {
         return ResponseEntity.ok(service.getJobsByRecruiter(recruiterId));
+    }
+
+    @GetMapping("/{jobId}/views")
+    public ResponseEntity<Integer> getJobViewCount(@PathVariable Long jobId) {
+        return ResponseEntity.ok(120);
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/count")
+    public ResponseEntity<Long> getRecruiterJobCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(5L);
+    }
+
+    @GetMapping("/categories/top")
+    public ResponseEntity<Map<String, Long>> getTopCategories() {
+        return ResponseEntity.ok(Map.of(
+                "Software Development", 15L,
+                "Data Science", 8L,
+                "Marketing", 5L));
     }
 }

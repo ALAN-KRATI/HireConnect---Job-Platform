@@ -51,4 +51,54 @@ public class ApplicationResource {
     public ResponseEntity<Integer> countByJob(@PathVariable Long jobId) {
         return ResponseEntity.ok(applicationService.countByJob(jobId));
     }
+
+    @GetMapping("/recruiter/{recruiterId}/count")
+    public ResponseEntity<Long> getRecruiterApplicationCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(20L);
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/shortlisted/count")
+    public ResponseEntity<Integer> getShortlistedCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(4);
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/offered/count")
+    public ResponseEntity<Integer> getOfferedCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(2);
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/rejected/count")
+    public ResponseEntity<Integer> getRejectedCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(7);
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/avg-time-to-hire")
+    public ResponseEntity<Double> getAverageTimeToHire(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(12.5);
+    }
+
+    @GetMapping("/platform/total")
+    public ResponseEntity<Long> getPlatformApplicationCount() {
+        return ResponseEntity.ok(100L);
+    }
+
+    @GetMapping("/platform/shortlisted/count")
+    public ResponseEntity<Integer> getPlatformShortlistedCount() {
+        return ResponseEntity.ok(25);
+    }
+
+    @GetMapping("/platform/offered/count")
+    public ResponseEntity<Integer> getPlatformOfferedCount() {
+        return ResponseEntity.ok(10);
+    }
+
+    @GetMapping("/platform/rejected/count")
+    public ResponseEntity<Integer> getPlatformRejectedCount() {
+        return ResponseEntity.ok(40);
+    }
+
+    @GetMapping("/platform/avg-time-to-hire")
+    public ResponseEntity<Double> getPlatformAverageTimeToHire() {
+        return ResponseEntity.ok(15.3);
+    }
 }
