@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Browse Jobs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Available Jobs</h1>
+
+    <div class="card" th:each="job : ${jobs}">
+        <h2 th:text="${job.title}"></h2>
+        <p><strong>Company:</strong> <span th:text="${job.companyName}"></span></p>
+        <p><strong>Location:</strong> <span th:text="${job.location}"></span></p>
+        <p><strong>Salary:</strong> ₹<span th:text="${job.salary}"></span></p>
+
+        <div class="actions">
+            <form th:action="@{'/candidate/jobs/' + ${job.id} + '/apply'}" method="post">
+                <button type="submit">Apply</button>
+            </form>
+
+            <form th:action="@{'/candidate/jobs/' + ${job.id} + '/bookmark'}" method="post">
+                <button type="submit">Bookmark</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

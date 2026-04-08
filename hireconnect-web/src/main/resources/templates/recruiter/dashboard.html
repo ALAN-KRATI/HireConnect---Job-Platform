@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recruiter Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Recruiter Dashboard</h1>
+
+    <div class="stats">
+        <div class="card">
+            <h2>Total Jobs</h2>
+            <p th:text="${analytics.totalJobs}"></p>
+        </div>
+
+        <div class="card">
+            <h2>Total Applications</h2>
+            <p th:text="${analytics.totalApplications}"></p>
+        </div>
+    </div>
+
+    <a th:href="@{/recruiter/jobs/post}" class="btn">Post New Job</a>
+</div>
+</body>
+</html>

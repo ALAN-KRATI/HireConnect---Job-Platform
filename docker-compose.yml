@@ -285,6 +285,42 @@ services:
     networks:
       - hireconnect-network
 
+  hireconnect-web:
+    build: ./hireconnect-web
+    container_name: hireconnect-web
+    restart: always
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_APPLICATION_NAME: hireconnect-web
+      SERVER_PORT: 8089
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: hireconnect-web
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8089
+
+    depends_on:
+      discovery-server:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      profile-service:
+        condition: service_started
+      job-service:
+        condition: service_started
+      application-service:
+        condition: service_started
+      interview-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
+      subscription-service:
+        condition: service_started
+      analytics-service:
+        condition: service_started
+    networks:
+      - hireconnect-network
+
 volumes:
   mysql-data:
 

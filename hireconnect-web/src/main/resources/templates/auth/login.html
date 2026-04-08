@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register - HireConnect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Create Account</h1>
+
+    <form th:action="@{/candidate/register}" th:object="${registerRequest}" method="post">
+        <input type="text" th:field="*{fullName}" placeholder="Full Name" required>
+        <input type="email" th:field="*{email}" placeholder="Email" required>
+        <input type="password" th:field="*{password}" placeholder="Password" required>
+
+        <select th:field="*{role}">
+            <option value="CANDIDATE">Candidate</option>
+            <option value="RECRUITER">Recruiter</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+</body>
+</html>
