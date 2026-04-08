@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <div class="card">
+        <h2>Total Users</h2>
+        <p th:text="${#lists.size(users)}"></p>
+    </div>
+
+    <div class="card">
+        <h2>Total Jobs</h2>
+        <p th:text="${#lists.size(jobs)}"></p>
+    </div>
+</div>
+</body>
+</html>
