@@ -1,101 +1,92 @@
 package com.hireconnect.profile.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.hireconnect.profile.entity.CandidateProfile;
-import com.hireconnect.profile.entity.RecruiterProfile;
+import com.hireconnect.profile.dto.ProfileRequest;
+import com.hireconnect.profile.dto.ProfileResponse;
 import com.hireconnect.profile.service.ProfileService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/profiles")
 @RequiredArgsConstructor
 public class ProfileResource {
 
-    private final ProfileService service;
+    private final ProfileService profileService;
 
-    @PostMapping("/candidates")
-    public ResponseEntity<CandidateProfile> addCandidateProfile(
-            @Valid @RequestBody CandidateProfile profile) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.addCandidateProfile(profile));
+    @GetMapping("/candidates/{userId}")
+    public ResponseEntity<ProfileResponse> getCandidateProfile(
+            @PathVariable UUID userId) {
+
+        return ResponseEntity.ok(
+                profileService.getCandidateProfile(userId)
+        );
     }
 
-    @PutMapping("/candidates/{id}")
-    public ResponseEntity<CandidateProfile> updateCandidateProfile(
-            @PathVariable UUID id,
-            @Valid @RequestBody CandidateProfile profile) {
-        return ResponseEntity.ok(service.updateCandidateProfile(id, profile));
+    @PutMapping("/candidates/{userId}")
+    public ResponseEntity<ProfileResponse> updateCandidateProfile(
+            @PathVariable UUID userId,
+            @Valid @RequestBody ProfileRequest request) {
+
+        return ResponseEntity.ok(
+                profileService.updateCandidateProfile(userId, request)
+        );
     }
 
-    @DeleteMapping("/candidates/{id}")
-    public ResponseEntity<String> deleteCandidateProfile(@PathVariable UUID id) {
-        service.deleteCandidateProfile(id);
-        return ResponseEntity.ok("Candidate Profile deleted successfully!");
+    @DeleteMapping("/candidates/{userId}")
+    public ResponseEntity<String> deleteCandidateProfile(
+            @PathVariable UUID userId) {
+
+        profileService.deleteCandidateProfile(userId);
+
+        return ResponseEntity.ok("Candidate profile deleted successfully");
     }
 
-    @GetMapping("/candidates/{id}")
-    public ResponseEntity<CandidateProfile> getCandidateProfile(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.getCandidateProfile(id));
+    @GetMapping("/candidates")
+    public ResponseEntity<List<ProfileResponse>> getAllCandidateProfiles() {
+
+        return ResponseEntity.ok(
+                profileService.getAllCandidateProfiles()
+        );
     }
 
-    @GetMapping("/candidates/email/{email}")
-    public ResponseEntity<CandidateProfile> getCandidateProfileByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(service.getCandidateProfileByEmail(email));
+    @GetMapping("/recruiters/{userId}")
+    public ResponseEntity<ProfileResponse> getRecruiterProfile(
+            @PathVariable UUID userId) {
+
+        return ResponseEntity.ok(
+                profileService.getRecruiterProfile(userId)
+        );
     }
 
-    @GetMapping("/candidates/all")
-    public ResponseEntity<List<CandidateProfile>> getAllCandidateProfiles() {
-        return ResponseEntity.ok(service.getAllCandidateProfiles());
+    @PutMapping("/recruiters/{userId}")
+    public ResponseEntity<ProfileResponse> updateRecruiterProfile(
+            @PathVariable UUID userId,
+            @Valid @RequestBody ProfileRequest request) {
+
+        return ResponseEntity.ok(
+                profileService.updateRecruiterProfile(userId, request)
+        );
     }
 
-    @PostMapping("/recruiters")
-    public ResponseEntity<RecruiterProfile> addRecruiterProfile(
-            @Valid @RequestBody RecruiterProfile profile) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.addRecruiterProfile(profile));
-    }
+    @DeleteMapping("/recruiters/{userId}")
+    public ResponseEntity<String> deleteRecruiterProfile(
+            @PathVariable UUID userId) {
 
-    @PutMapping("/recruiters/{Id}")
-    public ResponseEntity<RecruiterProfile> updateRecruiterProfile(
-            @PathVariable UUID Id,
-            @Valid @RequestBody RecruiterProfile profile) {
-        return ResponseEntity.ok(service.updateRecruiterProfile(Id, profile));
-    }
+        profileService.deleteRecruiterProfile(userId);
 
-    @DeleteMapping("/recruiters/{Id}")
-    public ResponseEntity<String> deleteRecruiterProfile(@PathVariable UUID Id) {
-        service.deleteRecruiterProfile(Id);
-        return ResponseEntity.ok("Recruiter profile deleted successfully.");
-    }
-
-    @GetMapping("/recruiters/{Id}")
-    public ResponseEntity<RecruiterProfile> getRecruiterProfile(@PathVariable UUID Id) {
-        return ResponseEntity.ok(service.getRecruiterProfile(Id));
-    }
-
-    @GetMapping("/recruiters/email/{email}")
-    public ResponseEntity<RecruiterProfile> getRecruiterProfileByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(service.getRecruiterProfileByEmail(email));
+        return ResponseEntity.ok("Recruiter profile deleted successfully");
     }
 
     @GetMapping("/recruiters")
-    public ResponseEntity<List<RecruiterProfile>> getAllRecruiterProfiles() {
-        return ResponseEntity.ok(service.getAllRecruiterProfiles());
+    public ResponseEntity<List<ProfileResponse>> getAllRecruiterProfiles() {
+
+        return ResponseEntity.ok(
+                profileService.getAllRecruiterProfiles()
+        );
     }
 }

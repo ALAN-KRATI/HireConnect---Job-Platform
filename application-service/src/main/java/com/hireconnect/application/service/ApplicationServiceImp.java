@@ -2,12 +2,16 @@ package com.hireconnect.application.service;
 
 import com.hireconnect.application.entity.Application;
 import com.hireconnect.application.enums.ApplicationStatus;
+import com.hireconnect.application.event.ApplicationStatusChangedEvent;
+import com.hireconnect.application.exception.ApplicationNotFoundException;
+import com.hireconnect.application.exception.DuplicateApplicationException;
 import com.hireconnect.application.repository.ApplicationRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ApplicationServiceImp implements ApplicationService {
@@ -30,10 +34,17 @@ public class ApplicationServiceImp implements ApplicationService {
                         application.getCandidateId()
                 )
                 .ifPresent(existing -> {
-                    throw new RuntimeException("Candidate has already applied for this job");
+                    throw new DuplicateApplicationException(
+                            "Candidate has already applied for this job"
+                    );
                 });
 
+        if (application.getApplicationId() == null) {
+            application.setApplicationId(UUID.randomUUID());
+        }
+
         application.setAppliedAt(LocalDateTime.now());
+        application.setUpdatedAt(LocalDateTime.now());
         application.setStatus(ApplicationStatus.APPLIED);
 
         Application savedApplication = applicationRepository.save(application);
@@ -41,69 +52,122 @@ public class ApplicationServiceImp implements ApplicationService {
         rabbitTemplate.convertAndSend(
                 "application.exchange",
                 "application.submitted",
-                savedApplication
+                new ApplicationStatusChangedEvent(
+                        savedApplication.getApplicationId(),
+                        savedApplication.getCandidateId(),
+                        savedApplication.getRecruiterId(),
+                        savedApplication.getJobId(),
+                        savedApplication.getStatus(),
+                        savedApplication.getUpdatedAt()
+                )
         );
 
         return savedApplication;
     }
 
     @Override
-    public List<Application> getByCandidate(Long candidateId) {
+    public List<Application> getByCandidate(UUID candidateId) {
         return applicationRepository.findByCandidateId(candidateId);
     }
 
     @Override
-    public List<Application> getByJob(Long jobId) {
+    public List<Application> getByJob(UUID jobId) {
         return applicationRepository.findByJobId(jobId);
     }
 
     @Override
-    public Application updateStatus(Long applicationId, ApplicationStatus status) {
-
-        Application application = applicationRepository.findById(applicationId)
+    public Application getById(UUID applicationId) {
+        return applicationRepository.findById(applicationId)
                 .orElseThrow(() ->
-                        new RuntimeException("Application not found with id: " + applicationId));
+                        new ApplicationNotFoundException(
+                                "Application not found with id: " + applicationId
+                        ));
+    }
+
+    @Override
+    public Application updateStatus(UUID applicationId, ApplicationStatus status) {
+
+        Application application = getById(applicationId);
 
         application.setStatus(status);
+        application.setUpdatedAt(LocalDateTime.now());
 
         Application updatedApplication = applicationRepository.save(application);
 
         rabbitTemplate.convertAndSend(
                 "application.exchange",
                 "application.status.updated",
-                updatedApplication
+                new ApplicationStatusChangedEvent(
+                        updatedApplication.getApplicationId(),
+                        updatedApplication.getCandidateId(),
+                        updatedApplication.getRecruiterId(),
+                        updatedApplication.getJobId(),
+                        updatedApplication.getStatus(),
+                        updatedApplication.getUpdatedAt()
+                )
         );
 
         return updatedApplication;
     }
 
     @Override
-    public void withdrawApplication(Long applicationId) {
+    public void withdrawApplication(UUID applicationId) {
 
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() ->
-                        new RuntimeException("Application not found with id: " + applicationId));
+        Application application = getById(applicationId);
 
         application.setStatus(ApplicationStatus.WITHDRAW);
+        application.setUpdatedAt(LocalDateTime.now());
 
-        applicationRepository.save(application);
+        Application updatedApplication = applicationRepository.save(application);
 
         rabbitTemplate.convertAndSend(
                 "application.exchange",
                 "application.withdrawn",
-                application
+                new ApplicationStatusChangedEvent(
+                        updatedApplication.getApplicationId(),
+                        updatedApplication.getCandidateId(),
+                        updatedApplication.getRecruiterId(),
+                        updatedApplication.getJobId(),
+                        updatedApplication.getStatus(),
+                        updatedApplication.getUpdatedAt()
+                )
         );
     }
 
     @Override
-    public Application getById(Long applicationId) {
-        return applicationRepository.findById(applicationId)
-                .orElseThrow(() ->
-                        new RuntimeException("Application not found with id: " + applicationId));
+    public long countByJob(UUID jobId) {
+        return applicationRepository.countByJobId(jobId);
     }
 
     @Override
-    public int countByJob(Long jobId) {
-        return applicationRepository.countByJobId(jobId);
+    public long countByRecruiterId(UUID recruiterId) {
+        return applicationRepository.countByRecruiterId(recruiterId);
+    }
+
+    @Override
+    public long countByRecruiterIdAndStatus(UUID recruiterId, ApplicationStatus status) {
+        return applicationRepository.countByRecruiterIdAndStatus(recruiterId, status);
+    }
+
+    @Override
+    public long countByStatus(ApplicationStatus status) {
+        return applicationRepository.countByStatus(status);
+    }
+
+    @Override
+    public long count() {
+        return applicationRepository.count();
+    }
+
+    @Override
+    public Double findAverageTimeToHireByRecruiterId(UUID recruiterId) {
+        Double avg = applicationRepository.findAverageTimeToHireByRecruiterId(recruiterId);
+        return avg != null ? avg : 0.0;
+    }
+
+    @Override
+    public Double findPlatformAverageTimeToHire() {
+        Double avg = applicationRepository.findPlatformAverageTimeToHire();
+        return avg != null ? avg : 0.0;
     }
 }

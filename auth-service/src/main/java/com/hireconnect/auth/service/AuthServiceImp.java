@@ -5,23 +5,33 @@ import com.hireconnect.auth.dto.AuthResponse;
 import com.hireconnect.auth.dto.LoginRequest;
 import com.hireconnect.auth.dto.SignupRequest;
 import com.hireconnect.auth.entity.Provider;
+import com.hireconnect.auth.entity.RefreshToken;
 import com.hireconnect.auth.entity.UserCredential;
+import com.hireconnect.auth.entity.UserRole;
+import com.hireconnect.auth.event.UserCreatedEvent;
 import com.hireconnect.auth.exception.EmailAlreadyExistsException;
 import com.hireconnect.auth.exception.InvalidCredentialsException;
 import com.hireconnect.auth.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImp implements AuthService {
 
+    private static final String BLACKLIST_PREFIX = "blacklisted_token:";
+
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final StringRedisTemplate redisTemplate;
+    private final UserEventPublisher userEventPublisher;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public AuthResponse register(SignupRequest request) {
@@ -34,23 +44,34 @@ public class AuthServiceImp implements AuthService {
                 .email(request.getEmail())
                 .mobileNumber(request.getMobileNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(UserRole.valueOf(request.getRole().toUpperCase()))
                 .provider(Provider.LOCAL)
                 .createdAt(LocalDateTime.now())
+                .lastLoginAt(LocalDateTime.now())
+                .active(true)
                 .build();
 
-        authRepository.save(user);
+        user = authRepository.save(user);
 
-        String token = jwtService.generateToken(
-                user.getEmail(),
-                user.getRole().name()
+        userEventPublisher.publishUserCreatedEvent(
+                UserCreatedEvent.builder()
+                        .userId(user.getId())
+                        .email(user.getEmail())
+                        .role(user.getRole().name())
+                        .mobileNumber(user.getMobileNumber())
+                        .build()
         );
 
+        String accessToken = jwtService.generateToken(user);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+
         return AuthResponse.builder()
-                .token(token)
-                .refreshToken(token)
+                .token(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .userId(user.getId().toString())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .message("Registration successful")
                 .build();
     }
 
@@ -61,56 +82,83 @@ public class AuthServiceImp implements AuthService {
                 .orElseThrow(() ->
                         new InvalidCredentialsException("Invalid email or password"));
 
+        if (!user.isActive()) {
+            throw new InvalidCredentialsException("User account is inactive");
+        }
+
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
-        String token = jwtService.generateToken(
-                user.getEmail(),
-                user.getRole().name()
-        );
+        user.setLastLoginAt(LocalDateTime.now());
+        authRepository.save(user);
+
+        String accessToken = jwtService.generateToken(user);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         return AuthResponse.builder()
-                .token(token)
-                .refreshToken(token)
+                .token(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .userId(user.getId().toString())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .message("Login successful")
                 .build();
     }
 
     @Override
     public void logout(String token) {
-        // TODO: implement token blacklist using Redis
+
+        redisTemplate.opsForValue().set(
+                BLACKLIST_PREFIX + token,
+                "LOGGED_OUT",
+                Duration.ofHours(24)
+        );
     }
 
     @Override
     public boolean validateToken(String token) {
+
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_PREFIX + token))) {
+            return false;
+        }
+
         return jwtService.validateToken(token);
     }
 
     @Override
     public AuthResponse refreshToken(String refreshToken) {
 
-        if (!jwtService.validateToken(refreshToken)) {
-            throw new InvalidCredentialsException("Invalid refresh token");
-        }
+        RefreshToken storedToken = refreshTokenService.validateRefreshToken(refreshToken);
 
-        String email = jwtService.extractEmail(refreshToken);
-
-        UserCredential user = authRepository.findByEmail(email)
+        UserCredential user = authRepository.findById(storedToken.getUserId())
                 .orElseThrow(() ->
                         new InvalidCredentialsException("User not found"));
 
-        String newToken = jwtService.generateToken(
-                user.getEmail(),
-                user.getRole().name()
-        );
+        String newAccessToken = jwtService.generateToken(user);
 
         return AuthResponse.builder()
-                .token(newToken)
-                .refreshToken(refreshToken)
+                .token(newAccessToken)
+                .refreshToken(storedToken.getToken())
+                .userId(user.getId().toString())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .message("Token refreshed successfully")
                 .build();
+    }
+
+    @Override
+    public String extractEmail(String token) {
+        return jwtService.extractEmail(token);
+    }
+
+    @Override
+    public String extractRole(String token) {
+        return jwtService.extractRole(token);
+    }
+
+    @Override
+    public String extractUserId(String token) {
+        return jwtService.extractUserId(token);
     }
 }

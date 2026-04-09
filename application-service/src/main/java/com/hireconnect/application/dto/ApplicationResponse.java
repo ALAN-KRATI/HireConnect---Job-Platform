@@ -1,22 +1,28 @@
 package com.hireconnect.application.dto;
 
-import java.time.LocalDateTime;
-
 import com.hireconnect.application.enums.ApplicationStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationResponse {
-    private Long applicationId;
-    private Long jobId;
-    private Long candidateId;
+
+    private UUID applicationId;
+    private UUID jobId;
+    private UUID candidateId;
+    private UUID recruiterId;
+
     private LocalDateTime appliedAt;
+    private LocalDateTime updatedAt;
+
     private ApplicationStatus status;
+
     private String coverLetter;
     private String resumeUrl;
 }

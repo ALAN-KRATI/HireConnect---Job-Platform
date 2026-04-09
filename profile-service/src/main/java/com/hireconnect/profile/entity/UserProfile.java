@@ -1,7 +1,6 @@
 package com.hireconnect.profile.entity;
 
-import java.util.UUID;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,16 +25,31 @@ public abstract class UserProfile {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID profileId;
 
+    @Column(nullable = false, unique = true)
     private UUID userId;
 
     @NotBlank(message = "Full name is required")
+    @Column(nullable = false)
     private String fullName;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank(message = "Mobile number is required")
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Mobile number must be a valid 10-digit Indian number")
+    @Pattern(
+            regexp = "^[6-9]\\d{9}$",
+            message = "Mobile number must be a valid 10-digit Indian number"
+    )
+    @Column(nullable = false, length = 10)
     private String mobile;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private LocalDateTime updatedAt;
 }
