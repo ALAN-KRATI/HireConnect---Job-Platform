@@ -5,6 +5,7 @@ import com.hireconnect.auth.dto.LoginRequest;
 import com.hireconnect.auth.dto.SignupRequest;
 
 public interface AuthService {
+
     AuthResponse register(SignupRequest request);
 
     AuthResponse login(LoginRequest request);
@@ -14,4 +15,10 @@ public interface AuthService {
     boolean validateToken(String token);
 
     AuthResponse refreshToken(String refreshToken);
+
+    String extractEmail(String token);
+
+    String extractRole(String token);
+
+    String extractUserId(String token);
 }

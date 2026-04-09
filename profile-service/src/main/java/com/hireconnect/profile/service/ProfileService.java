@@ -1,28 +1,33 @@
 package com.hireconnect.profile.service;
 
+import com.hireconnect.profile.dto.ProfileRequest;
+import com.hireconnect.profile.dto.ProfileResponse;
+
 import java.util.List;
 import java.util.UUID;
 
-import com.hireconnect.profile.entity.CandidateProfile;
-import com.hireconnect.profile.entity.RecruiterProfile;
-
 public interface ProfileService {
-    CandidateProfile addCandidateProfile(CandidateProfile cp);
-    RecruiterProfile addRecruiterProfile(RecruiterProfile rp);
 
-    CandidateProfile updateCandidateProfile(UUID profileId, CandidateProfile cp);
-    RecruiterProfile updateRecruiterProfile(UUID profileId, RecruiterProfile profile);
+    void createDefaultProfile(
+            UUID userId,
+            String email,
+            String role,
+            String mobile
+    );
 
-    void deleteCandidateProfile(UUID id);
-    void deleteRecruiterProfile(UUID id);
+    ProfileResponse getCandidateProfile(UUID userId);
 
-    CandidateProfile getCandidateProfile(UUID id);
-    RecruiterProfile getRecruiterProfile(UUID id);
+    ProfileResponse getRecruiterProfile(UUID userId);
 
-    CandidateProfile getCandidateProfileByEmail(String email);
-    RecruiterProfile getRecruiterProfileByEmail(String email);
+    ProfileResponse updateCandidateProfile(UUID userId, ProfileRequest request);
 
-    List<CandidateProfile> getAllCandidateProfiles();
-    List<RecruiterProfile> getAllRecruiterProfiles();
+    ProfileResponse updateRecruiterProfile(UUID userId, ProfileRequest request);
 
+    void deleteCandidateProfile(UUID userId);
+
+    void deleteRecruiterProfile(UUID userId);
+
+    List<ProfileResponse> getAllCandidateProfiles();
+
+    List<ProfileResponse> getAllRecruiterProfiles();
 }

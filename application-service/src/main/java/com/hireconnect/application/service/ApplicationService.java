@@ -1,23 +1,36 @@
 package com.hireconnect.application.service;
 
-import java.util.List;
-
 import com.hireconnect.application.entity.Application;
 import com.hireconnect.application.enums.ApplicationStatus;
 
+import java.util.List;
+import java.util.UUID;
+
 public interface ApplicationService {
+
     Application submitApplication(Application application);
 
-    List<Application> getByCandidate(Long candidateId);
+    List<Application> getByCandidate(UUID candidateId);
 
-    List<Application> getByJob(Long jobId);
+    List<Application> getByJob(UUID jobId);
 
-    Application updateStatus(Long applicationId, ApplicationStatus status);
+    Application getById(UUID applicationId);
 
-    void withdrawApplication(Long applicationId);
+    Application updateStatus(UUID applicationId, ApplicationStatus status);
 
-    Application getById(Long applicationId);
+    void withdrawApplication(UUID applicationId);
 
-    int countByJob(Long jobId);
+    long countByJob(UUID jobId);
 
+    long countByRecruiterId(UUID recruiterId);
+
+    long countByRecruiterIdAndStatus(UUID recruiterId, ApplicationStatus status);
+
+    long countByStatus(ApplicationStatus status);
+
+    long count();
+
+    Double findAverageTimeToHireByRecruiterId(UUID recruiterId);
+
+    Double findPlatformAverageTimeToHire();
 }

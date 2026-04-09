@@ -5,21 +5,25 @@ import com.hireconnect.interview.enums.InterviewStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 public interface InterviewService {
 
     Interview scheduleInterview(Interview interview);
 
-    String confirmInterview(Long interviewId);
+    Interview confirmInterview(UUID interviewId);
 
-    Interview rescheduleInterview(Long interviewId, LocalDateTime newDateTime);
+    Interview rescheduleInterview(UUID interviewId, LocalDateTime newDateTime);
 
-    String cancelInterview(Long interviewId);
+    void cancelInterview(UUID interviewId);
 
-    List<Interview> getByApplication(Long applicationId);
+    List<Interview> getByCandidate(UUID candidateId);
+
+    List<Interview> getByRecruiter(UUID recruiterId);
+
+    List<Interview> getByApplication(UUID applicationId);
 
     List<Interview> getByStatus(InterviewStatus status);
 
-    Optional<Interview> getById(Long interviewId);
+    Interview getById(UUID interviewId);
 }

@@ -20,6 +20,15 @@ services:
       retries: 10
     networks:
       - hireconnect-network
+    
+  redis:
+    image: redis:7
+    container_name: hireconnect-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - hireconnect-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -63,10 +72,23 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: auth-service
       EUREKA_INSTANCE_NON_SECURE_PORT: 8081
+
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
     depends_on:
       mysql:
         condition: service_healthy
       discovery-server:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
         condition: service_started
     networks:
       - hireconnect-network
@@ -79,19 +101,31 @@ services:
       - "8082:8082"
     environment:
       SPRING_APPLICATION_NAME: profile-service
+      SERVER_PORT: 8082
 
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hireconnectdb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
 
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: profile-service
       EUREKA_INSTANCE_NON_SECURE_PORT: 8082
+
     depends_on:
       mysql:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
       discovery-server:
         condition: service_started
+      auth-service:
+        condition: service_started
+
     networks:
       - hireconnect-network
 
@@ -318,6 +352,43 @@ services:
         condition: service_started
       analytics-service:
         condition: service_started
+    networks:
+      - hireconnect-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: hireconnect-api-gateway
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: api-gateway
+      SERVER_PORT: 8080
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: api-gateway
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8080
+
+    depends_on:
+      discovery-server:
+        condition: service_started
+      auth-service:
+        condition: service_started
+      profile-service:
+        condition: service_started
+      job-service:
+        condition: service_started
+      application-service:
+        condition: service_started
+      interview-service:
+        condition: service_started
+      notification-service:
+        condition: service_started
+      subscription-service:
+        condition: service_started
+      analytics-service:
+        condition: service_started
+
     networks:
       - hireconnect-network
 

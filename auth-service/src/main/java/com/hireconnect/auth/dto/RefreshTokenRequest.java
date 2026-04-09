@@ -1,9 +1,11 @@
 package com.hireconnect.auth.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class RefreshTokenRequest {
-    private String refreshToken;
 
+    @NotBlank(message = "Refresh token is required")
+    private String refreshToken;
 }

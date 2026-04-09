@@ -1,18 +1,24 @@
 package com.hireconnect.application.event;
 
+import com.hireconnect.application.enums.ApplicationStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ApplicationStatusChangedEvent {
 
-    private Long applicationId;
-    private Long candidateId;
-    private String status;
+    private UUID applicationId;
+    private UUID candidateId;
+    private UUID recruiterId;
+    private UUID jobId;
 
-    public ApplicationStatusChangedEvent(Long applicationId, Long candidateId, String status) {
-        this.applicationId = applicationId;
-        this.candidateId = candidateId;
-        this.status = status;
-    }
+    private ApplicationStatus status;
 
+    private LocalDateTime updatedAt;
 }
