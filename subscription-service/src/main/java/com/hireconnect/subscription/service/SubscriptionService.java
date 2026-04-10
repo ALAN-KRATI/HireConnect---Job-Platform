@@ -1,22 +1,32 @@
 package com.hireconnect.subscription.service;
 
-import com.hireconnect.subscription.entity.Invoice;
+import com.hireconnect.subscription.dto.InvoiceResponse;
+import com.hireconnect.subscription.dto.SubscriptionResponse;
 import com.hireconnect.subscription.entity.Subscription;
+import com.hireconnect.subscription.enums.PaymentMode;
 import com.hireconnect.subscription.enums.SubscriptionPlan;
 
 import java.util.List;
 
 public interface SubscriptionService {
 
-    Subscription subscribe(Integer recruiterId, SubscriptionPlan plan);
+    SubscriptionResponse subscribe(
+            Integer recruiterId,
+            SubscriptionPlan plan,
+            PaymentMode paymentMode
+    );
 
-    Subscription cancelSubscription(Integer subscriptionId);
+    SubscriptionResponse cancelSubscription(Integer subscriptionId);
 
-    Subscription renewSubscription(Integer subscriptionId);
+    SubscriptionResponse renewSubscription(Integer subscriptionId);
 
-    List<Subscription> getByRecruiter(Integer recruiterId);
+    List<SubscriptionResponse> getByRecruiter(Integer recruiterId);
 
-    Invoice generateInvoice(Subscription subscription);
+    List<InvoiceResponse> getInvoices(Integer recruiterId);
 
-    List<Invoice> getInvoices(Integer recruiterId);
+    Integer getAllowedJobLimit(Integer recruiterId);
+
+    boolean canPostMoreJobs(Integer recruiterId);
+
+    Subscription getActiveSubscription(Integer recruiterId);
 }

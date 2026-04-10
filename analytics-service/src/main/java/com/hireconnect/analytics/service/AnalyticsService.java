@@ -4,6 +4,7 @@ import com.hireconnect.analytics.dto.AnalyticsSummary;
 
 import java.util.Map;
 
+
 public interface AnalyticsService {
 
     int getJobViewCount(Long jobId);
@@ -12,7 +13,7 @@ public interface AnalyticsService {
 
     double getViewToApplyRatio(Long jobId);
 
-    double getTimeToHire(Long jobId);
+    double getTimeToHire(Long recruiterId);
 
     AnalyticsSummary getPipelineStats(Long recruiterId);
 

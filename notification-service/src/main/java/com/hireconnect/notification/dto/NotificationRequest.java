@@ -3,40 +3,42 @@ package com.hireconnect.notification.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public class NotificationRequest {
 
     @NotNull(message = "User ID is required")
-    private Integer userId;
+    private UUID userId;
 
-    @NotBlank(message = "Type is required")
-    private String type;
+    @NotBlank(message = "Notification title is required")
+    private String title;
 
-    @NotBlank(message = "Message is required")
+    @NotBlank(message = "Notification message is required")
     private String message;
 
     public NotificationRequest() {
     }
 
-    public NotificationRequest(Integer userId, String type, String message) {
+    public NotificationRequest(UUID userId, String title, String message) {
         this.userId = userId;
-        this.type = type;
+        this.title = title;
         this.message = message;
     }
 
-    public Integer getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public String getType() {
-        return type;
+    public String getTitle() {
+        return title;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getMessage() {

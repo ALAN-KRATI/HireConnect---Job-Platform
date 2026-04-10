@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Applications</title>
+    <title>Post Job</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <div class="container">
-    <h1>Application History</h1>
+    <h1>Post a New Job</h1>
 
-    <table>
-        <tr>
-            <th>Job</th>
-            <th>Company</th>
-            <th>Status</th>
-            <th>Applied At</th>
-        </tr>
+    <form th:action="@{/recruiter/jobs/post}" th:object="${job}" method="post">
+        <input type="text" th:field="*{title}" placeholder="Job Title" required>
+        <input type="text" th:field="*{companyName}" placeholder="Company Name" required>
+        <input type="text" th:field="*{location}" placeholder="Location" required>
+        <input type="number" th:field="*{salary}" placeholder="Salary" required>
+        <textarea th:field="*{description}" placeholder="Description"></textarea>
 
-        <tr th:each="application : ${applications}">
-            <td th:text="${application.jobTitle}"></td>
-            <td th:text="${application.companyName}"></td>
-            <td th:text="${application.status}"></td>
-            <td th:text="${application.appliedAt}"></td>
-        </tr>
-    </table>
+        <button type="submit">Post Job</button>
+    </form>
 </div>
 </body>
 </html>

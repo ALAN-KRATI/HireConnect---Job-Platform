@@ -1,25 +1,133 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Register - HireConnect</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | HireConnect</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<body>
-<div class="container">
-    <h1>Create Account</h1>
+<body class="auth-page">
 
-    <form th:action="@{/candidate/register}" th:object="${registerRequest}" method="post">
-        <input type="text" th:field="*{fullName}" placeholder="Full Name" required>
-        <input type="email" th:field="*{email}" placeholder="Email" required>
-        <input type="password" th:field="*{password}" placeholder="Password" required>
+<div class="auth-container">
 
-        <select th:field="*{role}">
-            <option value="CANDIDATE">Candidate</option>
-            <option value="RECRUITER">Recruiter</option>
-        </select>
+    <div class="auth-left">
+        <div class="brand">
+            <h1>HireConnect</h1>
+            <p>Your next opportunity is one click away.</p>
+        </div>
 
-        <button type="submit">Register</button>
-    </form>
+        <div class="auth-card">
+            <h2>Create Account</h2>
+            <p class="subtitle">Join as a candidate or recruiter and start the chaos, but like... professionally.</p>
+
+            <form th:action="@{/candidate/register}"
+                  th:object="${registerRequest}"
+                  method="post"
+                  class="auth-form">
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text"
+                               th:field="*{fullName}"
+                               placeholder="Enter your full name"
+                               required>
+                    </div>
+                    <small class="error"
+                           th:if="${#fields.hasErrors('fullName')}"
+                           th:errors="*{fullName}">
+                    </small>
+                </div>
+
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email"
+                               th:field="*{email}"
+                               placeholder="Enter your email"
+                               required>
+                    </div>
+                    <small class="error"
+                           th:if="${#fields.hasErrors('email')}"
+                           th:errors="*{email}">
+                    </small>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password"
+                               th:field="*{password}"
+                               placeholder="Create a password"
+                               required>
+                    </div>
+                    <small class="error"
+                           th:if="${#fields.hasErrors('password')}"
+                           th:errors="*{password}">
+                    </small>
+                </div>
+
+                <div class="input-group">
+                    <label>Register As</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-tag"></i>
+
+                        <select th:field="*{role}">
+                            <option value="CANDIDATE">Candidate</option>
+                            <option value="RECRUITER">Recruiter</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>
+                    Already have an account?
+                    <a th:href="@{/login}">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-right">
+        <div class="overlay">
+            <h2>Welcome to HireConnect</h2>
+            <p>
+                Find jobs, hire talent, schedule interviews, stalk analytics
+                in a perfectly legal way, and basically run your career arc.
+            </p>
+
+            <div class="feature-list">
+                <div class="feature">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Apply to jobs instantly</span>
+                </div>
+
+                <div class="feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Track applications and analytics</span>
+                </div>
+
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <span>Recruit and manage candidates</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
 </body>
 </html>

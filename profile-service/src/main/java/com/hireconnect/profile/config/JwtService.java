@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 @Service
 public class JwtService {
@@ -17,6 +18,14 @@ public class JwtService {
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private Claims extractClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String extractEmail(String token) {
@@ -33,18 +42,13 @@ public class JwtService {
 
     public boolean validateToken(String token) {
         try {
-            extractClaims(token);
-            return true;
-        } catch (Exception e) {
+            Claims claims = extractClaims(token);
+
+            return claims.getExpiration() != null
+                    && claims.getExpiration().after(new Date());
+
+        } catch (Exception ex) {
             return false;
         }
-    }
-
-    private Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 }

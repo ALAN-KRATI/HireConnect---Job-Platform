@@ -18,4 +18,6 @@ public interface SubscriptionService {
     SubscriptionDto upgradePlan(Long recruiterId, String planName);
 
     void cancelPlan(Long recruiterId);
+
+    List<String> getAvailablePlans();
 }

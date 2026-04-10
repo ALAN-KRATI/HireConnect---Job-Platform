@@ -14,9 +14,9 @@ import java.util.UUID;
 public class ApplicationResponse {
 
     private UUID applicationId;
-    private UUID jobId;
+    private Long jobId;
     private UUID candidateId;
-    private UUID recruiterId;
+    private Long recruiterId;
 
     private LocalDateTime appliedAt;
     private LocalDateTime updatedAt;

@@ -3,43 +3,99 @@ package com.hireconnect.web.service.imp;
 import com.hireconnect.web.dto.LoginRequest;
 import com.hireconnect.web.dto.RegisterRequest;
 import com.hireconnect.web.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class AuthServiceImp implements AuthService {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private final String BASE_URL = "http://localhost:8081/auth";
+    private static final String BASE_URL = "http://auth-service/auth";
+
+    public AuthServiceImp(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public String login(LoginRequest request) {
-        return restTemplate.postForObject(BASE_URL + "/login", request, String.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<LoginRequest> entity = new HttpEntity<>(request, headers);
+
+        return restTemplate.postForObject(
+                BASE_URL + "/login",
+                entity,
+                String.class
+        );
     }
 
     @Override
     public void register(RegisterRequest request) {
-        restTemplate.postForObject(BASE_URL + "/register", request, Void.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<RegisterRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.postForObject(
+                BASE_URL + "/register",
+                entity,
+                Void.class
+        );
     }
 
     @Override
     public void logout(String token) {
-        restTemplate.postForObject(BASE_URL + "/logout", token, Void.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.postForObject(
+                BASE_URL + "/logout",
+                entity,
+                Void.class
+        );
     }
 
     @Override
     public boolean validateToken(String token) {
-        return restTemplate.postForObject(BASE_URL + "/validate", token, Boolean.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        Boolean response = restTemplate.postForObject(
+                BASE_URL + "/validate",
+                entity,
+                Boolean.class
+        );
+
+        return response != null && response;
     }
 
     @Override
     public String refreshToken(String refreshToken) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(refreshToken, headers);
+
         return restTemplate.postForObject(
                 BASE_URL + "/refresh",
-                refreshToken,
-                String.class);
+                entity,
+                String.class
+        );
     }
 }

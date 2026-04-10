@@ -1,7 +1,7 @@
 package com.hireconnect.job.enums;
 
 public enum JobStatus {
-    ACTIVE,
+    OPEN,
     PAUSED,
     CLOSED,
     DELETED

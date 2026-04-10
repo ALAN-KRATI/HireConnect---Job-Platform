@@ -1,8 +1,11 @@
 package com.hireconnect.profile.entity;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +32,11 @@ public class CandidateProfile extends UserProfile {
     private String bio;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "candidate_profile_skills",
+            joinColumns = @JoinColumn(name = "candidate_profile_profile_id")
+    )
+    @Column(name = "skills")
     private List<String> skills;
 
     private Integer experience;
@@ -40,5 +48,9 @@ public class CandidateProfile extends UserProfile {
     private String resumeUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "candidate_profiles_addresses",
+            joinColumns = @JoinColumn(name = "candidate_profile_profile_id")
+    )
     private List<Address> addresses;
 }

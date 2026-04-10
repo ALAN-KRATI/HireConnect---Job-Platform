@@ -1,66 +1,88 @@
 package com.hireconnect.notification.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "notifications")
 public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer notificationId;
+    private UUID notificationId;
 
-    private Integer userId;
+    @Column(nullable = false)
+    private UUID userId;
 
-    private String type;
+    @Column(nullable = false)
+    private String title;
 
-    @Column(length = 1000)
+    @Column(length = 1000, nullable = false)
     private String message;
 
-    private boolean isRead = false;
+    @Column(name = "is_read", nullable = false)
+    private boolean read;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     public Notification() {
     }
 
-    public Notification(Integer notificationId,
-                        Integer userId,
-                        String type,
+    public Notification(UUID notificationId,
+                        UUID userId,
+                        String title,
                         String message,
-                        boolean isRead,
+                        boolean read,
                         LocalDateTime createdAt) {
         this.notificationId = notificationId;
         this.userId = userId;
-        this.type = type;
+        this.title = title;
         this.message = message;
-        this.isRead = isRead;
+        this.read = read;
         this.createdAt = createdAt;
     }
 
-    public Integer getNotificationId() {
+    @PrePersist
+    public void prePersist() {
+        if (notificationId == null) {
+            notificationId = UUID.randomUUID();
+        }
+
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+
+        read = false;
+    }
+
+    public UUID getNotificationId() {
         return notificationId;
     }
 
-    public void setNotificationId(Integer notificationId) {
+    public void setNotificationId(UUID notificationId) {
         this.notificationId = notificationId;
     }
 
-    public Integer getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public String getType() {
-        return type;
+    public String getTitle() {
+        return title;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getMessage() {
@@ -72,11 +94,11 @@ public class Notification {
     }
 
     public boolean isRead() {
-        return isRead;
+        return read;
     }
 
     public void setRead(boolean read) {
-        isRead = read;
+        this.read = read;
     }
 
     public LocalDateTime getCreatedAt() {

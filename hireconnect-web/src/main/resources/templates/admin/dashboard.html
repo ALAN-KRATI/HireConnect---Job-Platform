@@ -1,22 +1,175 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireConnect | Admin Dashboard</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>Admin Dashboard</h1>
 
-    <div class="card">
-        <h2>Total Users</h2>
-        <p th:text="${#lists.size(users)}"></p>
-    </div>
+<div class="dashboard-container">
 
-    <div class="card">
-        <h2>Total Jobs</h2>
-        <p th:text="${#lists.size(jobs)}"></p>
-    </div>
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>HireConnect</h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav>
+            <a th:href="@{/admin/dashboard}" class="active">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+
+            <a th:href="@{/admin/users}">
+                <i class="fas fa-users"></i> Users
+            </a>
+
+            <a th:href="@{/admin/jobs}">
+                <i class="fas fa-briefcase"></i> Jobs
+            </a>
+
+            <a th:href="@{/admin/analytics}">
+                <i class="fas fa-chart-pie"></i> Analytics
+            </a>
+
+            <a th:href="@{/admin/subscriptions}">
+                <i class="fas fa-crown"></i> Subscriptions
+            </a>
+
+            <a th:href="@{/admin/invoices}">
+                <i class="fas fa-file-invoice-dollar"></i> Invoices
+            </a>
+
+            <a th:href="@{/logout}">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <h1>Admin Dashboard</h1>
+            <p>Welcome back. The empire is mildly under control.</p>
+        </div>
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="icon blue">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <h3>Total Users</h3>
+                    <p th:text="${totalUsers}">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon green">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div>
+                    <h3>Total Jobs</h3>
+                    <p th:text="${totalJobs}">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon orange">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <h3>Total Applications</h3>
+                    <p th:text="${analytics.totalApplications}">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon red">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div>
+                    <h3>Shortlisted</h3>
+                    <p th:text="${analytics.shortlistedCount}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Recent Users</h2>
+                    <a th:href="@{/admin/users}">View All</a>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.fullName}">John Doe</td>
+                        <td th:text="${user.email}">john@example.com</td>
+                        <td th:text="${user.role}">CANDIDATE</td>
+                        <td>
+                            <span class="status"
+                                  th:text="${user.status}">
+                                ACTIVE
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Recent Jobs</h2>
+                    <a th:href="@{/admin/jobs}">View All</a>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="job : ${jobs}">
+                        <td th:text="${job.title}">Java Developer</td>
+                        <td th:text="${job.companyName}">HireConnect</td>
+                        <td th:text="${job.location}">Remote</td>
+                        <td>
+                            <span class="status"
+                                  th:text="${job.status}">
+                                ACTIVE
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </div>
+
+    </main>
 </div>
+
 </body>
 </html>

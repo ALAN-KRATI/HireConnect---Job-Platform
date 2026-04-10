@@ -3,7 +3,6 @@ package com.hireconnect.notification.service;
 import com.hireconnect.notification.entity.Notification;
 import com.hireconnect.notification.exception.NotificationNotFoundException;
 import com.hireconnect.notification.repository.NotificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,39 +10,54 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class NotificationServiceImp implements NotificationService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
-
-    @Autowired
-    private JavaMailSender emailSender;
+    private final NotificationRepository notificationRepository;
+    private final JavaMailSender emailSender;
 
     @Value("${spring.mail.username}")
     private String mailUsername;
 
-    @Override
-    public void sendNotification(Notification notification) {
-        notification.setCreatedAt(LocalDateTime.now());
-        notification.setRead(false);
-        notificationRepository.save(notification);
+    public NotificationServiceImp(NotificationRepository notificationRepository,
+                                  JavaMailSender emailSender) {
+        this.notificationRepository = notificationRepository;
+        this.emailSender = emailSender;
     }
 
     @Override
-    public void markAsRead(Integer notificationId) {
+    public Notification sendNotification(Notification notification) {
+
+        if (notification.getCreatedAt() == null) {
+            notification.setCreatedAt(LocalDateTime.now());
+        }
+
+        notification.setRead(false);
+
+        return notificationRepository.save(notification);
+    }
+
+    @Override
+    public Notification markAsRead(UUID notificationId) {
+
         Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new NotificationNotFoundException(notificationId));
+                .orElseThrow(() ->
+                        new NotificationNotFoundException(
+                                "Notification not found with id: " + notificationId
+                        ));
 
         notification.setRead(true);
-        notificationRepository.save(notification);
+
+        return notificationRepository.save(notification);
     }
 
     @Override
-    public void markAllRead(Integer userId) {
+    public void markAllRead(UUID userId) {
+
         List<Notification> notifications =
-                notificationRepository.findByUserIdAndIsRead(userId, false);
+                notificationRepository.findByUserIdAndRead(userId, false);
 
         notifications.forEach(notification -> notification.setRead(true));
 
@@ -51,17 +65,25 @@ public class NotificationServiceImp implements NotificationService {
     }
 
     @Override
-    public List<Notification> getByUser(Integer userId) {
+    public List<Notification> getByUser(UUID userId) {
         return notificationRepository.findByUserId(userId);
     }
 
     @Override
-    public void deleteNotification(Integer notificationId) {
-        notificationRepository.deleteByNotificationId(notificationId);
+    public void deleteNotification(UUID notificationId) {
+
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() ->
+                        new NotificationNotFoundException(
+                                "Notification not found with id: " + notificationId
+                        ));
+
+        notificationRepository.delete(notification);
     }
 
     @Override
     public void sendEmailAlert(String to, String subject, String body) {
+
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(mailUsername);
@@ -71,14 +93,15 @@ public class NotificationServiceImp implements NotificationService {
 
             emailSender.send(message);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Authentication failed: " + e.getMessage());
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    "Failed to send email: " + ex.getMessage()
+            );
         }
     }
 
     @Override
-    public int getUnreadCount(Integer userId) {
-        return notificationRepository.countByUserIdAndIsRead(userId, false);
+    public long getUnreadCount(UUID userId) {
+        return notificationRepository.countByUserIdAndRead(userId, false);
     }
 }

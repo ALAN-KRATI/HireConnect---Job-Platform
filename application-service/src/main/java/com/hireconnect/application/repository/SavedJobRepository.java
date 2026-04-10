@@ -11,5 +11,5 @@ public interface SavedJobRepository extends JpaRepository<SavedJob, UUID> {
 
     List<SavedJob> findByCandidateId(UUID candidateId);
 
-    Optional<SavedJob> findByCandidateIdAndJobId(UUID candidateId, UUID jobId);
+    Optional<SavedJob> findByCandidateIdAndJobId(UUID candidateId, Long jobId);
 }

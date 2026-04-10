@@ -1,22 +1,148 @@
+<!-- recruiter/post-job.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Post Job</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post New Job | HireConnect</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>Post a New Job</h1>
 
-    <form th:action="@{/recruiter/jobs/post}" th:object="${job}" method="post">
-        <input type="text" th:field="*{title}" placeholder="Job Title" required>
-        <input type="text" th:field="*{companyName}" placeholder="Company Name" required>
-        <input type="text" th:field="*{location}" placeholder="Location" required>
-        <input type="number" th:field="*{salary}" placeholder="Salary" required>
-        <textarea th:field="*{description}" placeholder="Description"></textarea>
+<div class="dashboard-layout">
 
-        <button type="submit">Post Job</button>
-    </form>
+    <aside class="sidebar">
+        <h2>HireConnect</h2>
+
+        <nav>
+            <a th:href="@{/recruiter/dashboard}">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+
+            <a th:href="@{/recruiter/jobs}">
+                <i class="fas fa-briefcase"></i> My Jobs
+            </a>
+
+            <a th:href="@{/recruiter/jobs/post}" class="active">
+                <i class="fas fa-plus-circle"></i> Post Job
+            </a>
+
+            <a th:href="@{/logout}">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="page-content">
+
+        <div class="page-header">
+            <h1>Post a New Job</h1>
+            <p>Describe the role. Summon the applicants.</p>
+        </div>
+
+        <div class="form-card">
+
+            <form th:action="@{/recruiter/jobs/post}"
+                  th:object="${job}"
+                  method="post"
+                  class="job-form">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="title">Job Title</label>
+                        <input type="text"
+                               id="title"
+                               th:field="*{title}"
+                               placeholder="e.g. Java Backend Developer"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text"
+                               id="companyName"
+                               th:field="*{companyName}"
+                               placeholder="Your company name"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text"
+                               id="location"
+                               th:field="*{location}"
+                               placeholder="Remote / Delhi / Bengaluru"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salary">Salary (₹)</label>
+                        <input type="number"
+                               id="salary"
+                               th:field="*{salary}"
+                               placeholder="Enter annual salary"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text"
+                               id="category"
+                               th:field="*{category}"
+                               placeholder="IT, Marketing, Finance..."
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">Experience</label>
+                        <input type="text"
+                               id="experience"
+                               th:field="*{experience}"
+                               placeholder="0-2 years, 3+ years..."
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Job Description</label>
+                    <textarea id="description"
+                              th:field="*{description}"
+                              rows="8"
+                              placeholder="Tell candidates what they’ll actually be doing instead of just saying 'must be a team player'."
+                              required>
+                    </textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/recruiter/dashboard}" class="btn-secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Post Job
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
 </div>
+
 </body>
 </html>

@@ -10,6 +10,7 @@ import com.hireconnect.profile.repository.RecruiterProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,18 @@ public class ProfileServiceImp implements ProfileService {
                 return;
             }
 
-            CandidateProfile profile = new CandidateProfile();
+            CandidateProfile profile = CandidateProfile.builder()
+                    .headline("")
+                    .location("")
+                    .bio("")
+                    .skills(List.of())
+                    .experience(0)
+                    .dob(LocalDate.of(2000, 1, 1))
+                    .gender("Not Specified")
+                    .resumeUrl("")
+                    .addresses(List.of())
+                    .build();
+
             profile.setUserId(userId);
             profile.setEmail(email);
             profile.setMobile(mobile);
@@ -52,7 +64,14 @@ public class ProfileServiceImp implements ProfileService {
                 return;
             }
 
-            RecruiterProfile profile = new RecruiterProfile();
+            RecruiterProfile profile = RecruiterProfile.builder()
+                    .companyName("")
+                    .companySize("")
+                    .industry("")
+                    .website("")
+                    .officeLocation("")
+                    .build();
+
             profile.setUserId(userId);
             profile.setEmail(email);
             profile.setMobile(mobile);
@@ -101,18 +120,25 @@ public class ProfileServiceImp implements ProfileService {
 
         profile.setSkills(
                 request.getSkills() == null || request.getSkills().isBlank()
-                        ? List.of()
-                        : List.of(request.getSkills().split("\\s*,\\s*"))
-        );
+                        ? new java.util.ArrayList<>()
+                        : new java.util.ArrayList<>(
+                                java.util.Arrays.asList(
+                                        request.getSkills().split("\\s*,\\s*"))));
 
         profile.setExperience(
                 request.getExperience() == null || request.getExperience().isBlank()
                         ? 0
-                        : Integer.parseInt(request.getExperience())
-        );
+                        : Integer.parseInt(request.getExperience()));
+
+        if (profile.getAddresses() == null) {
+            profile.setAddresses(new java.util.ArrayList<>());
+        }
+
         profile.setUpdatedAt(LocalDateTime.now());
 
-        return mapCandidate(candidateRepository.save(profile));
+        CandidateProfile updatedProfile = candidateRepository.save(profile);
+
+        return mapCandidate(updatedProfile);
     }
 
     @Override
@@ -136,11 +162,23 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public void deleteCandidateProfile(UUID userId) {
+
+        if (!candidateRepository.existsByUserId(userId)) {
+            throw new ProfileNotFoundException(
+                    "Candidate profile not found for userId: " + userId);
+        }
+
         candidateRepository.deleteByUserId(userId);
     }
 
     @Override
     public void deleteRecruiterProfile(UUID userId) {
+
+        if (!recruiterRepository.existsByUserId(userId)) {
+            throw new ProfileNotFoundException(
+                    "Recruiter profile not found for userId: " + userId);
+        }
+
         recruiterRepository.deleteByUserId(userId);
     }
 
@@ -174,7 +212,9 @@ public class ProfileServiceImp implements ProfileService {
                 .skills(profile.getSkills() == null
                         ? ""
                         : String.join(", ", profile.getSkills()))
-                .experience(String.valueOf(profile.getExperience()))
+                .experience(profile.getExperience() == null
+                        ? "0"
+                        : String.valueOf(profile.getExperience()))
                 .active(profile.isActive())
                 .createdAt(profile.getCreatedAt())
                 .updatedAt(profile.getUpdatedAt())
@@ -191,8 +231,8 @@ public class ProfileServiceImp implements ProfileService {
                 .role("RECRUITER")
                 .companyName(profile.getCompanyName())
                 .companyWebsite(profile.getWebsite())
-                .location(profile.getOfficeLocation())
                 .headline(profile.getIndustry())
+                .location(profile.getOfficeLocation())
                 .active(profile.isActive())
                 .createdAt(profile.getCreatedAt())
                 .updatedAt(profile.getUpdatedAt())

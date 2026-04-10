@@ -2,10 +2,14 @@ package com.hireconnect.job.controller;
 
 import com.hireconnect.job.dto.JobRequest;
 import com.hireconnect.job.dto.JobResponse;
+import com.hireconnect.job.enums.JobStatus;
 import com.hireconnect.job.service.JobService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,34 +18,40 @@ import java.util.Map;
 @RestController
 @RequestMapping("/jobs")
 @RequiredArgsConstructor
+@Validated
 public class JobResource {
 
-    private final JobService service;
+    private final JobService jobService;
 
     @PostMapping
-    public ResponseEntity<JobResponse> addJob(@RequestBody JobRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.addJob(request));
+    public ResponseEntity<JobResponse> addJob(@Valid @RequestBody JobRequest request) {
+        JobResponse response = jobService.addJob(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<JobResponse>> getAllJobs() {
-        return ResponseEntity.ok(service.getAllJobs());
+        return ResponseEntity.ok(jobService.getAllJobs());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<JobResponse> getJobById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.getJobById(id));
+    @GetMapping("/{jobId}")
+    public ResponseEntity<JobResponse> getJobById(@PathVariable Long jobId) {
+        return ResponseEntity.ok(jobService.getJobById(jobId));
     }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<List<JobResponse>> getJobsByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(service.getJobsByCategory(category));
+        return ResponseEntity.ok(jobService.getJobsByCategory(category));
     }
 
     @GetMapping("/location/{location}")
     public ResponseEntity<List<JobResponse>> getJobsByLocation(@PathVariable String location) {
-        return ResponseEntity.ok(service.getJobsByLocation(location));
+        return ResponseEntity.ok(jobService.getJobsByLocation(location));
+    }
+
+    @GetMapping("/recruiter/{recruiterId}")
+    public ResponseEntity<List<JobResponse>> getJobsByRecruiter(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(jobService.getJobsByRecruiter(recruiterId));
     }
 
     @GetMapping("/search")
@@ -52,51 +62,63 @@ public class JobResource {
             @RequestParam(required = false) Double minSalary,
             @RequestParam(required = false) Double maxSalary,
             @RequestParam(required = false) Integer experience) {
+
         return ResponseEntity.ok(
-                service.searchJobs(title, location, category, minSalary, maxSalary, experience));
+                jobService.searchJobs(
+                        title,
+                        location,
+                        category,
+                        minSalary,
+                        maxSalary,
+                        experience));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{jobId}")
     public ResponseEntity<JobResponse> updateJob(
-            @PathVariable Long id,
-            @RequestBody JobRequest request) {
-        return ResponseEntity.ok(service.updateJob(id, request));
+            @PathVariable Long jobId,
+            @Valid @RequestBody JobRequest request) {
+
+        return ResponseEntity.ok(jobService.updateJob(jobId, request));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJob(@PathVariable("id") Long id) {
-        service.deleteJob(id);
+    @PatchMapping("/{jobId}/status")
+    public ResponseEntity<JobResponse> changeJobStatus(
+            @PathVariable Long jobId,
+            @RequestParam JobStatus status) {
+
+        return ResponseEntity.ok(jobService.changeStatus(jobId, status.name()));
+    }
+
+    @DeleteMapping("/{jobId}")
+    public ResponseEntity<Void> deleteJob(@PathVariable Long jobId) {
+        jobService.deleteJob(jobId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<JobResponse> changeStatus(
-            @PathVariable("id") Long id,
-            @RequestParam String status) {
-        return ResponseEntity.ok(service.changeStatus(id, status));
-    }
-
-    @GetMapping("/recruiter/{recruiterId}")
-    public ResponseEntity<List<JobResponse>> getJobsByRecruiter(
-            @PathVariable("recruiterId") Long recruiterId) {
-        return ResponseEntity.ok(service.getJobsByRecruiter(recruiterId));
-    }
-
     @GetMapping("/{jobId}/views")
-    public ResponseEntity<Integer> getJobViewCount(@PathVariable Long jobId) {
-        return ResponseEntity.ok(120);
+    public ResponseEntity<Long> getJobViewCount(@PathVariable Long jobId) {
+        return ResponseEntity.ok(jobService.getJobViewCount(jobId));
     }
+
+    
 
     @GetMapping("/recruiter/{recruiterId}/count")
     public ResponseEntity<Long> getRecruiterJobCount(@PathVariable Long recruiterId) {
-        return ResponseEntity.ok(5L);
+        return ResponseEntity.ok(jobService.getRecruiterJobCount(recruiterId));
     }
 
     @GetMapping("/categories/top")
     public ResponseEntity<Map<String, Long>> getTopCategories() {
-        return ResponseEntity.ok(Map.of(
-                "Software Development", 15L,
-                "Data Science", 8L,
-                "Marketing", 5L));
+        return ResponseEntity.ok(jobService.getTopCategories());
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/active/count")
+    public ResponseEntity<Long> getActiveJobCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(jobService.getRecruiterJobCountByStatus(recruiterId, JobStatus.OPEN));
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/closed/count")
+    public ResponseEntity<Long> getClosedJobCount(@PathVariable Long recruiterId) {
+        return ResponseEntity.ok(jobService.getRecruiterJobCountByStatus(recruiterId, JobStatus.CLOSED));
     }
 }

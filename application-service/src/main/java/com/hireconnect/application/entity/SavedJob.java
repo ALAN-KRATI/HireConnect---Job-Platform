@@ -21,5 +21,5 @@ public class SavedJob {
 
     private UUID candidateId;
 
-    private UUID jobId;
+    private Long jobId;
 }

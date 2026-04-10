@@ -8,6 +8,10 @@ public interface JobService {
 
     List<JobDto> getAllJobs();
 
+    void closeJob(Long jobId);
+
+    void pauseJob(Long jobId);
+
     JobDto getJobById(Long jobId);
 
     List<JobDto> searchJobs(String keyword, String location);

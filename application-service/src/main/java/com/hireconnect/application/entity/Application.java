@@ -33,13 +33,13 @@ public class Application {
     private UUID applicationId;
 
     @Column(name = "job_id", nullable = false)
-    private UUID jobId;
+    private Long jobId;
 
     @Column(name = "candidate_id", nullable = false)
     private UUID candidateId;
 
     @Column(name = "recruiter_id", nullable = false)
-    private UUID recruiterId;
+    private Long recruiterId;
 
     @Column(name = "applied_at", nullable = false)
     private LocalDateTime appliedAt;

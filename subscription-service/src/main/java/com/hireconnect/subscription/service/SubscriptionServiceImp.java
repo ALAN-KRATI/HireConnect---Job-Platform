@@ -1,5 +1,7 @@
 package com.hireconnect.subscription.service;
 
+import com.hireconnect.subscription.dto.InvoiceResponse;
+import com.hireconnect.subscription.dto.SubscriptionResponse;
 import com.hireconnect.subscription.entity.Invoice;
 import com.hireconnect.subscription.entity.Subscription;
 import com.hireconnect.subscription.enums.PaymentMode;
@@ -24,29 +26,26 @@ public class SubscriptionServiceImp implements SubscriptionService {
     private final InvoiceRepository invoiceRepository;
 
     @Override
-    public Subscription subscribe(Integer recruiterId, SubscriptionPlan plan) {
+    public SubscriptionResponse subscribe(
+            Integer recruiterId,
+            SubscriptionPlan plan,
+            PaymentMode paymentMode
+    ) {
 
-        subscriptionRepository.findByRecruiterIdAndStatus(recruiterId, SubscriptionStatus.ACTIVE)
-                .ifPresent(subscription -> {
-                    throw new SubscriptionAlreadyExistsException(
-                            "Recruiter already has an active subscription");
-                });
+        subscriptionRepository.findByRecruiterIdAndStatus(
+                recruiterId,
+                SubscriptionStatus.ACTIVE
+        ).ifPresent(subscription -> {
+            throw new SubscriptionAlreadyExistsException(
+                    "Recruiter already has an active subscription"
+            );
+        });
 
-        double amount;
-
-        switch (plan) {
-            case FREE:
-                amount = 0.0;
-                break;
-            case PROFESSIONAL:
-                amount = 999.0;
-                break;
-            case ENTERPRISE:
-                amount = 2999.0;
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid subscription plan");
-        }
+        double amount = switch (plan) {
+            case FREE -> 0.0;
+            case PROFESSIONAL -> 999.0;
+            case ENTERPRISE -> 2999.0;
+        };
 
         Subscription subscription = Subscription.builder()
                 .recruiterId(recruiterId)
@@ -57,63 +56,135 @@ public class SubscriptionServiceImp implements SubscriptionService {
                 .amountPaid(amount)
                 .build();
 
-        Subscription saved = subscriptionRepository.save(subscription);
+        Subscription savedSubscription = subscriptionRepository.save(subscription);
 
-        generateInvoice(saved);
+        generateInvoice(savedSubscription, paymentMode);
 
-        return saved;
+        return mapSubscription(savedSubscription);
     }
 
     @Override
-    public Subscription cancelSubscription(Integer subscriptionId) {
+    public SubscriptionResponse cancelSubscription(Integer subscriptionId) {
 
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subscription not found with id: " + subscriptionId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Subscription not found with id: " + subscriptionId
+                ));
 
         subscription.setStatus(SubscriptionStatus.CANCELLED);
 
-        return subscriptionRepository.save(subscription);
+        return mapSubscription(subscriptionRepository.save(subscription));
     }
 
     @Override
-    public Subscription renewSubscription(Integer subscriptionId) {
+    public SubscriptionResponse renewSubscription(Integer subscriptionId) {
 
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subscription not found with id: " + subscriptionId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Subscription not found with id: " + subscriptionId
+                ));
 
         subscription.setStartDate(LocalDate.now());
         subscription.setEndDate(LocalDate.now().plusMonths(1));
         subscription.setStatus(SubscriptionStatus.ACTIVE);
 
-        Subscription renewed = subscriptionRepository.save(subscription);
+        Subscription renewedSubscription = subscriptionRepository.save(subscription);
 
-        generateInvoice(renewed);
+        generateInvoice(renewedSubscription, PaymentMode.UPI);
 
-        return renewed;
+        return mapSubscription(renewedSubscription);
     }
 
     @Override
-    public List<Subscription> getByRecruiter(Integer recruiterId) {
-        return subscriptionRepository.findByRecruiterId(recruiterId);
+    public List<SubscriptionResponse> getByRecruiter(Integer recruiterId) {
+
+        return subscriptionRepository.findByRecruiterId(recruiterId)
+                .stream()
+                .map(this::mapSubscription)
+                .toList();
     }
 
     @Override
-    public Invoice generateInvoice(Subscription subscription) {
+    public List<InvoiceResponse> getInvoices(Integer recruiterId) {
+
+        return invoiceRepository.findByRecruiterId(recruiterId)
+                .stream()
+                .map(this::mapInvoice)
+                .toList();
+    }
+
+    @Override
+    public Integer getAllowedJobLimit(Integer recruiterId) {
+
+        Subscription subscription = getActiveSubscription(recruiterId);
+
+        return switch (subscription.getPlan()) {
+            case FREE -> 3;
+            case PROFESSIONAL -> 20;
+            case ENTERPRISE -> Integer.MAX_VALUE;
+        };
+    }
+
+    @Override
+    public boolean canPostMoreJobs(Integer recruiterId) {
+
+        Subscription subscription = getActiveSubscription(recruiterId);
+
+        return subscription != null && subscription.isActive();
+    }
+
+    @Override
+    public Subscription getActiveSubscription(Integer recruiterId) {
+
+        return subscriptionRepository.findByRecruiterIdAndStatus(
+                        recruiterId,
+                        SubscriptionStatus.ACTIVE
+                )
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No active subscription found for recruiter: " + recruiterId
+                ));
+    }
+
+    private Invoice generateInvoice(
+            Subscription subscription,
+            PaymentMode paymentMode
+    ) {
 
         Invoice invoice = Invoice.builder()
                 .subscriptionId(subscription.getSubscriptionId())
                 .recruiterId(subscription.getRecruiterId())
                 .amount(subscription.getAmountPaid())
                 .paymentDate(LocalDateTime.now())
-                .paymentMode(PaymentMode.UPI)
+                .paymentMode(paymentMode)
                 .transactionId("TXN-" + System.currentTimeMillis())
                 .build();
 
         return invoiceRepository.save(invoice);
     }
 
-    @Override
-    public List<Invoice> getInvoices(Integer recruiterId) {
-        return invoiceRepository.findByRecruiterId(recruiterId);
+    private SubscriptionResponse mapSubscription(Subscription subscription) {
+
+        return SubscriptionResponse.builder()
+                .subscriptionId(subscription.getSubscriptionId())
+                .recruiterId(subscription.getRecruiterId())
+                .plan(subscription.getPlan())
+                .startDate(subscription.getStartDate())
+                .endDate(subscription.getEndDate())
+                .status(subscription.getStatus())
+                .amountPaid(subscription.getAmountPaid())
+                .build();
+    }
+
+    private InvoiceResponse mapInvoice(Invoice invoice) {
+
+        return InvoiceResponse.builder()
+                .invoiceId(invoice.getInvoiceId())
+                .subscriptionId(invoice.getSubscriptionId())
+                .recruiterId(invoice.getRecruiterId())
+                .amount(invoice.getAmount())
+                .paymentMode(invoice.getPaymentMode())
+                .transactionId(invoice.getTransactionId())
+                .paymentDate(invoice.getPaymentDate())
+                .build();
     }
 }

@@ -1,26 +1,175 @@
+<!-- recruiter/dashboard.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Recruiter Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard | HireConnect</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>Recruiter Dashboard</h1>
 
-    <div class="stats">
-        <div class="card">
-            <h2>Total Jobs</h2>
-            <p th:text="${analytics.totalJobs}"></p>
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <h2>HireConnect</h2>
+
+        <nav>
+            <a th:href="@{/recruiter/dashboard}" class="active">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+
+            <a th:href="@{/recruiter/jobs}">
+                <i class="fas fa-briefcase"></i> My Jobs
+            </a>
+
+            <a th:href="@{/recruiter/jobs/post}">
+                <i class="fas fa-plus-circle"></i> Post Job
+            </a>
+
+            <a th:href="@{/recruiter/applications}">
+                <i class="fas fa-file-lines"></i> Applications
+            </a>
+
+            <a th:href="@{/recruiter/interviews}">
+                <i class="fas fa-calendar-check"></i> Interviews
+            </a>
+
+            <a th:href="@{/recruiter/analytics}">
+                <i class="fas fa-chart-pie"></i> Analytics
+            </a>
+
+            <a th:href="@{/recruiter/subscription}">
+                <i class="fas fa-crown"></i> Subscription
+            </a>
+
+            <a th:href="@{/logout}">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="page-content">
+
+        <div class="page-header">
+            <div>
+                <h1>Recruiter Dashboard</h1>
+                <p>
+                    Welcome back,
+                    <span th:text="${profile.fullName}">Recruiter</span>.
+                    Time to recruit like the final boss of LinkedIn.
+                </p>
+            </div>
+
+            <a th:href="@{/recruiter/jobs/post}" class="btn-primary">
+                <i class="fas fa-plus"></i>
+                Post New Job
+            </a>
         </div>
 
-        <div class="card">
-            <h2>Total Applications</h2>
-            <p th:text="${analytics.totalApplications}"></p>
-        </div>
-    </div>
+        <div class="stats-grid">
 
-    <a th:href="@{/recruiter/jobs/post}" class="btn">Post New Job</a>
+            <div class="stat-card">
+                <div class="icon blue">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+
+                <div>
+                    <h3>Total Jobs</h3>
+                    <p th:text="${analytics.totalJobs}">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon green">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+
+                <div>
+                    <h3>Total Applications</h3>
+                    <p th:text="${analytics.totalApplications}">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon orange">
+                    <i class="fas fa-user-check"></i>
+                </div>
+
+                <div>
+                    <h3>Shortlisted</h3>
+                    <p th:text="${analytics.shortlistedCount}">0</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon purple">
+                    <i class="fas fa-crown"></i>
+                </div>
+
+                <div>
+                    <h3>Current Plan</h3>
+                    <p th:text="${subscription.planName}">FREE</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="content-section">
+
+            <div class="section-header">
+                <h2>Recent Job Posts</h2>
+                <a th:href="@{/recruiter/jobs}">View All</a>
+            </div>
+
+            <div class="jobs-grid">
+
+                <div class="job-card" th:each="job : ${jobs}">
+
+                    <div class="job-header">
+                        <h3 th:text="${job.title}">Java Developer</h3>
+
+                        <span class="status-badge"
+                              th:text="${job.status}">
+                            ACTIVE
+                        </span>
+                    </div>
+
+                    <p>
+                        <i class="fas fa-location-dot"></i>
+                        <span th:text="${job.location}">Remote</span>
+                    </p>
+
+                    <p>
+                        <i class="fas fa-indian-rupee-sign"></i>
+                        <span th:text="${job.salary}">1000000</span>
+                    </p>
+
+                    <div class="job-actions">
+                        <a th:href="@{'/recruiter/jobs/edit/' + ${job.id}}"
+                           class="btn-secondary">
+                            Edit
+                        </a>
+
+                        <form th:action="@{'/recruiter/jobs/' + ${job.id} + '/close'}"
+                              method="post">
+                            <button type="submit" class="btn-danger">
+                                Close
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
 </div>
+
 </body>
 </html>

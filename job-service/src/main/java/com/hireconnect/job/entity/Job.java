@@ -1,28 +1,28 @@
 package com.hireconnect.job.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.hireconnect.job.enums.JobStatus;
 import com.hireconnect.job.enums.JobType;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "jobs")
@@ -31,45 +31,64 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode
 public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long jobId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String category;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
     private JobType type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String location;
 
-    private double minSalary;
+    @Column(nullable = false)
+    private Double minSalary;
 
-    private double maxSalary;
+    @Column(nullable = false)
+    private Double maxSalary;
 
-    @Column(length = 5000)
+    @Column(nullable = false, length = 5000)
     private String description;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "job_skills", joinColumns = @JoinColumn(name = "job_id"))
-    @Column(name = "skills")
+    @Column(name = "skill", nullable = false, length = 50)
     private List<String> skills;
 
-    private int experienceRequired;
+    @Column(nullable = false)
+    private Integer experienceRequired;
 
     @Column(nullable = false)
     private Long postedBy;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
     private JobStatus status;
 
+    @Column(nullable = false, updatable = false)
     private LocalDateTime postedAt;
 
+    @PrePersist
+    public void prePersist() {
+        if (postedAt == null) {
+            postedAt = LocalDateTime.now();
+        }
+
+        if (status == null) {
+            status = JobStatus.OPEN;
+        }
+    }
+
+    // Job.java
+    @Column(nullable = false)
+    private Long viewCount = 0L;
 }

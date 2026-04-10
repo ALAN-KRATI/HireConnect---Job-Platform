@@ -1,21 +1,129 @@
+<!-- candidate/profile.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | HireConnect</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <h1>My Profile</h1>
 
-    <div class="card">
-        <h2 th:text="${profile.fullName}"></h2>
-        <p><strong>Email:</strong> <span th:text="${profile.email}"></span></p>
-        <p><strong>Phone:</strong> <span th:text="${profile.phone}"></span></p>
-        <p><strong>Location:</strong> <span th:text="${profile.location}"></span></p>
-        <p><strong>Skills:</strong> <span th:text="${profile.skills}"></span></p>
-        <p><strong>Wallet:</strong> ₹<span th:text="${profile.walletBalance}"></span></p>
-    </div>
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <h2>HireConnect</h2>
+
+        <nav>
+            <a th:href="@{/candidate/home}">
+                <i class="fas fa-house"></i> Home
+            </a>
+
+            <a th:href="@{/candidate/jobs}">
+                <i class="fas fa-briefcase"></i> Jobs
+            </a>
+
+            <a th:href="@{/candidate/applications}">
+                <i class="fas fa-file-lines"></i> Applications
+            </a>
+
+            <a th:href="@{/candidate/profile}" class="active">
+                <i class="fas fa-user"></i> Profile
+            </a>
+
+            <a th:href="@{/logout}">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="page-content">
+
+        <div class="page-header">
+            <h1>My Profile</h1>
+            <p>Your professional main character sheet.</p>
+        </div>
+
+        <div class="profile-card">
+
+            <div class="profile-header">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div>
+                    <h2 th:text="${profile.fullName}">John Doe</h2>
+                    <p th:text="${profile.headline}">Java Developer</p>
+                </div>
+            </div>
+
+            <div class="profile-details">
+
+                <div class="detail-item">
+                    <label>Email</label>
+                    <p th:text="${profile.email}">john@example.com</p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Phone</label>
+                    <p th:text="${profile.phone}">9876543210</p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Location</label>
+                    <p th:text="${profile.location}">Muzaffarnagar</p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Skills</label>
+                    <p th:text="${profile.skills}">Java, Spring Boot, SQL</p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Experience</label>
+                    <p th:text="${profile.experience}">2 Years</p>
+                </div>
+
+                <div class="detail-item">
+                    <label>Education</label>
+                    <p th:text="${profile.education}">B.Tech CSE</p>
+                </div>
+
+                <div class="detail-item full-width">
+                    <label>About</label>
+                    <p th:text="${profile.summary}">
+                        Tiny summary with suspiciously strong LinkedIn energy.
+                    </p>
+                </div>
+
+                <div class="detail-item wallet-card">
+                    <label>Wallet Balance</label>
+                    <h3>
+                        ₹<span th:text="${profile.walletBalance}">0</span>
+                    </h3>
+
+                    <form th:action="@{/candidate/wallet/add}" method="post">
+                        <input type="number"
+                               name="amount"
+                               min="1"
+                               placeholder="Add amount"
+                               required>
+
+                        <button type="submit" class="btn-primary">
+                            Add Money
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
 </div>
+
 </body>
 </html>

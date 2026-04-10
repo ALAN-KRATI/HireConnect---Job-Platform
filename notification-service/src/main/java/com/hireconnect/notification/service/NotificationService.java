@@ -3,20 +3,21 @@ package com.hireconnect.notification.service;
 import com.hireconnect.notification.entity.Notification;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface NotificationService {
 
-    void sendNotification(Notification notification);
+    Notification sendNotification(Notification notification);
 
-    void markAsRead(Integer notificationId);
+    Notification markAsRead(UUID notificationId);
 
-    void markAllRead(Integer userId);
+    void markAllRead(UUID userId);
 
-    List<Notification> getByUser(Integer userId);
+    List<Notification> getByUser(UUID userId);
 
-    void deleteNotification(Integer notificationId);
+    void deleteNotification(UUID notificationId);
 
     void sendEmailAlert(String email, String subject, String body);
 
-    int getUnreadCount(Integer userId);
+    long getUnreadCount(UUID userId);
 }

@@ -6,15 +6,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
-@FeignClient(name = "job-service")
+@FeignClient(
+        name = "job-service",
+        url = "http://job-service:8083",
+        path = "/jobs"
+)
 public interface JobServiceClient {
 
-    @GetMapping("/jobs/recruiter/{recruiterId}/count")
-    Long getRecruiterJobCount(@PathVariable Long recruiterId);
+    @GetMapping("/{jobId}/views")
+    Integer getJobViewCount(@PathVariable("jobId") Long jobId);
 
-    @GetMapping("/jobs/{jobId}/views")
-    Integer getJobViewCount(@PathVariable Long jobId);
+    @GetMapping("/recruiter/{recruiterId}/count")
+    Long getRecruiterJobCount(@PathVariable("recruiterId") Long recruiterId);
 
-    @GetMapping("/jobs/categories/top")
+    @GetMapping("/recruiter/{recruiterId}/active/count")
+    Long getActiveJobCount(@PathVariable("recruiterId") Long recruiterId);
+
+    @GetMapping("/recruiter/{recruiterId}/closed/count")
+    Long getClosedJobCount(@PathVariable("recruiterId") Long recruiterId);
+
+    @GetMapping("/categories/top")
     Map<String, Long> getTopCategories();
 }

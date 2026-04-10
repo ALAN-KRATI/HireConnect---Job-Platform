@@ -4,14 +4,15 @@ import com.hireconnect.notification.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface NotificationRepository extends JpaRepository<Notification, Integer> {
+public interface NotificationRepository extends JpaRepository<Notification, UUID> {
 
-    List<Notification> findByUserId(Integer userId);
+    List<Notification> findByUserId(UUID userId);
 
-    List<Notification> findByUserIdAndIsRead(Integer userId, boolean isRead);
+    List<Notification> findByUserIdAndRead(UUID userId, boolean read);
 
-    int countByUserIdAndIsRead(Integer userId, boolean isRead);
+    long countByUserIdAndRead(UUID userId, boolean read);
 
-    void deleteByNotificationId(Integer notificationId);
+    void deleteByNotificationId(UUID notificationId);
 }

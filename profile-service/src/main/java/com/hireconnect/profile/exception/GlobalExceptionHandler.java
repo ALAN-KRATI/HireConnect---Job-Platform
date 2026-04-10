@@ -18,6 +18,8 @@ public class GlobalExceptionHandler {
             ProfileNotFoundException ex,
             HttpServletRequest request) {
 
+        ex.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse.builder()
                         .timestamp(LocalDateTime.now())
@@ -32,6 +34,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
+
+        ex.printStackTrace();
 
         String message = ex.getBindingResult()
                 .getFieldErrors()
@@ -54,11 +58,13 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
+        ex.printStackTrace();
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.builder()
                         .timestamp(LocalDateTime.now())
                         .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .error("Internal Server Error")
+                        .error(ex.getClass().getSimpleName())
                         .message(ex.getMessage())
                         .path(request.getRequestURI())
                         .build());

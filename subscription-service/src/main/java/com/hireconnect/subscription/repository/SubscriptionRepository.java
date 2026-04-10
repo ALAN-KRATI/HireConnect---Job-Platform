@@ -1,8 +1,8 @@
 package com.hireconnect.subscription.repository;
 
 import com.hireconnect.subscription.entity.Subscription;
+import com.hireconnect.subscription.enums.SubscriptionPlan;
 import com.hireconnect.subscription.enums.SubscriptionStatus;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,9 +12,17 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
 
     List<Subscription> findByRecruiterId(Integer recruiterId);
 
-    List<Subscription> findByStatus(String status);
+    List<Subscription> findByStatus(SubscriptionStatus status);
 
-    Optional<Subscription> findByRecruiterIdAndStatus(Integer recruiterId, SubscriptionStatus status);
+    Optional<Subscription> findByRecruiterIdAndStatus(
+            Integer recruiterId,
+            SubscriptionStatus status
+    );
 
-    long countByPlan(String plan);
+    long countByPlan(SubscriptionPlan plan);
+
+    boolean existsByRecruiterIdAndStatus(
+            Integer recruiterId,
+            SubscriptionStatus status
+    );
 }

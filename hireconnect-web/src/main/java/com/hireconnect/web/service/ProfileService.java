@@ -9,6 +9,10 @@ public interface ProfileService {
 
     void registerCandidate(RegisterRequest request);
 
+    Long getCandidateIdByEmail(String email);
+
+    Long getRecruiterIdByEmail(String email);
+
     void registerRecruiter(RegisterRequest request);
 
     ProfileDto getCandidateProfile(Long candidateId);
@@ -18,6 +22,8 @@ public interface ProfileService {
     ProfileDto updateProfile(Long userId, ProfileDto profileDto);
 
     List<ProfileDto> getAllUsers();
+
+    void activateUser(Long userId);
 
     void suspendUser(Long userId);
 

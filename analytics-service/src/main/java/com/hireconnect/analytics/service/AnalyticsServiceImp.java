@@ -4,12 +4,15 @@ import com.hireconnect.analytics.client.ApplicationServiceClient;
 import com.hireconnect.analytics.client.JobServiceClient;
 import com.hireconnect.analytics.dto.AnalyticsSummary;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnalyticsServiceImp implements AnalyticsService {
 
     private final JobServiceClient jobServiceClient;
@@ -17,83 +20,165 @@ public class AnalyticsServiceImp implements AnalyticsService {
 
     @Override
     public int getJobViewCount(Long jobId) {
-        return jobServiceClient.getJobViewCount(jobId);
+
+        Integer views = jobServiceClient.getJobViewCount(jobId);
+
+        return views != null ? views : 0;
     }
 
     @Override
     public int getAppCountByJob(Long jobId) {
-        return applicationServiceClient.getApplicationCountByJob(jobId);
+
+        Integer applications = applicationServiceClient.getApplicationCountByJob(jobId);
+
+        return applications != null ? applications : 0;
     }
 
     @Override
     public double getViewToApplyRatio(Long jobId) {
+
         int views = getJobViewCount(jobId);
         int applications = getAppCountByJob(jobId);
 
-        if (views == 0) {
+        if (views <= 0) {
             return 0.0;
         }
 
-        return (double) applications / views;
+        return Math.round(((double) applications / views) * 100.0) / 100.0;
     }
 
-    @Override
-    public double getTimeToHire(Long jobId) {
-        return applicationServiceClient.getAverageTimeToHire(jobId);
-    }
 
     @Override
     public AnalyticsSummary getPipelineStats(Long recruiterId) {
 
-        Long totalJobs = jobServiceClient.getRecruiterJobCount(recruiterId);
-        Long totalApplications = applicationServiceClient.getRecruiterApplicationCount(recruiterId);
+        log.info("Fetching analytics dashboard for recruiterId={}", recruiterId);
 
-        Integer shortlisted = applicationServiceClient.getShortlistedCount(recruiterId);
-        Integer offered = applicationServiceClient.getOfferedCount(recruiterId);
-        Integer rejected = applicationServiceClient.getRejectedCount(recruiterId);
+        Long totalJobs = defaultLong(jobServiceClient.getRecruiterJobCount(recruiterId));
+        Long activeJobs = defaultLong(jobServiceClient.getActiveJobCount(recruiterId));
+        Long closedJobs = defaultLong(jobServiceClient.getClosedJobCount(recruiterId));
 
-        Double avgTime = applicationServiceClient.getAverageTimeToHire(recruiterId);
+        Long totalApplications = defaultLong(
+                applicationServiceClient.getRecruiterApplicationCount(recruiterId));
 
-        Double ratio = totalJobs == 0 ? 0.0 : (double) totalApplications / totalJobs;
+        Integer shortlisted = defaultInteger(
+                applicationServiceClient.getShortlistedCount(recruiterId));
 
-        return new AnalyticsSummary(
-                totalJobs,
-                totalApplications,
-                shortlisted,
-                offered,
-                rejected,
-                avgTime,
-                ratio
-        );
+        Integer interviewScheduled = defaultInteger(
+                applicationServiceClient.getInterviewScheduledCount(recruiterId));
+
+        Integer offered = defaultInteger(
+                applicationServiceClient.getOfferedCount(recruiterId));
+
+        Integer rejected = defaultInteger(
+                applicationServiceClient.getRejectedCount(recruiterId));
+
+        Double avgTime = defaultDouble(
+                applicationServiceClient.getAverageTimeToHire(recruiterId));
+
+        double viewToApplyRatio = totalJobs == 0
+                ? 0.0
+                : Math.round(((double) totalApplications / totalJobs) * 100.0) / 100.0;
+
+        Map<String, Long> topCategories;
+
+        try {
+            topCategories = jobServiceClient.getTopCategories();
+        } catch (Exception ex) {
+            log.warn("Could not fetch top categories from job-service: {}", ex.getMessage());
+            topCategories = Collections.emptyMap();
+        }
+
+        return AnalyticsSummary.builder()
+                .totalJobs(totalJobs)
+                .activeJobs(activeJobs)
+                .closedJobs(closedJobs)
+                .totalApplications(totalApplications)
+                .shortlistedCount(shortlisted)
+                .interviewScheduledCount(interviewScheduled)
+                .offeredCount(offered)
+                .rejectedCount(rejected)
+                .avgTimeToHireDays(avgTime)
+                .viewToApplyRatio(viewToApplyRatio)
+                .topJobCategories(topCategories)
+                .build();
     }
 
     @Override
     public AnalyticsSummary getPlatformStats() {
 
-        Long totalJobs = 0L; // later from job-service endpoint
-        Long totalApplications = applicationServiceClient.getPlatformApplicationCount();
+        log.info("Fetching platform-wide analytics");
 
-        Integer shortlisted = applicationServiceClient.getPlatformShortlistedCount();
-        Integer offered = applicationServiceClient.getPlatformOfferedCount();
-        Integer rejected = applicationServiceClient.getPlatformRejectedCount();
+        Long totalJobs = 0L;
 
-        Double avgTime = applicationServiceClient.getPlatformAverageTimeToHire();
+        Long totalApplications = defaultLong(
+                applicationServiceClient.getPlatformApplicationCount());
 
-        Double ratio = totalJobs == 0 ? 0.0 : (double) totalApplications / totalJobs;
+        Integer shortlisted = defaultInteger(
+                applicationServiceClient.getPlatformShortlistedCount());
 
-        return new AnalyticsSummary(
-                totalJobs,
-                totalApplications,
-                shortlisted,
-                offered,
-                rejected,
-                avgTime,
-                ratio
-        );
+        Integer interviewScheduled = defaultInteger(
+                applicationServiceClient.getPlatformInterviewScheduledCount());
+
+        Integer offered = defaultInteger(
+                applicationServiceClient.getPlatformOfferedCount());
+
+        Integer rejected = defaultInteger(
+                applicationServiceClient.getPlatformRejectedCount());
+
+        Double avgTime = defaultDouble(
+                applicationServiceClient.getPlatformAverageTimeToHire());
+
+        double viewToApplyRatio = totalJobs == 0
+                ? 0.0
+                : Math.round(((double) totalApplications / totalJobs) * 100.0) / 100.0;
+
+        Map<String, Long> topCategories;
+
+        try {
+            topCategories = jobServiceClient.getTopCategories();
+        } catch (Exception ex) {
+            log.warn("Could not fetch top categories from job-service: {}", ex.getMessage());
+            topCategories = Collections.emptyMap();
+        }
+
+        return AnalyticsSummary.builder()
+                .totalJobs(totalJobs)
+                .activeJobs(0L)
+                .closedJobs(0L)
+                .totalApplications(totalApplications)
+                .shortlistedCount(shortlisted)
+                .interviewScheduledCount(interviewScheduled)
+                .offeredCount(offered)
+                .rejectedCount(rejected)
+                .avgTimeToHireDays(avgTime)
+                .viewToApplyRatio(viewToApplyRatio)
+                .topJobCategories(topCategories)
+                .build();
     }
 
     @Override
     public Map<String, Long> getTopJobCategories() {
+
         return jobServiceClient.getTopCategories();
+    }
+
+    private Long defaultLong(Long value) {
+        return value != null ? value : 0L;
+    }
+
+    private Integer defaultInteger(Integer value) {
+        return value != null ? value : 0;
+    }
+
+    private Double defaultDouble(Double value) {
+        return value != null ? value : 0.0;
+    }
+
+    @Override
+    public double getTimeToHire(Long recruiterId) {
+
+        Double average = applicationServiceClient.getAverageTimeToHire(recruiterId);
+
+        return average != null ? average : 0.0;
     }
 }

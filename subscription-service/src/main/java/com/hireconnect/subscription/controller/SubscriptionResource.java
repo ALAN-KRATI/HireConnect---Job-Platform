@@ -1,12 +1,13 @@
 package com.hireconnect.subscription.controller;
 
+import com.hireconnect.subscription.dto.InvoiceResponse;
 import com.hireconnect.subscription.dto.SubscriptionRequest;
-import com.hireconnect.subscription.entity.Invoice;
-import com.hireconnect.subscription.entity.Subscription;
+import com.hireconnect.subscription.dto.SubscriptionResponse;
 import com.hireconnect.subscription.service.SubscriptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,34 +20,72 @@ public class SubscriptionResource {
     private final SubscriptionService subscriptionService;
 
     @PostMapping
-    public ResponseEntity<Subscription> subscribe(
-            @Valid @RequestBody SubscriptionRequest request) {
-
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<SubscriptionResponse> subscribe(
+            @Valid @RequestBody SubscriptionRequest request
+    ) {
         return ResponseEntity.ok(
                 subscriptionService.subscribe(
                         request.getRecruiterId(),
-                        request.getPlan()
+                        request.getPlan(),
+                        request.getPaymentMode()
                 )
         );
     }
 
     @PutMapping("/{subscriptionId}/cancel")
-    public ResponseEntity<Subscription> cancel(@PathVariable Integer subscriptionId) {
-        return ResponseEntity.ok(subscriptionService.cancelSubscription(subscriptionId));
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<SubscriptionResponse> cancel(
+            @PathVariable Integer subscriptionId
+    ) {
+        return ResponseEntity.ok(
+                subscriptionService.cancelSubscription(subscriptionId)
+        );
     }
 
     @PutMapping("/{subscriptionId}/renew")
-    public ResponseEntity<Subscription> renew(@PathVariable Integer subscriptionId) {
-        return ResponseEntity.ok(subscriptionService.renewSubscription(subscriptionId));
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<SubscriptionResponse> renew(
+            @PathVariable Integer subscriptionId
+    ) {
+        return ResponseEntity.ok(
+                subscriptionService.renewSubscription(subscriptionId)
+        );
     }
 
     @GetMapping("/recruiter/{recruiterId}")
-    public ResponseEntity<List<Subscription>> getByRecruiter(@PathVariable Integer recruiterId) {
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<List<SubscriptionResponse>> getByRecruiter(
+            @PathVariable Integer recruiterId
+    ) {
         return ResponseEntity.ok(subscriptionService.getByRecruiter(recruiterId));
     }
 
     @GetMapping("/invoices/{recruiterId}")
-    public ResponseEntity<List<Invoice>> getInvoices(@PathVariable Integer recruiterId) {
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<List<InvoiceResponse>> getInvoices(
+            @PathVariable Integer recruiterId
+    ) {
         return ResponseEntity.ok(subscriptionService.getInvoices(recruiterId));
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/job-limit")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<Integer> getJobLimit(
+            @PathVariable Integer recruiterId
+    ) {
+        return ResponseEntity.ok(
+                subscriptionService.getAllowedJobLimit(recruiterId)
+        );
+    }
+
+    @GetMapping("/recruiter/{recruiterId}/can-post")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<Boolean> canPostMoreJobs(
+            @PathVariable Integer recruiterId
+    ) {
+        return ResponseEntity.ok(
+                subscriptionService.canPostMoreJobs(recruiterId)
+        );
     }
 }

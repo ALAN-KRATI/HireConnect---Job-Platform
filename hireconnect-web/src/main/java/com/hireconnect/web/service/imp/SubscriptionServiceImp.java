@@ -3,58 +3,117 @@ package com.hireconnect.web.service.imp;
 import com.hireconnect.web.dto.InvoiceDto;
 import com.hireconnect.web.dto.SubscriptionDto;
 import com.hireconnect.web.service.SubscriptionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class SubscriptionServiceImp implements SubscriptionService {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private final String BASE_URL = "http://localhost:8087/subscriptions";
+    private static final String BASE_URL = "http://subscription-service/subscriptions";
+
+    public SubscriptionServiceImp(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public SubscriptionDto getCurrentPlan(Long recruiterId) {
-        return restTemplate.getForObject(BASE_URL + "/" + recruiterId, SubscriptionDto.class);
+
+        return restTemplate.getForObject(
+                BASE_URL + "/{recruiterId}",
+                SubscriptionDto.class,
+                recruiterId
+        );
     }
 
     @Override
     public List<InvoiceDto> getInvoices(Long recruiterId) {
-        InvoiceDto[] response = restTemplate.getForObject(BASE_URL + "/" + recruiterId + "/invoices",
-                InvoiceDto[].class);
-        return Arrays.asList(response);
+
+        ResponseEntity<List<InvoiceDto>> response = restTemplate.exchange(
+                BASE_URL + "/{recruiterId}/invoices",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<InvoiceDto>>() {},
+                recruiterId
+        );
+
+        return response.getBody() != null
+                ? response.getBody()
+                : Collections.emptyList();
     }
 
     @Override
     public List<SubscriptionDto> getAllSubscriptions() {
-        SubscriptionDto[] response = restTemplate.getForObject(BASE_URL, SubscriptionDto[].class);
-        return Arrays.asList(response);
+
+        ResponseEntity<List<SubscriptionDto>> response = restTemplate.exchange(
+                BASE_URL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<SubscriptionDto>>() {}
+        );
+
+        return response.getBody() != null
+                ? response.getBody()
+                : Collections.emptyList();
     }
 
     @Override
     public List<InvoiceDto> getAllInvoices() {
-        InvoiceDto[] response = restTemplate.getForObject(BASE_URL + "/invoices", InvoiceDto[].class);
-        return Arrays.asList(response);
+
+        ResponseEntity<List<InvoiceDto>> response = restTemplate.exchange(
+                BASE_URL + "/invoices",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<InvoiceDto>>() {}
+        );
+
+        return response.getBody() != null
+                ? response.getBody()
+                : Collections.emptyList();
     }
 
     @Override
     public SubscriptionDto upgradePlan(Long recruiterId, String planName) {
+
         return restTemplate.postForObject(
-                BASE_URL + "/" + recruiterId + "/upgrade?plan=" + planName,
+                BASE_URL + "/{recruiterId}/upgrade?plan={planName}",
                 null,
-                SubscriptionDto.class);
+                SubscriptionDto.class,
+                recruiterId,
+                planName
+        );
     }
 
     @Override
     public void cancelPlan(Long recruiterId) {
+
         restTemplate.postForObject(
-                BASE_URL + "/" + recruiterId + "/cancel",
+                BASE_URL + "/{recruiterId}/cancel",
                 null,
-                Void.class);
+                Void.class,
+                recruiterId
+        );
+    }
+
+    @Override
+    public List<String> getAvailablePlans() {
+
+        ResponseEntity<List<String>> response = restTemplate.exchange(
+                BASE_URL + "/plans",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<String>>() {}
+        );
+
+        return response.getBody() != null
+                ? response.getBody()
+                : Collections.emptyList();
     }
 }

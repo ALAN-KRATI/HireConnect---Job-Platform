@@ -17,4 +17,6 @@ public interface ApplicationService {
     void rejectCandidate(Long applicationId);
 
     ApplicationDto getApplicationById(Long applicationId);
+
+    void offerCandidate(Long applicationId);
 }

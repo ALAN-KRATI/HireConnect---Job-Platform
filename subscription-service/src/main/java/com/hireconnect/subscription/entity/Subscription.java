@@ -36,8 +36,8 @@ public class Subscription {
     private Double amountPaid;
 
     public boolean isActive() {
-        return "ACTIVE".equalsIgnoreCase(SubscriptionStatus.ACTIVE.name())
+        return status == SubscriptionStatus.ACTIVE
                 && endDate != null
-                && endDate.isAfter(LocalDate.now());
+                && !endDate.isBefore(LocalDate.now());
     }
 }
