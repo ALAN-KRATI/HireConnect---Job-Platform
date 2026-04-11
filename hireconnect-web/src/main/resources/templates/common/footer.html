@@ -1,0 +1,73 @@
+<!-- templates/common/footer.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<footer th:fragment="footer" class="landing-footer">
+
+    <div class="footer-container">
+
+        <div class="footer-brand">
+            <div class="brand-logo">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Where careers and caffeine-fueled recruiters collide.</p>
+                </div>
+            </div>
+
+            <p class="footer-description">
+                HireConnect helps candidates discover opportunities, recruiters
+                find talent, and admins pretend everything is under control.
+            </p>
+        </div>
+
+        <div class="footer-links">
+
+            <div class="footer-column">
+                <h3>Platform</h3>
+
+                <a th:href="@{/}">Home</a>
+                <a th:href="@{/login}">Login</a>
+                <a th:href="@{/register}">Register</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>For Candidates</h3>
+
+                <a th:href="@{/candidate/jobs}">Browse Jobs</a>
+                <a th:href="@{/candidate/applications}">Applications</a>
+                <a th:href="@{/candidate/profile}">Profile</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>For Recruiters</h3>
+
+                <a th:href="@{/recruiter/jobs/post}">Post Job</a>
+                <a th:href="@{/recruiter/dashboard}">Dashboard</a>
+                <a th:href="@{/recruiter/subscription}">Plans</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Contact</h3>
+
+                <p><i class="fas fa-envelope"></i> support@hireconnect.com</p>
+                <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+                <p><i class="fas fa-location-dot"></i> India</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>
+            © 2026 HireConnect. Built with ambition, deadlines, and slightly concerning amounts of coffee.
+        </p>
+    </div>
+
+</footer>
+
+</body>
+</html>

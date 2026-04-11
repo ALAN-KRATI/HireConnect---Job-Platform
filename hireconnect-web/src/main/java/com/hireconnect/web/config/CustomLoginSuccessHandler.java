@@ -5,13 +5,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Collection;
 
 @Component
-public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -19,26 +20,26 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-            String role = authority.getAuthority();
+        String targetUrl = "/";
 
-            if ("ROLE_RECRUITER".equals(role)) {
-                response.sendRedirect("/recruiter/dashboard");
-                return;
-            }
-
-            if ("ROLE_CANDIDATE".equals(role)) {
-                response.sendRedirect("/candidate/home");
-                return;
-            }
-
-            if ("ROLE_ADMIN".equals(role)) {
-                response.sendRedirect("/admin/dashboard");
-                return;
-            }
+        if (hasRole(authorities, "ROLE_ADMIN")) {
+            targetUrl = "/admin/dashboard";
+        } else if (hasRole(authorities, "ROLE_RECRUITER")) {
+            targetUrl = "/recruiter/dashboard";
+        } else if (hasRole(authorities, "ROLE_CANDIDATE")) {
+            targetUrl = "/candidate/dashboard";
         }
 
-        response.sendRedirect("/");
+        setAlwaysUseDefaultTargetUrl(true);
+        setDefaultTargetUrl(targetUrl);
+
+        super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    private boolean hasRole(Collection<? extends GrantedAuthority> authorities, String role) {
+        return authorities.stream()
+                .anyMatch(authority -> role.equals(authority.getAuthority()));
     }
 }

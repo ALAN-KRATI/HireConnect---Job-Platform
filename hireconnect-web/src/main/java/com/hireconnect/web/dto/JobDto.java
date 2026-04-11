@@ -1,29 +1,34 @@
 package com.hireconnect.web.dto;
 
-import com.hireconnect.web.enums.EmploymentType;
 import com.hireconnect.web.enums.JobStatus;
-
+import com.hireconnect.web.enums.JobType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class JobDto {
 
-    private Long id;
     private Long recruiterId;
-
-    private String title;
-    private String description;
     private String companyName;
-    private String location;
-
-    private Double salary;
-    private String experience;
+    private Long jobId;
+    private String title;
     private String category;
-    private EmploymentType employmentType;
-
+    private JobType type;
+    private String location;
+    private Double minSalary;
+    private Double maxSalary;
+    private List<String> skills;
+    private Integer experienceRequired;
+    private Long postedBy;
     private JobStatus status;
+    private LocalDateTime postedAt;
+    private String description;
 }

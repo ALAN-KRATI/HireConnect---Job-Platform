@@ -1,0 +1,263 @@
+<!-- templates/recruiter/profile.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Recruiter Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/recruiter/dashboard}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>My Jobs</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs/post}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Job</span>
+                </a>
+
+                <a th:href="@{/recruiter/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/recruiter/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/recruiter/subscription}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscription</span>
+                </a>
+
+                <a th:href="@{/recruiter/profile}" class="active">
+                    <i class="fas fa-building"></i>
+                    <span>Company Profile</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-building"></i>
+                    Recruiter Profile
+                </span>
+
+                <h1>Company Profile</h1>
+
+                <p>
+                    The part where your company gets to look polished, inspiring,
+                    and definitely not powered by three people and caffeine.
+                </p>
+            </div>
+
+            <button class="btn-primary" onclick="document.getElementById('editProfileModal').style.display='flex'">
+                <i class="fas fa-pen"></i>
+                Edit Profile
+            </button>
+
+        </header>
+
+        <section class="profile-layout">
+
+            <div class="profile-card">
+
+                <div class="profile-banner"></div>
+
+                <div class="profile-main">
+
+                    <div class="company-avatar">
+                        <i class="fas fa-building"></i>
+                    </div>
+
+                    <div class="profile-header-text">
+                        <h2 th:text="${profile.fullName}">
+                            HireConnect Pvt Ltd
+                        </h2>
+
+                        <p th:text="${profile.headline}">
+                            Building careers, one chaotic interview at a time.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="profile-details-grid">
+
+                    <div class="detail-box">
+                        <label>Email</label>
+                        <p th:text="${profile.email}">company@example.com</p>
+                    </div>
+
+                    <div class="detail-box">
+                        <label>Phone</label>
+                        <p th:text="${profile.phone}">9876543210</p>
+                    </div>
+
+                    <div class="detail-box">
+                        <label>Location</label>
+                        <p th:text="${profile.location}">Bengaluru</p>
+                    </div>
+
+                    <div class="detail-box">
+                        <label>Industry / Skills</label>
+                        <p th:text="${profile.skills}">
+                            Java, Spring Boot, Recruitment, Hiring
+                        </p>
+                    </div>
+
+                    <div class="detail-box full-width">
+                        <label>About Company</label>
+                        <p th:text="${profile.summary}">
+                            We are a fast-growing company solving real-world problems
+                            with technology and mild panic.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <div id="editProfileModal" class="modal">
+
+            <div class="modal-content large-modal">
+
+                <div class="modal-header">
+                    <h2>Edit Company Profile</h2>
+
+                    <button class="close-btn"
+                            onclick="document.getElementById('editProfileModal').style.display='none'">
+                        &times;
+                    </button>
+                </div>
+
+                <form th:action="@{/recruiter/profile/update}"
+                      th:object="${profile}"
+                      method="post"
+                      class="job-form">
+
+                    <div class="form-grid">
+
+                        <div class="input-group">
+                            <label>Company Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-building"></i>
+                                <input type="text" th:field="*{fullName}" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" th:field="*{email}" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Phone</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone"></i>
+                                <input type="text" th:field="*{phone}">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Location</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-location-dot"></i>
+                                <input type="text" th:field="*{location}">
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>Headline</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-quote-left"></i>
+                                <input type="text" th:field="*{headline}">
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>Skills / Industry</label>
+                            <textarea th:field="*{skills}" rows="3"></textarea>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>About Company</label>
+                            <textarea th:field="*{summary}" rows="6"></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button"
+                                class="btn-outline"
+                                onclick="document.getElementById('editProfileModal').style.display='none'">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-floppy-disk"></i>
+                            Save Changes
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+</main>
+</div>
+
+</body>
+</html>

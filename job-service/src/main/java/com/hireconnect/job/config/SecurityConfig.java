@@ -39,14 +39,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Public job browsing
-                        .requestMatchers(HttpMethod.GET,
-                                "/jobs",
-                                "/jobs/search",
-                                "/jobs/categories/top",
-                                "/jobs/category/**",
-                                "/jobs/location/**",
-                                "/jobs/*"
-                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/jobs/**").permitAll()
 
                         // Recruiter only
                         .requestMatchers(HttpMethod.POST, "/jobs").hasRole("RECRUITER")

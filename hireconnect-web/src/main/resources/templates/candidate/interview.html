@@ -1,0 +1,218 @@
+<!-- templates/candidate/interviews.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Interviews | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Candidate Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/candidate/home}">
+                    <i class="fas fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/candidate/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Browse Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>My Applications</span>
+                </a>
+
+                <a th:href="@{/candidate/interviews}" class="active">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/candidate/saved-jobs}">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Saved Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/profile}">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-calendar-check"></i>
+                    Interview Schedule
+                </span>
+
+                <h1>Upcoming Interviews</h1>
+
+                <p>
+                    The place where confidence, awkward silences, and “tell me about yourself”
+                    collide in glorious chaos.
+                </p>
+            </div>
+        </header>
+
+        <div class="dashboard-panel">
+
+            <div th:if="${#lists.isEmpty(interviews)}" class="empty-state">
+                <i class="fas fa-calendar-xmark"
+                   style="font-size: 52px; color: #94a3b8; margin-bottom: 20px;"></i>
+
+                <h2 style="margin-bottom: 12px;">No Interviews Scheduled</h2>
+
+                <p style="margin-bottom: 24px;">
+                    Nothing on the calendar yet. Keep applying — eventually someone
+                    will decide your résumé is built different.
+                </p>
+
+                <a th:href="@{/candidate/jobs}" class="btn-primary">
+                    <i class="fas fa-briefcase"></i>
+                    Browse Jobs
+                </a>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(interviews)}" class="job-cards-grid">
+
+                <div class="job-card"
+                     th:each="interview : ${interviews}">
+
+                    <div class="job-card-top">
+
+                        <div>
+                            <h3>
+                                Interview with
+                                <span th:text="${interview.recruiterName}">
+                                    Recruiter
+                                </span>
+                            </h3>
+
+                            <p>
+                                Application ID:
+                                <span th:text="${interview.applicationId}">1</span>
+                            </p>
+                        </div>
+
+                        <span class="status-pill"
+                              th:classappend="${
+                                interview.status.name() == 'SCHEDULED'} ? ' primary' :
+                                (${interview.status.name() == 'COMPLETED'} ? ' success' : ' danger')"
+                              th:text="${interview.status}">
+                            SCHEDULED
+                        </span>
+
+                    </div>
+
+                    <div class="job-meta">
+
+                        <span>
+                            <i class="fas fa-calendar-days"></i>
+                            <span th:text="${#temporals.format(interview.scheduledAt, 'dd MMM yyyy, hh:mm a')}">
+                                12 Apr 2026, 03:00 PM
+                            </span>
+                        </span>
+
+                        <span>
+                            <i class="fas fa-video"></i>
+                            <span th:text="${interview.interviewType}">
+                                ONLINE
+                            </span>
+                        </span>
+
+                    </div>
+
+                    <div class="job-description"
+                         th:if="${interview.interviewType.name() == 'ONLINE'}">
+
+                        <strong>Meeting Link</strong>
+
+                        <p style="margin-top: 10px;">
+                            <a th:href="${interview.meetingLink}"
+                               target="_blank"
+                               style="color: #2563eb; font-weight: 600;">
+                                <span th:text="${interview.meetingLink}">
+                                    https://meet.google.com/abc
+                                </span>
+                            </a>
+                        </p>
+
+                    </div>
+
+                    <div class="job-description"
+                         th:if="${interview.interviewType.name() == 'OFFLINE'}">
+
+                        <strong>Location</strong>
+
+                        <p style="margin-top: 10px;"
+                           th:text="${interview.location}">
+                            Company Office, Bengaluru
+                        </p>
+
+                    </div>
+
+                    <div class="job-actions">
+
+                        <a th:if="${interview.interviewType.name() == 'ONLINE'}"
+                           th:href="${interview.meetingLink}"
+                           target="_blank"
+                           class="btn-primary">
+                            <i class="fas fa-video"></i>
+                            Join Interview
+                        </a>
+
+                        <button type="button"
+                                class="btn-outline">
+                            <i class="fas fa-bell"></i>
+                            Set Reminder
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

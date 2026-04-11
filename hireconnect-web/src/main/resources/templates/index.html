@@ -1,0 +1,214 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireConnect | Find Jobs & Hire Talent</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<header class="landing-header">
+    <div class="landing-logo">
+        <div class="logo-circle">HC</div>
+        <div>
+            <h2>HireConnect</h2>
+            <p>Career. Hiring. Sorted.</p>
+        </div>
+    </div>
+
+    <nav class="landing-nav">
+        <a th:href="@{/jobs}">Browse Jobs</a>
+        <a th:href="@{/login}">Sign In</a>
+        <a th:href="@{/register}" class="btn-primary">Get Started</a>
+    </nav>
+</header>
+
+<section class="hero-section">
+
+    <div class="hero-content">
+        <span class="welcome-tag">
+            <i class="fas fa-bolt"></i>
+            Smarter Hiring Starts Here
+        </span>
+
+        <h1>
+            Find your next job.
+            <br>
+            Or your next superstar hire.
+        </h1>
+
+        <p>
+            HireConnect helps candidates discover great jobs and helps recruiters
+            find the right people without turning the process into a side quest.
+        </p>
+
+        <div class="hero-actions">
+            <a th:href="@{/register}" class="btn-primary">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </a>
+
+            <a th:href="@{/jobs}" class="btn-outline">
+                <i class="fas fa-briefcase"></i>
+                Explore Jobs
+            </a>
+        </div>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <h3>10K+</h3>
+                <p>Jobs Posted</p>
+            </div>
+
+            <div class="hero-stat">
+                <h3>4K+</h3>
+                <p>Companies</p>
+            </div>
+
+            <div class="hero-stat">
+                <h3>25K+</h3>
+                <p>Candidates</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-visual">
+        <div class="dashboard-preview">
+
+            <div class="preview-card blue-card">
+                <div class="stat-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div>
+                    <span>Active Jobs</span>
+                    <h2>124</h2>
+                </div>
+            </div>
+
+            <div class="preview-card green-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <span>Applications</span>
+                    <h2>1,842</h2>
+                </div>
+            </div>
+
+            <div class="preview-card purple-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <span>Interviews</span>
+                    <h2>248</h2>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<section class="features-section">
+
+    <div class="section-heading">
+        <span class="welcome-tag">Why HireConnect?</span>
+        <h2>Everything you need, minus the corporate headache.</h2>
+    </div>
+
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <i class="fas fa-magnifying-glass"></i>
+            <h3>Smart Job Search</h3>
+            <p>
+                Filter by title, salary, location, experience, and category.
+                Because scrolling through 900 random jobs is not a personality trait.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-file-lines"></i>
+            <h3>One-Click Applications</h3>
+            <p>
+                Apply instantly using your saved profile and resume. No copy-pasting
+                your life story 37 times.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-chart-pie"></i>
+            <h3>Recruiter Analytics</h3>
+            <p>
+                Track applications, interviews, and hiring performance with clean dashboards.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section class="featured-jobs-section">
+
+    <div class="section-heading">
+        <h2>Featured Jobs</h2>
+        <a th:href="@{/jobs}" class="panel-link">View All</a>
+    </div>
+
+    <div class="job-cards-grid">
+
+        <div class="job-card" th:each="job : ${featuredJobs}">
+            <div class="job-card-top">
+                <div>
+                    <h3 th:text="${job.title}">Java Developer</h3>
+                    <p th:text="${job.companyName}">HireConnect</p>
+                </div>
+
+                <span class="job-badge"
+                      th:text="${job.employmentType}">
+                    FULL_TIME
+                </span>
+            </div>
+
+            <div class="job-meta">
+                <span>
+                    <i class="fas fa-location-dot"></i>
+                    <span th:text="${job.location}">Remote</span>
+                </span>
+
+                <span>
+                    <i class="fas fa-indian-rupee-sign"></i>
+                    <span th:text="${job.salary}">1200000</span>
+                </span>
+            </div>
+
+            <p class="job-description"
+               th:text="${job.description}">
+                Job description here...
+            </p>
+
+            <div class="job-actions">
+                <a th:href="@{/login}" class="btn-primary">
+                    Apply Now
+                </a>
+
+                <a th:href="@{/login}" class="btn-outline">
+                    Save Job
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer class="landing-footer">
+    <p>© 2026 HireConnect. Built for people who are tired of ugly job portals.</p>
+</footer>
+
+</body>
+</html>

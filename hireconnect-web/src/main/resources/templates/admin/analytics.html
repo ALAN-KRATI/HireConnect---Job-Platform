@@ -1,0 +1,236 @@
+<!-- templates/admin/analytics.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Analytics | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/admin/dashboard}">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/admin/users}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+
+                <a th:href="@{/admin/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Jobs</span>
+                </a>
+
+                <a th:href="@{/admin/analytics}" class="active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a th:href="@{/admin/subscriptions}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscriptions</span>
+                </a>
+
+                <a th:href="@{/admin/invoices}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Invoices</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-chart-line"></i>
+                    Deep Platform Stats
+                </span>
+
+                <h1>Analytics</h1>
+
+                <p>
+                    Numbers, trends, and evidence that everyone is indeed pressing the apply button.
+                </p>
+            </div>
+
+            <a th:href="@{/admin/report/export}" class="btn-primary">
+                <i class="fas fa-file-export"></i>
+                Export Report
+            </a>
+
+        </header>
+
+        <section class="stats-grid">
+
+            <div class="stat-card blue-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+
+                <div class="stat-info">
+                    <span>Total Applications</span>
+                    <h2 th:text="${analytics.totalApplications}">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card green-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+
+                <div class="stat-info">
+                    <span>Shortlisted</span>
+                    <h2 th:text="${analytics.shortlistedCount}">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card orange-card">
+                <div class="stat-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+
+                <div class="stat-info">
+                    <span>Offers Sent</span>
+                    <h2 th:text="${analytics.offeredCount}">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card purple-card">
+                <div class="stat-icon">
+                    <i class="fas fa-xmark"></i>
+                </div>
+
+                <div class="stat-info">
+                    <span>Rejected</span>
+                    <h2 th:text="${analytics.rejectedCount}">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="dashboard-grid">
+
+            <div class="dashboard-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Hiring Efficiency</h2>
+                        <p>How quickly and effectively the platform is helping people get hired.</p>
+                    </div>
+                </div>
+
+                <div class="activity-list">
+
+                    <div class="activity-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+
+                        <div>
+                            <h4>
+                                <span th:text="${analytics.avgTimeToHireDays}">0</span> Days
+                            </h4>
+                            <p>Average Time to Hire</p>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-simple"></i>
+                        </div>
+
+                        <div>
+                            <h4>
+                                <span th:text="${analytics.viewToApplyRatio}">0</span>x
+                            </h4>
+                            <p>View to Apply Ratio</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="dashboard-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Application Funnel</h2>
+                        <p>The beautiful journey from “Applied” to “You’re hired.”</p>
+                    </div>
+                </div>
+
+                <div class="funnel-list">
+
+                    <div class="funnel-step">
+                        <span>Applications</span>
+                        <strong th:text="${analytics.totalApplications}">0</strong>
+                    </div>
+
+                    <div class="funnel-arrow">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+
+                    <div class="funnel-step">
+                        <span>Shortlisted</span>
+                        <strong th:text="${analytics.shortlistedCount}">0</strong>
+                    </div>
+
+                    <div class="funnel-arrow">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+
+                    <div class="funnel-step">
+                        <span>Offered</span>
+                        <strong th:text="${analytics.offeredCount}">0</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

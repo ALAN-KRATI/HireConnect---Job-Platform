@@ -1,5 +1,9 @@
 package com.hireconnect.web.controller;
 
+import com.hireconnect.web.dto.AnalyticsDto;
+import com.hireconnect.web.dto.ProfileDto;
+import com.hireconnect.web.dto.SubscriptionDto;
+import com.hireconnect.web.enums.UserRole;
 import com.hireconnect.web.service.AnalyticsService;
 import com.hireconnect.web.service.JobService;
 import com.hireconnect.web.service.ProfileService;
@@ -10,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,23 +39,29 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
 
-        model.addAttribute("totalUsers",
-                profileService.getAllUsers().size());
+        List<ProfileDto> users = profileService.getAllUsers();
+        AnalyticsDto analytics = analyticsService.getPlatformAnalytics();
+        List<SubscriptionDto> subscriptions = subscriptionService.getAllSubscriptions();
 
-        model.addAttribute("totalJobs",
-                jobService.getAllJobs().size());
+        long totalCandidates = users.stream()
+                .filter(user -> user.getRole() == UserRole.CANDIDATE)
+                .count();
 
-        model.addAttribute("users",
-                profileService.getAllUsers());
+        long totalRecruiters = users.stream()
+                .filter(user -> user.getRole() == UserRole.RECRUITER)
+                .count();
 
-        model.addAttribute("jobs",
-                jobService.getAllJobs());
+        model.addAttribute("pageTitle", "Admin Dashboard");
+        model.addAttribute("users", users);
+        model.addAttribute("jobs", jobService.getAllJobs());
+        model.addAttribute("analytics", analytics);
+        model.addAttribute("subscriptions", subscriptions);
 
-        model.addAttribute("analytics",
-                analyticsService.getPlatformAnalytics());
-
-        model.addAttribute("subscriptions",
-                subscriptionService.getAllSubscriptions());
+        model.addAttribute("totalUsers", users.size());
+        model.addAttribute("totalCandidates", totalCandidates);
+        model.addAttribute("totalRecruiters", totalRecruiters);
+        model.addAttribute("totalJobs", analytics.getTotalJobs());
+        model.addAttribute("totalApplications", analytics.getTotalApplications());
 
         return "admin/dashboard";
     }
@@ -57,50 +69,50 @@ public class AdminController {
     @GetMapping("/users")
     public String manageUsers(Model model) {
 
-        model.addAttribute("users",
-                profileService.getAllUsers());
+        model.addAttribute("pageTitle", "Manage Users");
+        model.addAttribute("users", profileService.getAllUsers());
 
         return "admin/users";
     }
 
     @PostMapping("/users/{userId}/suspend")
-    public String suspendUser(@PathVariable("userId") Long userId) {
+    public String suspendUser(@PathVariable Long userId) {
 
         profileService.suspendUser(userId);
 
-        return "redirect:/admin/users?success=userSuspended";
+        return "redirect:/admin/users?success=User suspended successfully";
     }
 
     @PostMapping("/users/{userId}/activate")
-    public String activateUser(@PathVariable("userId") Long userId) {
+    public String activateUser(@PathVariable Long userId) {
 
         profileService.activateUser(userId);
 
-        return "redirect:/admin/users?success=userActivated";
+        return "redirect:/admin/users?success=User activated successfully";
     }
 
     @GetMapping("/jobs")
     public String viewAllJobs(Model model) {
 
-        model.addAttribute("jobs",
-                jobService.getAllJobs());
+        model.addAttribute("pageTitle", "Manage Jobs");
+        model.addAttribute("jobs", jobService.getAllJobs());
 
         return "admin/jobs";
     }
 
     @PostMapping("/jobs/{jobId}/delete")
-    public String deleteJob(@PathVariable("jobId") Long jobId) {
+    public String deleteJob(@PathVariable Long jobId) {
 
         jobService.deleteJob(jobId);
 
-        return "redirect:/admin/jobs?success=jobDeleted";
+        return "redirect:/admin/jobs?success=Job deleted successfully";
     }
 
     @GetMapping("/analytics")
     public String viewPlatformAnalytics(Model model) {
 
-        model.addAttribute("analytics",
-                analyticsService.getPlatformAnalytics());
+        model.addAttribute("pageTitle", "Platform Analytics");
+        model.addAttribute("analytics", analyticsService.getPlatformAnalytics());
 
         return "admin/analytics";
     }
@@ -108,8 +120,8 @@ public class AdminController {
     @GetMapping("/subscriptions")
     public String manageSubscriptions(Model model) {
 
-        model.addAttribute("subscriptions",
-                subscriptionService.getAllSubscriptions());
+        model.addAttribute("pageTitle", "Manage Subscriptions");
+        model.addAttribute("subscriptions", subscriptionService.getAllSubscriptions());
 
         return "admin/subscriptions";
     }
@@ -117,8 +129,8 @@ public class AdminController {
     @GetMapping("/invoices")
     public String viewAllInvoices(Model model) {
 
-        model.addAttribute("invoices",
-                subscriptionService.getAllInvoices());
+        model.addAttribute("pageTitle", "All Invoices");
+        model.addAttribute("invoices", subscriptionService.getAllInvoices());
 
         return "admin/invoices";
     }

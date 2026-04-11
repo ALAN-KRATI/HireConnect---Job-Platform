@@ -65,12 +65,21 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.generateToken(user);
         String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
 
+        String redirectUrl;
+
+        if (user.getRole() == UserRole.RECRUITER) {
+            redirectUrl = "http://localhost:5173/recruiter-dashboard";
+        } else {
+            redirectUrl = "http://localhost:5173/candidate-dashboard";
+        }
+
         response.sendRedirect(
-                "http://localhost:3000/oauth-success"
+                redirectUrl
                         + "?token=" + accessToken
                         + "&refreshToken=" + refreshToken
                         + "&role=" + user.getRole().name()
                         + "&userId=" + user.getId()
+                        + "&email=" + user.getEmail()
         );
     }
 }

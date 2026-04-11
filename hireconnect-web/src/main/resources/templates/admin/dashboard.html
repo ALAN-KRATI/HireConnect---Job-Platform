@@ -1,174 +1,271 @@
+<!-- templates/admin/dashboard.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HireConnect | Admin Dashboard</title>
+    <title>Admin Dashboard | HireConnect</title>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<body>
+<body class="dashboard-page">
 
-<div class="dashboard-container">
+<div class="dashboard-layout">
 
     <aside class="sidebar">
-        <div class="logo">
-            <h2>HireConnect</h2>
-            <p>Admin Panel</p>
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/admin/dashboard}" class="active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/admin/users}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+
+                <a th:href="@{/admin/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Jobs</span>
+                </a>
+
+                <a th:href="@{/admin/analytics}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a th:href="@{/admin/subscriptions}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscriptions</span>
+                </a>
+
+                <a th:href="@{/admin/invoices}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Invoices</span>
+                </a>
+
+            </nav>
         </div>
 
-        <nav>
-            <a th:href="@{/admin/dashboard}" class="active">
-                <i class="fas fa-chart-line"></i> Dashboard
-            </a>
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
 
-            <a th:href="@{/admin/users}">
-                <i class="fas fa-users"></i> Users
-            </a>
-
-            <a th:href="@{/admin/jobs}">
-                <i class="fas fa-briefcase"></i> Jobs
-            </a>
-
-            <a th:href="@{/admin/analytics}">
-                <i class="fas fa-chart-pie"></i> Analytics
-            </a>
-
-            <a th:href="@{/admin/subscriptions}">
-                <i class="fas fa-crown"></i> Subscriptions
-            </a>
-
-            <a th:href="@{/admin/invoices}">
-                <i class="fas fa-file-invoice-dollar"></i> Invoices
-            </a>
-
-            <a th:href="@{/logout}">
-                <i class="fas fa-right-from-bracket"></i> Logout
-            </a>
-        </nav>
     </aside>
 
-    <main class="main-content">
+    <main class="dashboard-main">
 
-        <div class="topbar">
-            <h1>Admin Dashboard</h1>
-            <p>Welcome back. The empire is mildly under control.</p>
-        </div>
+        <header class="dashboard-header">
 
-        <div class="stats-grid">
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-shield-halved"></i>
+                    Platform Overview
+                </span>
 
-            <div class="stat-card">
-                <div class="icon blue">
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    The command center for the entire platform. Very powerful.
+                    Mildly terrifying. Like being the final boss of spreadsheets.
+                </p>
+            </div>
+
+            <a th:href="@{/admin/report/export}" class="btn-primary">
+                <i class="fas fa-file-arrow-down"></i>
+                Export Report
+            </a>
+
+        </header>
+
+        <section class="stats-grid">
+
+            <div class="stat-card blue-card">
+                <div class="stat-icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <div>
-                    <h3>Total Users</h3>
-                    <p th:text="${totalUsers}">0</p>
+
+                <div class="stat-info">
+                    <span>Total Users</span>
+                    <h2 th:text="${totalUsers}">0</h2>
+                    <p>All candidates and recruiters.</p>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="icon green">
+            <div class="stat-card green-card">
+                <div class="stat-icon">
                     <i class="fas fa-briefcase"></i>
                 </div>
-                <div>
-                    <h3>Total Jobs</h3>
-                    <p th:text="${totalJobs}">0</p>
+
+                <div class="stat-info">
+                    <span>Total Jobs</span>
+                    <h2 th:text="${totalJobs}">0</h2>
+                    <p>Jobs currently on the platform.</p>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="icon orange">
-                    <i class="fas fa-chart-line"></i>
+            <div class="stat-card orange-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-lines"></i>
                 </div>
-                <div>
-                    <h3>Total Applications</h3>
-                    <p th:text="${analytics.totalApplications}">0</p>
+
+                <div class="stat-info">
+                    <span>Applications</span>
+                    <h2 th:text="${analytics.totalApplications}">0</h2>
+                    <p>Total applications submitted.</p>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="icon red">
+            <div class="stat-card purple-card">
+                <div class="stat-icon">
                     <i class="fas fa-user-check"></i>
                 </div>
-                <div>
-                    <h3>Shortlisted</h3>
-                    <p th:text="${analytics.shortlistedCount}">0</p>
+
+                <div class="stat-info">
+                    <span>Shortlisted</span>
+                    <h2 th:text="${analytics.shortlistedCount}">0</h2>
+                    <p>People surviving the hiring gauntlet.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="content-grid">
+        </section>
 
-            <section class="panel">
+        <section class="dashboard-grid">
+
+            <div class="dashboard-panel">
+
                 <div class="panel-header">
-                    <h2>Recent Users</h2>
-                    <a th:href="@{/admin/users}">View All</a>
+                    <div>
+                        <h2>Recent Users</h2>
+                        <p>Latest people joining the platform.</p>
+                    </div>
+
+                    <a th:href="@{/admin/users}" class="panel-link">
+                        View All
+                    </a>
                 </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
+                <div class="table-wrapper">
 
-                    <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.fullName}">John Doe</td>
-                        <td th:text="${user.email}">john@example.com</td>
-                        <td th:text="${user.role}">CANDIDATE</td>
-                        <td>
-                            <span class="status"
-                                  th:text="${user.status}">
-                                ACTIVE
-                            </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </section>
+                    <table class="custom-table">
 
-            <section class="panel">
-                <div class="panel-header">
-                    <h2>Recent Jobs</h2>
-                    <a th:href="@{/admin/jobs}">View All</a>
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="user : ${users}">
+
+                            <td th:text="${user.fullName}">John Doe</td>
+
+                            <td th:text="${user.email}">
+                                john@example.com
+                            </td>
+
+                            <td th:text="${user.role}">
+                                CANDIDATE
+                            </td>
+
+                            <td>
+                                <span class="status-pill"
+                                      th:classappend="${
+                                        user.status.name() == 'ACTIVE'} ? ' success' : ' danger'"
+                                      th:text="${user.status}">
+                                    ACTIVE
+                                </span>
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
                 </div>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Company</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
+            </div>
 
-                    <tbody>
-                    <tr th:each="job : ${jobs}">
-                        <td th:text="${job.title}">Java Developer</td>
-                        <td th:text="${job.companyName}">HireConnect</td>
-                        <td th:text="${job.location}">Remote</td>
-                        <td>
-                            <span class="status"
-                                  th:text="${job.status}">
-                                ACTIVE
-                            </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </section>
+            <div class="dashboard-panel">
 
-        </div>
+                <div class="panel-header">
+                    <div>
+                        <h2>Platform Snapshot</h2>
+                        <p>The numbers keeping this whole thing alive.</p>
+                    </div>
+                </div>
+
+                <div class="activity-list">
+
+                    <div class="activity-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+
+                        <div>
+                            <h4 th:text="${analytics.offeredCount}">0</h4>
+                            <p>Offers Sent</p>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-xmark"></i>
+                        </div>
+
+                        <div>
+                            <h4 th:text="${analytics.rejectedCount}">0</h4>
+                            <p>Rejected Applications</p>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+
+                        <div>
+                            <h4>
+                                <span th:text="${analytics.avgTimeToHireDays}">0</span>
+                                Days
+                            </h4>
+                            <p>Average Time to Hire</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
 
     </main>
+
 </div>
 
 </body>

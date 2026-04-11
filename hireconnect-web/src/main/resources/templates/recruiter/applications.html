@@ -1,0 +1,230 @@
+<!-- templates/recruiter/applications.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Recruiter Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/recruiter/dashboard}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>My Jobs</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs/post}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Job</span>
+                </a>
+
+                <a th:href="@{/recruiter/applications}" class="active">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/recruiter/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/recruiter/subscription}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscription</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-file-lines"></i>
+                    Candidate Pipeline
+                </span>
+
+                <h1>Applications</h1>
+
+                <p>
+                    Every applicant, every résumé, every cover letter pretending
+                    “I'm passionate about innovation” was written voluntarily.
+                </p>
+            </div>
+        </header>
+
+        <div class="dashboard-panel">
+
+            <div th:if="${#lists.isEmpty(applications)}" class="empty-state">
+                <i class="fas fa-users"
+                   style="font-size: 52px; color: #94a3b8; margin-bottom: 18px;"></i>
+
+                <h2 style="margin-bottom: 10px;">No Applications Yet</h2>
+
+                <p style="margin-bottom: 22px;">
+                    Your jobs are live, but the applications haven't started rolling in yet.
+                    Either give it time or stop asking for 8 years of experience in an internship.
+                </p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(applications)}" class="job-cards-grid">
+
+                <div class="job-card"
+                     th:each="application : ${applications}">
+
+                    <div class="job-card-top">
+
+                        <div>
+                            <h3 th:text="${application.candidateName}">
+                                Candidate Name
+                            </h3>
+
+                            <p>
+                                Applied for
+                                <strong th:text="${application.jobTitle}">
+                                    Java Backend Developer
+                                </strong>
+                            </p>
+                        </div>
+
+                        <span class="status-pill"
+                              th:classappend="${
+                                  application.status.name() == 'APPLIED'} ? ' primary' :
+                                  (${application.status.name() == 'SHORTLISTED'} ? ' success' :
+                                  (${application.status.name() == 'REJECTED'} ? ' danger' : ' warning'))"
+                              th:text="${application.status}">
+                            APPLIED
+                        </span>
+
+                    </div>
+
+                    <div class="job-meta">
+
+                        <span>
+                            <i class="fas fa-calendar-days"></i>
+                            <span th:text="${#temporals.format(application.appliedAt, 'dd MMM yyyy')}">
+                                11 Apr 2026
+                            </span>
+                        </span>
+
+                        <span th:if="${application.resumeUrl != null}">
+                            <i class="fas fa-file-pdf"></i>
+                            Resume Available
+                        </span>
+
+                    </div>
+
+                    <div class="job-description"
+                         th:if="${application.coverLetter != null and !#strings.isEmpty(application.coverLetter)}">
+
+                        <strong>Cover Letter</strong>
+
+                        <p style="margin-top: 10px;"
+                           th:text="${application.coverLetter}">
+                            Cover letter...
+                        </p>
+
+                    </div>
+
+                    <div class="job-actions">
+
+                        <a th:if="${application.resumeUrl != null}"
+                           th:href="${application.resumeUrl}"
+                           target="_blank"
+                           class="btn-outline">
+                            <i class="fas fa-file-arrow-down"></i>
+                            View Resume
+                        </a>
+
+                        <form th:action="@{'/recruiter/applications/' + ${application.id} + '/shortlist'}"
+                              method="post"
+                              th:if="${application.status.name() == 'APPLIED'}">
+
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-user-check"></i>
+                                Shortlist
+                            </button>
+
+                        </form>
+
+                        <form th:action="@{'/recruiter/applications/' + ${application.id} + '/offer'}"
+                              method="post"
+                              th:if="${application.status.name() == 'SHORTLISTED'}">
+
+                            <button type="submit" class="btn-secondary">
+                                <i class="fas fa-award"></i>
+                                Offer
+                            </button>
+
+                        </form>
+
+                        <form th:action="@{'/recruiter/applications/' + ${application.id} + '/reject'}"
+                              method="post"
+                              th:if="${application.status.name() != 'REJECTED'}">
+
+                            <button type="submit" class="btn-danger">
+                                <i class="fas fa-xmark"></i>
+                                Reject
+                            </button>
+
+                        </form>
+
+                        <a th:if="${application.status.name() == 'SHORTLISTED'}"
+                           th:href="@{'/recruiter/interviews/schedule/' + ${application.id}}"
+                           class="btn-outline">
+                            <i class="fas fa-calendar-plus"></i>
+                            Schedule Interview
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

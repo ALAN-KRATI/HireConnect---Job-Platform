@@ -2,13 +2,15 @@ package com.hireconnect.web.controller;
 
 import com.hireconnect.web.dto.InterviewDto;
 import com.hireconnect.web.dto.JobDto;
+import com.hireconnect.web.enums.EmploymentType;
+import com.hireconnect.web.enums.JobStatus;
 import com.hireconnect.web.service.AnalyticsService;
 import com.hireconnect.web.service.ApplicationService;
 import com.hireconnect.web.service.InterviewService;
 import com.hireconnect.web.service.JobService;
 import com.hireconnect.web.service.ProfileService;
 import com.hireconnect.web.service.SubscriptionService;
-import org.springframework.security.core.Authentication;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,20 +42,17 @@ public class RecruiterController {
 
     @GetMapping("/dashboard")
     public String recruiterDashboard(Model model,
-                                     Authentication authentication) {
+                                     org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
-        model.addAttribute("profile",
-                profileService.getRecruiterProfile(recruiterId));
-
-        model.addAttribute("jobs",
-                jobService.getJobsByRecruiter(recruiterId));
-
+        model.addAttribute("pageTitle", "Recruiter Dashboard");
+        model.addAttribute("profile", profileService.getRecruiterProfile(recruiterId));
+        model.addAttribute("jobs", jobService.getJobsByRecruiter(recruiterId));
+        model.addAttribute("applications",
+                applicationService.getApplicationsForRecruiter(recruiterId));
         model.addAttribute("analytics",
                 analyticsService.getRecruiterAnalytics(recruiterId));
-
         model.addAttribute("subscription",
                 subscriptionService.getCurrentPlan(recruiterId));
 
@@ -62,95 +61,100 @@ public class RecruiterController {
 
     @GetMapping("/jobs")
     public String recruiterJobs(Model model,
-                                Authentication authentication) {
+                                org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
-        model.addAttribute("jobs",
-                jobService.getJobsByRecruiter(recruiterId));
+        model.addAttribute("pageTitle", "My Jobs");
+        model.addAttribute("jobs", jobService.getJobsByRecruiter(recruiterId));
 
         return "recruiter/jobs";
     }
 
-    @GetMapping("/jobs/post")
+    @GetMapping("/jobs/new")
     public String postJobForm(Model model) {
 
-        model.addAttribute("job", new JobDto());
+        JobDto job = new JobDto();
+        job.setStatus(JobStatus.OPEN);
+
+        model.addAttribute("pageTitle", "Post New Job");
+        model.addAttribute("job", job);
+        model.addAttribute("employmentTypes", EmploymentType.values());
+        model.addAttribute("jobStatuses", JobStatus.values());
 
         return "recruiter/post-job";
     }
 
-    @PostMapping("/jobs/post")
-    public String postJob(@ModelAttribute("job") JobDto jobDto,
-                          Authentication authentication) {
+    @PostMapping("/jobs/new")
+    public String postJob(@Valid @ModelAttribute("job") JobDto jobDto,
+                          org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
         jobDto.setRecruiterId(recruiterId);
 
         jobService.createJob(jobDto);
 
-        return "redirect:/recruiter/jobs?success=created";
+        return "redirect:/recruiter/jobs?success=Job created successfully";
     }
 
-    @GetMapping("/jobs/edit/{jobId}")
-    public String editJob(@PathVariable("jobId") Long jobId,
+    @GetMapping("/jobs/{jobId}/edit")
+    public String editJob(@PathVariable Long jobId,
                           Model model) {
 
-        model.addAttribute("job",
-                jobService.getJobById(jobId));
+        model.addAttribute("pageTitle", "Edit Job");
+        model.addAttribute("job", jobService.getJobById(jobId));
+        model.addAttribute("employmentTypes", EmploymentType.values());
+        model.addAttribute("jobStatuses", JobStatus.values());
 
         return "recruiter/edit-job";
     }
 
-    @PostMapping("/jobs/edit/{jobId}")
-    public String updateJob(@PathVariable("jobId") Long jobId,
+    @PostMapping("/jobs/{jobId}/edit")
+    public String updateJob(@PathVariable Long jobId,
                             @ModelAttribute("job") JobDto jobDto,
-                            Authentication authentication) {
+                            org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
         jobDto.setRecruiterId(recruiterId);
 
         jobService.updateJob(jobId, jobDto);
 
-        return "redirect:/recruiter/jobs?success=updated";
+        return "redirect:/recruiter/jobs?success=Job updated successfully";
     }
 
     @PostMapping("/jobs/{jobId}/pause")
-    public String pauseJob(@PathVariable("jobId") Long jobId) {
+    public String pauseJob(@PathVariable Long jobId) {
 
         jobService.pauseJob(jobId);
 
-        return "redirect:/recruiter/jobs?success=paused";
+        return "redirect:/recruiter/jobs?success=Job paused successfully";
     }
 
     @PostMapping("/jobs/{jobId}/close")
-    public String closeJob(@PathVariable("jobId") Long jobId) {
+    public String closeJob(@PathVariable Long jobId) {
 
         jobService.closeJob(jobId);
 
-        return "redirect:/recruiter/jobs?success=closed";
+        return "redirect:/recruiter/jobs?success=Job closed successfully";
     }
 
     @PostMapping("/jobs/{jobId}/delete")
-    public String deleteJob(@PathVariable("jobId") Long jobId) {
+    public String deleteJob(@PathVariable Long jobId) {
 
         jobService.deleteJob(jobId);
 
-        return "redirect:/recruiter/jobs?success=deleted";
+        return "redirect:/recruiter/jobs?success=Job deleted successfully";
     }
 
     @GetMapping("/applications")
     public String viewApplications(Model model,
-                                   Authentication authentication) {
+                                   org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
+        model.addAttribute("pageTitle", "Applications");
         model.addAttribute("applications",
                 applicationService.getApplicationsForRecruiter(recruiterId));
 
@@ -158,56 +162,61 @@ public class RecruiterController {
     }
 
     @PostMapping("/applications/{applicationId}/shortlist")
-    public String shortlistCandidate(@PathVariable("applicationId") Long applicationId) {
+    public String shortlistCandidate(@PathVariable Long applicationId) {
 
         applicationService.shortlistCandidate(applicationId);
 
-        return "redirect:/recruiter/applications?success=shortlisted";
+        return "redirect:/recruiter/applications?success=Candidate shortlisted";
     }
 
     @PostMapping("/applications/{applicationId}/reject")
-    public String rejectCandidate(@PathVariable("applicationId") Long applicationId) {
+    public String rejectCandidate(@PathVariable Long applicationId) {
 
         applicationService.rejectCandidate(applicationId);
 
-        return "redirect:/recruiter/applications?success=rejected";
+        return "redirect:/recruiter/applications?success=Candidate rejected";
     }
 
     @PostMapping("/applications/{applicationId}/offer")
-    public String offerCandidate(@PathVariable("applicationId") Long applicationId) {
+    public String offerCandidate(@PathVariable Long applicationId) {
 
         applicationService.offerCandidate(applicationId);
 
-        return "redirect:/recruiter/applications?success=offered";
+        return "redirect:/recruiter/applications?success=Offer sent";
     }
 
-    @GetMapping("/interview/schedule/{applicationId}")
-    public String scheduleInterviewForm(@PathVariable("applicationId") Long applicationId,
+    @GetMapping("/interviews/schedule/{applicationId}")
+    public String scheduleInterviewForm(@PathVariable Long applicationId,
                                         Model model) {
 
-        InterviewDto interviewDto = new InterviewDto();
-        interviewDto.setApplicationId(applicationId);
+        InterviewDto interview = new InterviewDto();
+        interview.setApplicationId(applicationId);
 
-        model.addAttribute("interview", interviewDto);
+        model.addAttribute("pageTitle", "Schedule Interview");
+        model.addAttribute("interview", interview);
 
         return "recruiter/schedule-interview";
     }
 
-    @PostMapping("/interview/schedule")
-    public String scheduleInterview(@ModelAttribute("interview") InterviewDto interviewDto) {
+    @PostMapping("/interviews/schedule")
+    public String scheduleInterview(@ModelAttribute("interview") InterviewDto interviewDto,
+                                    org.springframework.security.core.Authentication authentication) {
+
+        Long recruiterId = getRecruiterId(authentication);
+        interviewDto.setRecruiterId(recruiterId);
 
         interviewService.scheduleInterview(interviewDto);
 
-        return "redirect:/recruiter/applications?success=interviewScheduled";
+        return "redirect:/recruiter/interviews?success=Interview scheduled";
     }
 
     @GetMapping("/interviews")
     public String viewInterviews(Model model,
-                                 Authentication authentication) {
+                                 org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
+        model.addAttribute("pageTitle", "Interviews");
         model.addAttribute("interviews",
                 interviewService.getRecruiterInterviews(recruiterId));
 
@@ -216,11 +225,11 @@ public class RecruiterController {
 
     @GetMapping("/analytics")
     public String viewAnalytics(Model model,
-                                Authentication authentication) {
+                                org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
+        model.addAttribute("pageTitle", "Recruiter Analytics");
         model.addAttribute("analytics",
                 analyticsService.getRecruiterAnalytics(recruiterId));
 
@@ -229,14 +238,13 @@ public class RecruiterController {
 
     @GetMapping("/subscription")
     public String managePlan(Model model,
-                             Authentication authentication) {
+                             org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
+        model.addAttribute("pageTitle", "Subscription");
         model.addAttribute("subscription",
                 subscriptionService.getCurrentPlan(recruiterId));
-
         model.addAttribute("plans",
                 subscriptionService.getAvailablePlans());
 
@@ -244,27 +252,40 @@ public class RecruiterController {
     }
 
     @PostMapping("/subscription/upgrade")
-    public String upgradeSubscription(@RequestParam("plan") String plan,
-                                      Authentication authentication) {
+    public String upgradeSubscription(@RequestParam String plan,
+                                      org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
         subscriptionService.upgradePlan(recruiterId, plan);
 
-        return "redirect:/recruiter/subscription?success=upgraded";
+        return "redirect:/recruiter/subscription?success=Plan upgraded successfully";
+    }
+
+    @PostMapping("/subscription/cancel")
+    public String cancelSubscription(org.springframework.security.core.Authentication authentication) {
+
+        Long recruiterId = getRecruiterId(authentication);
+
+        subscriptionService.cancelPlan(recruiterId);
+
+        return "redirect:/recruiter/subscription?success=Subscription cancelled";
     }
 
     @GetMapping("/invoices")
     public String viewInvoices(Model model,
-                               Authentication authentication) {
+                               org.springframework.security.core.Authentication authentication) {
 
-        String email = authentication.getName();
-        Long recruiterId = profileService.getRecruiterIdByEmail(email);
+        Long recruiterId = getRecruiterId(authentication);
 
+        model.addAttribute("pageTitle", "Invoices");
         model.addAttribute("invoices",
                 subscriptionService.getInvoices(recruiterId));
 
         return "recruiter/invoices";
+    }
+
+    private Long getRecruiterId(org.springframework.security.core.Authentication authentication) {
+        return profileService.getRecruiterIdByEmail(authentication.getName());
     }
 }

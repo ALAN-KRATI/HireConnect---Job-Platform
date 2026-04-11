@@ -1,14 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Error</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error | HireConnect</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<body>
-<div class="container">
-    <h1>Oops. Something broke.</h1>
-    <p th:text="${errorMessage}"></p>
-    <a th:href="@{/}">Go Home</a>
+<body class="error-page">
+
+<div class="error-container">
+
+    <div class="error-card">
+
+        <div class="error-icon warning">
+            <i class="fas fa-triangle-exclamation"></i>
+        </div>
+
+        <span class="error-code">500</span>
+
+        <h1>Oops. Something Broke.</h1>
+
+        <p class="error-message"
+           th:text="${errorMessage} ?: 'The page crashed harder than a student opening 27 Chrome tabs before finals.'">
+            Something went wrong.
+        </p>
+
+        <p class="error-subtext">
+            Don’t worry, your data is probably still alive. Probably.
+        </p>
+
+        <div class="error-actions">
+            <a th:href="@{/}" class="btn-primary">
+                <i class="fas fa-house"></i>
+                Back to Home
+            </a>
+
+            <a href="javascript:location.reload()" class="btn-secondary">
+                <i class="fas fa-rotate-right"></i>
+                Try Again
+            </a>
+        </div>
+
+    </div>
+
 </div>
+
 </body>
 </html>

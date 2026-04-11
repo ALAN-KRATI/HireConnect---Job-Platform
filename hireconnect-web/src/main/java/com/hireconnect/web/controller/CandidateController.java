@@ -6,9 +6,11 @@ import com.hireconnect.web.service.InterviewService;
 import com.hireconnect.web.service.JobService;
 import com.hireconnect.web.service.NotificationService;
 import com.hireconnect.web.service.ProfileService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -33,42 +35,56 @@ public class CandidateController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/home")
-    public String home(Model model, Authentication authentication) {
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
-        model.addAttribute("profile",
-                profileService.getCandidateProfile(candidateId));
-
-        model.addAttribute("jobs",
-                jobService.getAllJobs());
-
+        model.addAttribute("pageTitle", "Candidate Dashboard");
+        model.addAttribute("profile", profileService.getCandidateProfile(candidateId));
+        model.addAttribute("recommendedJobs", jobService.getAllJobs());
         model.addAttribute("recentApplications",
                 applicationService.getApplicationsByCandidate(candidateId));
-
+        model.addAttribute("interviews",
+                interviewService.getCandidateInterviews(candidateId));
         model.addAttribute("notifications",
                 notificationService.getNotifications(candidateId));
 
-        return "candidate/home";
+        return "candidate/dashboard";
     }
 
     @GetMapping("/register")
-    public String register(Model model) {
+    public String registerPage(Model model) {
 
         RegisterRequest request = new RegisterRequest();
         request.setRole("CANDIDATE");
 
         model.addAttribute("registerRequest", request);
+        model.addAttribute("pageTitle", "Candidate Registration");
 
         return "auth/register";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("registerRequest") RegisterRequest request) {
+    public String register(@Valid @ModelAttribute("registerRequest") RegisterRequest request,
+                           BindingResult result,
+                           Model model) {
 
         request.setRole("CANDIDATE");
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            result.rejectValue(
+                    "confirmPassword",
+                    "error.confirmPassword",
+                    "Password and confirm password do not match"
+            );
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("pageTitle", "Candidate Registration");
+            return "auth/register";
+        }
+
         profileService.registerCandidate(request);
 
         return "redirect:/login?registered=true";
@@ -77,65 +93,70 @@ public class CandidateController {
     @GetMapping("/profile")
     public String viewProfile(Model model, Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
-        model.addAttribute("profile",
-                profileService.getCandidateProfile(candidateId));
+        model.addAttribute("pageTitle", "My Profile");
+        model.addAttribute("profile", profileService.getCandidateProfile(candidateId));
 
         return "candidate/profile";
     }
 
     @GetMapping("/jobs")
-    public String searchJobs(Model model) {
+    public String jobs(@RequestParam(required = false) String keyword,
+                       @RequestParam(required = false) String location,
+                       Model model) {
 
+        model.addAttribute("pageTitle", "Browse Jobs");
         model.addAttribute("jobs",
-                jobService.getAllJobs());
+                (keyword != null || location != null)
+                        ? jobService.searchJobs(keyword, location)
+                        : jobService.getAllJobs());
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("location", location);
 
         return "candidate/jobs";
     }
 
     @GetMapping("/jobs/{jobId}")
-    public String viewJob(@PathVariable("jobId") Long jobId,
+    public String viewJob(@PathVariable Long jobId,
                           Model model) {
 
-        model.addAttribute("job",
-                jobService.getJobById(jobId));
+        model.addAttribute("pageTitle", "Job Details");
+        model.addAttribute("job", jobService.getJobById(jobId));
 
         return "candidate/job-details";
     }
 
     @PostMapping("/jobs/{jobId}/apply")
-    public String applyForJob(@PathVariable("jobId") Long jobId,
+    public String applyForJob(@PathVariable Long jobId,
                               Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
         applicationService.applyForJob(candidateId, jobId);
 
-        return "redirect:/candidate/applications?success=applied";
+        return "redirect:/candidate/applications?success=Job application submitted";
     }
 
     @PostMapping("/jobs/{jobId}/bookmark")
-    public String bookmarkJob(@PathVariable("jobId") Long jobId,
+    public String bookmarkJob(@PathVariable Long jobId,
                               Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
         profileService.bookmarkJob(candidateId, jobId);
 
-        return "redirect:/candidate/jobs?success=bookmarked";
+        return "redirect:/candidate/jobs?success=Job bookmarked";
     }
 
     @GetMapping("/applications")
     public String viewApplications(Model model,
                                    Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
+        model.addAttribute("pageTitle", "My Applications");
         model.addAttribute("applications",
                 applicationService.getApplicationsByCandidate(candidateId));
 
@@ -146,9 +167,9 @@ public class CandidateController {
     public String viewInterviews(Model model,
                                  Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
+        model.addAttribute("pageTitle", "My Interviews");
         model.addAttribute("interviews",
                 interviewService.getCandidateInterviews(candidateId));
 
@@ -159,9 +180,9 @@ public class CandidateController {
     public String viewNotifications(Model model,
                                     Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
+        model.addAttribute("pageTitle", "Notifications");
         model.addAttribute("notifications",
                 notificationService.getNotifications(candidateId));
 
@@ -169,7 +190,7 @@ public class CandidateController {
     }
 
     @PostMapping("/notifications/{notificationId}/read")
-    public String markNotificationAsRead(@PathVariable("notificationId") Long notificationId) {
+    public String markNotificationAsRead(@PathVariable Long notificationId) {
 
         notificationService.markAsRead(notificationId);
 
@@ -177,14 +198,17 @@ public class CandidateController {
     }
 
     @PostMapping("/wallet/add")
-    public String addMoneyToWallet(@RequestParam("amount") Double amount,
+    public String addMoneyToWallet(@RequestParam Double amount,
                                    Authentication authentication) {
 
-        String email = authentication.getName();
-        Long candidateId = profileService.getCandidateIdByEmail(email);
+        Long candidateId = getCandidateId(authentication);
 
         profileService.addMoneyToWallet(candidateId, amount);
 
-        return "redirect:/candidate/profile?success=walletUpdated";
+        return "redirect:/candidate/profile?success=Wallet updated successfully";
+    }
+
+    private Long getCandidateId(Authentication authentication) {
+        return profileService.getCandidateIdByEmail(authentication.getName());
     }
 }

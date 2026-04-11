@@ -1,22 +1,194 @@
+<!-- templates/candidate/applications.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Post Job</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications | HireConnect</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-<body>
-<div class="container">
-    <h1>Post a New Job</h1>
+<body class="dashboard-page">
 
-    <form th:action="@{/recruiter/jobs/post}" th:object="${job}" method="post">
-        <input type="text" th:field="*{title}" placeholder="Job Title" required>
-        <input type="text" th:field="*{companyName}" placeholder="Company Name" required>
-        <input type="text" th:field="*{location}" placeholder="Location" required>
-        <input type="number" th:field="*{salary}" placeholder="Salary" required>
-        <textarea th:field="*{description}" placeholder="Description"></textarea>
+<div class="dashboard-layout">
 
-        <button type="submit">Post Job</button>
-    </form>
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Candidate Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/candidate/home}">
+                    <i class="fas fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/candidate/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Browse Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/applications}" class="active">
+                    <i class="fas fa-file-lines"></i>
+                    <span>My Applications</span>
+                </a>
+
+                <a th:href="@{/candidate/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/candidate/saved-jobs}">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Saved Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/profile}">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-file-lines"></i>
+                    Application Tracker
+                </span>
+
+                <h1>My Applications</h1>
+
+                <p>
+                    Every application you've sent into the void. Some of them even replied.
+                </p>
+            </div>
+        </header>
+
+        <div class="dashboard-panel">
+
+            <div th:if="${#lists.isEmpty(applications)}" class="empty-state">
+                <i class="fas fa-paper-plane"
+                   style="font-size: 48px; color: #94a3b8; margin-bottom: 18px;"></i>
+
+                <h2 style="margin-bottom: 12px;">No Applications Yet</h2>
+
+                <p style="margin-bottom: 20px;">
+                    You haven't applied to any jobs yet. Your future employer is still out there,
+                    probably making another unnecessarily long job description.
+                </p>
+
+                <a th:href="@{/candidate/jobs}" class="btn-primary">
+                    <i class="fas fa-briefcase"></i>
+                    Browse Jobs
+                </a>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(applications)}" class="job-cards-grid">
+
+                <div class="job-card"
+                     th:each="application : ${applications}">
+
+                    <div class="job-card-top">
+
+                        <div>
+                            <h3 th:text="${application.jobTitle}">
+                                Java Backend Developer
+                            </h3>
+
+                            <p th:text="${application.companyName}">
+                                HireConnect
+                            </p>
+                        </div>
+
+                        <span class="status-pill"
+                              th:classappend="${
+                                application.status.name() == 'APPLIED'} ? ' primary' :
+                                (${application.status.name() == 'SHORTLISTED'} ? ' success' :
+                                (${application.status.name() == 'REJECTED'} ? ' danger' : ' warning'))"
+                              th:text="${application.status}">
+                            APPLIED
+                        </span>
+
+                    </div>
+
+                    <div class="job-meta">
+
+                        <span>
+                            <i class="fas fa-calendar-days"></i>
+                            Applied on
+                            <span th:text="${#temporals.format(application.appliedAt, 'dd MMM yyyy')}">
+                                11 Apr 2026
+                            </span>
+                        </span>
+
+                        <span th:if="${application.candidateName != null}">
+                            <i class="fas fa-user"></i>
+                            <span th:text="${application.candidateName}">John Doe</span>
+                        </span>
+
+                    </div>
+
+                    <div class="job-description"
+                         th:if="${application.coverLetter != null and !#strings.isEmpty(application.coverLetter)}">
+                        <strong>Cover Letter:</strong>
+                        <p th:text="${application.coverLetter}"
+                           style="margin-top: 10px;">
+                            Cover letter text...
+                        </p>
+                    </div>
+
+                    <div class="job-actions">
+
+                        <a th:if="${application.resumeUrl != null}"
+                           th:href="${application.resumeUrl}"
+                           target="_blank"
+                           class="btn-outline">
+                            <i class="fas fa-file-pdf"></i>
+                            View Resume
+                        </a>
+
+                        <a th:if="${application.status.name() == 'SHORTLISTED'}"
+                           th:href="@{/candidate/interviews}"
+                           class="btn-primary">
+                            <i class="fas fa-calendar-check"></i>
+                            View Interview
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
 </div>
+
 </body>
 </html>
