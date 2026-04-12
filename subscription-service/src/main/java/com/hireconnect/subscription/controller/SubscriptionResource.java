@@ -3,6 +3,8 @@ package com.hireconnect.subscription.controller;
 import com.hireconnect.subscription.dto.InvoiceResponse;
 import com.hireconnect.subscription.dto.SubscriptionRequest;
 import com.hireconnect.subscription.dto.SubscriptionResponse;
+import com.hireconnect.subscription.enums.PaymentMode;
+import com.hireconnect.subscription.enums.SubscriptionPlan;
 import com.hireconnect.subscription.service.SubscriptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ public class SubscriptionResource {
     @GetMapping("/plans")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<List<String>> getAvailablePlans() {
-        return ResponseEntity.ok(List.of("BASIC", "STANDARD", "PREMIUM", "ENTERPRISE"));
+        return ResponseEntity.ok(List.of("FREE", "PROFESSIONAL", "ENTERPRISE"));
     }
 
     @GetMapping("/current")
@@ -47,7 +49,7 @@ public class SubscriptionResource {
                 subscriptionService.subscribe(
                         recruiterId,
                         SubscriptionPlan.valueOf(plan),
-                        PaymentMode.CREDIT_CARD
+                        PaymentMode.CARD
                 )
         );
     }
