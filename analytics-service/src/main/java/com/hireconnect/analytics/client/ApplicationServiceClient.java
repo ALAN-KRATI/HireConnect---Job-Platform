@@ -46,4 +46,7 @@ public interface ApplicationServiceClient {
 
     @GetMapping("/applications/platform/avg-time-to-hire")
     Double getPlatformAverageTimeToHire();
+    
+    @GetMapping("/applications/count/total")
+    Integer getAllApplicationsCount();
 }

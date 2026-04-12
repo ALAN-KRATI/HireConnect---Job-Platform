@@ -20,4 +20,10 @@ public interface AnalyticsService {
     AnalyticsSummary getPlatformStats();
 
     Map<String, Long> getTopJobCategories();
+    
+    int getAllActiveJobsCount();
+    
+    int getAllApplicationsCount();
+    
+    int getTotalJobsCount();
 }

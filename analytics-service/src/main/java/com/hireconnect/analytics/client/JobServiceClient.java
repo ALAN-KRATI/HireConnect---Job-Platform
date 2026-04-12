@@ -27,4 +27,10 @@ public interface JobServiceClient {
 
     @GetMapping("/categories/top")
     Map<String, Long> getTopCategories();
+    
+    @GetMapping("/count/active")
+    Integer getAllActiveJobsCount();
+    
+    @GetMapping("/count/total")
+    Integer getTotalJobsCount();
 }

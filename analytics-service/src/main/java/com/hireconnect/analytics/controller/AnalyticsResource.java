@@ -16,6 +16,38 @@ public class AnalyticsResource {
 
         private final AnalyticsService analyticsService;
 
+        @GetMapping("/candidate")
+        @PreAuthorize("hasRole('CANDIDATE')")
+        public ResponseEntity<AnalyticsSummary> getCandidateDashboard() {
+                return ResponseEntity.ok(
+                                AnalyticsSummary.builder()
+                                                .activeJobs((long) analyticsService.getAllActiveJobsCount())
+                                                .totalApplications((long) analyticsService.getAllApplicationsCount())
+                                                .build());
+        }
+
+        @GetMapping("/recruiter")
+        @PreAuthorize("hasRole('RECRUITER')")
+        public ResponseEntity<AnalyticsSummary> getRecruiterDashboard() {
+                return ResponseEntity.ok(
+                                AnalyticsSummary.builder()
+                                                .totalJobs((long) analyticsService.getTotalJobsCount())
+                                                .activeJobs((long) analyticsService.getAllActiveJobsCount())
+                                                .totalApplications((long) analyticsService.getAllApplicationsCount())
+                                                .build());
+        }
+
+        @GetMapping("/jobs/{jobId}")
+        @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
+        public ResponseEntity<Map<String, Object>> getJobAnalytics(@PathVariable Long jobId) {
+                Map<String, Object> analytics = Map.of(
+                                "jobId", jobId,
+                                "views", analyticsService.getJobViewCount(jobId),
+                                "applications", analyticsService.getAppCountByJob(jobId),
+                                "viewToApplyRatio", analyticsService.getViewToApplyRatio(jobId));
+                return ResponseEntity.ok(analytics);
+        }
+
         @GetMapping("/recruiter/{recruiterId}/dashboard")
         @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
         public ResponseEntity<AnalyticsSummary> getRecruiterDashboard(

@@ -19,6 +19,39 @@ public class SubscriptionResource {
 
     private final SubscriptionService subscriptionService;
 
+    @GetMapping("/plans")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<List<String>> getAvailablePlans() {
+        return ResponseEntity.ok(List.of("BASIC", "STANDARD", "PREMIUM", "ENTERPRISE"));
+    }
+
+    @GetMapping("/current")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<SubscriptionResponse> getCurrentSubscription(
+            @RequestParam Integer recruiterId
+    ) {
+        List<SubscriptionResponse> subs = subscriptionService.getByRecruiter(recruiterId);
+        return ResponseEntity.ok(subs.stream()
+                .filter(s -> s.getStatus().name().equals("ACTIVE"))
+                .findFirst()
+                .orElse(null));
+    }
+
+    @PostMapping("/upgrade")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<SubscriptionResponse> upgradePlan(
+            @RequestParam Integer recruiterId,
+            @RequestParam String plan
+    ) {
+        return ResponseEntity.ok(
+                subscriptionService.subscribe(
+                        recruiterId,
+                        SubscriptionPlan.valueOf(plan),
+                        PaymentMode.CREDIT_CARD
+                )
+        );
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<SubscriptionResponse> subscribe(

@@ -52,6 +52,11 @@ public class NotificationResource {
         return ResponseEntity.ok("Email sent successfully");
     }
 
+    @GetMapping
+    public ResponseEntity<List<Notification>> getMyNotifications() {
+        return ResponseEntity.ok(notificationService.getRecentNotifications());
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Notification>> getByUser(
             @PathVariable UUID userId) {

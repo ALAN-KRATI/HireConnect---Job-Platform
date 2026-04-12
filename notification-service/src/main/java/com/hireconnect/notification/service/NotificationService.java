@@ -20,4 +20,6 @@ public interface NotificationService {
     void sendEmailAlert(String email, String subject, String body);
 
     long getUnreadCount(UUID userId);
+    
+    List<Notification> getRecentNotifications();
 }

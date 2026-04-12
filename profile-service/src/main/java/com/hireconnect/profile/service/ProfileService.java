@@ -30,4 +30,6 @@ public interface ProfileService {
     List<ProfileResponse> getAllCandidateProfiles();
 
     List<ProfileResponse> getAllRecruiterProfiles();
+    
+    ProfileResponse getProfileByEmail(String email);
 }

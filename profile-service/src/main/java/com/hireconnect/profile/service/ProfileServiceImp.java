@@ -198,6 +198,16 @@ public class ProfileServiceImp implements ProfileService {
                 .toList();
     }
 
+    @Override
+    public ProfileResponse getProfileByEmail(String email) {
+        return candidateRepository.findByEmail(email)
+                .map(this::mapCandidate)
+                .orElseGet(() -> recruiterRepository.findByEmail(email)
+                        .map(this::mapRecruiter)
+                        .orElseThrow(() -> new ProfileNotFoundException(
+                                "Profile not found for email: " + email)));
+    }
+
     private ProfileResponse mapCandidate(CandidateProfile profile) {
         return ProfileResponse.builder()
                 .profileId(profile.getProfileId())

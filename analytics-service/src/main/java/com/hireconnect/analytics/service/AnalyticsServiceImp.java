@@ -181,4 +181,34 @@ public class AnalyticsServiceImp implements AnalyticsService {
 
         return average != null ? average : 0.0;
     }
+    
+    @Override
+    public int getAllActiveJobsCount() {
+        try {
+            return jobServiceClient.getAllActiveJobsCount();
+        } catch (Exception ex) {
+            log.warn("Could not fetch active jobs count: {}", ex.getMessage());
+            return 0;
+        }
+    }
+    
+    @Override
+    public int getAllApplicationsCount() {
+        try {
+            return applicationServiceClient.getAllApplicationsCount();
+        } catch (Exception ex) {
+            log.warn("Could not fetch all applications count: {}", ex.getMessage());
+            return 0;
+        }
+    }
+    
+    @Override
+    public int getTotalJobsCount() {
+        try {
+            return jobServiceClient.getTotalJobsCount();
+        } catch (Exception ex) {
+            log.warn("Could not fetch total jobs count: {}", ex.getMessage());
+            return 0;
+        }
+    }
 }

@@ -104,4 +104,9 @@ public class NotificationServiceImp implements NotificationService {
     public long getUnreadCount(UUID userId) {
         return notificationRepository.countByUserIdAndRead(userId, false);
     }
+    
+    @Override
+    public List<Notification> getRecentNotifications() {
+        return notificationRepository.findTop20ByOrderByCreatedAtDesc();
+    }
 }

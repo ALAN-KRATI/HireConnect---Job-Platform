@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,14 @@ import java.util.UUID;
 public class ProfileResource {
 
     private final ProfileService profileService;
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('CANDIDATE', 'RECRUITER')")
+    public ResponseEntity<ProfileResponse> getMyProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(profileService.getProfileByEmail(email));
+    }
 
     @GetMapping("/candidates/{userId}")
     @PreAuthorize("hasAnyRole('CANDIDATE', 'RECRUITER')")
