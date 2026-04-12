@@ -24,6 +24,7 @@ public class JobServiceImp implements JobService {
     private final AnalyticsClient analyticsClient;
     private final JobNotificationProducer notificationProducer;
     private final JobMapper jobMapper;
+    private final JobSearchService jobSearchService;
 
     @Override
     public JobResponse addJob(JobRequest request) {
@@ -33,6 +34,9 @@ public class JobServiceImp implements JobService {
         Job job = jobMapper.toEntity(request);
 
         Job savedJob = repository.save(job);
+
+        // Index in Elasticsearch
+        jobSearchService.indexJob(savedJob);
 
         notificationProducer.sendJobCreated(savedJob.getJobId());
 
@@ -79,6 +83,9 @@ public class JobServiceImp implements JobService {
 
         Job updatedJob = repository.save(job);
 
+        // Update in Elasticsearch
+        jobSearchService.indexJob(jobMapper.toResponse(updatedJob));
+
         return jobMapper.toResponse(updatedJob);
     }
 
@@ -90,6 +97,9 @@ public class JobServiceImp implements JobService {
         job.setStatus(JobStatus.DELETED);
 
         repository.save(job);
+
+        // Remove from Elasticsearch
+        jobSearchService.deleteJobIndex(jobId);
 
         notificationProducer.sendJobStatusChanged(jobId, JobStatus.DELETED.name());
     }
@@ -130,22 +140,8 @@ public class JobServiceImp implements JobService {
             Double maxSalary,
             Integer experience) {
 
-        return repository.findByStatus(JobStatus.OPEN)
-                .stream()
-                .filter(job -> title == null || title.isBlank()
-                        || job.getTitle().toLowerCase().contains(title.toLowerCase()))
-                .filter(job -> location == null || location.isBlank()
-                        || job.getLocation().equalsIgnoreCase(location))
-                .filter(job -> category == null || category.isBlank()
-                        || job.getCategory().equalsIgnoreCase(category))
-                .filter(job -> minSalary == null
-                        || job.getMinSalary() >= minSalary)
-                .filter(job -> maxSalary == null
-                        || job.getMaxSalary() <= maxSalary)
-                .filter(job -> experience == null
-                        || job.getExperienceRequired() >= experience)
-                .map(jobMapper::toResponse)
-                .toList();
+        // Use Elasticsearch for efficient search
+        return jobSearchService.searchJobs(title, location, category, minSalary, maxSalary, experience);
     }
 
     @Override

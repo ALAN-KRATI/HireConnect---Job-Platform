@@ -1,0 +1,39 @@
+{
+  "analysis": {
+    "analyzer": {
+      "job_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": [
+          "lowercase",
+          "asciifolding",
+          "synonym_filter"
+        ]
+      },
+      "job_search_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": [
+          "lowercase",
+          "asciifolding"
+        ]
+      }
+    },
+    "filter": {
+      "synonym_filter": {
+        "type": "synonym_graph",
+        "synonyms": [
+          "software engineer, developer, programmer, coder",
+          "senior, sr, lead, principal",
+          "junior, jr, entry level, associate",
+          "full stack, fullstack, full-stack",
+          "remote, work from home, wfh"
+        ]
+      }
+    }
+  },
+  "index": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0
+  }
+}

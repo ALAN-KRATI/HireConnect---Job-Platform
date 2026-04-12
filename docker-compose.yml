@@ -30,6 +30,26 @@ services:
     networks:
       - hireconnect-network
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: hireconnect-elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - hireconnect-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: hireconnect-rabbitmq
@@ -145,11 +165,23 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: job-service
       EUREKA_INSTANCE_NON_SECURE_PORT: 8083
+
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       mysql:
         condition: service_healthy
       discovery-server:
         condition: service_started
+      elasticsearch:
+        condition: service_healthy
     networks:
       - hireconnect-network
 
@@ -394,6 +426,7 @@ services:
 
 volumes:
   mysql-data:
+  elasticsearch-data:
 
 networks:
   hireconnect-network:
