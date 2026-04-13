@@ -59,9 +59,11 @@ public class JwtAuthenticationFilter implements GlobalFilter {
 
         String email = claims.getSubject();
         String role = claims.get("role", String.class);
+        String userId = claims.get("userId", String.class);
 
         System.out.println("PATH = " + path);
         System.out.println("ROLE = " + role);
+        System.out.println("USER_ID = " + userId);
 
         // Admin can access everything
         if ("ADMIN".equals(role)) {
@@ -70,6 +72,8 @@ public class JwtAuthenticationFilter implements GlobalFilter {
                             .request(exchange.getRequest().mutate()
                                     .header("X-Authenticated-User", email)
                                     .header("X-Authenticated-Role", role)
+                                    .header("X-User-Id", userId != null ? userId : "")
+                                    .header(HttpHeaders.AUTHORIZATION, authHeader)
                                     .build())
                             .build()
             );
@@ -99,6 +103,8 @@ public class JwtAuthenticationFilter implements GlobalFilter {
                         .request(exchange.getRequest().mutate()
                                 .header("X-Authenticated-User", email)
                                 .header("X-Authenticated-Role", role)
+                                .header("X-User-Id", userId != null ? userId : "")
+                                .header(HttpHeaders.AUTHORIZATION, authHeader)
                                 .build())
                         .build()
         );

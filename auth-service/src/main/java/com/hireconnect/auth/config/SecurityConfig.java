@@ -26,7 +26,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {})
+                // CORS disabled - handled by API Gateway
+                // .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))

@@ -45,12 +45,24 @@ public class AuthResource {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken(
+    public ResponseEntity<?> validateToken(
             @RequestHeader("Authorization") String authorizationHeader) {
 
         String token = authorizationHeader.replace("Bearer ", "");
 
-        return ResponseEntity.ok(service.validateToken(token));
+        boolean isValid = service.validateToken(token);
+        if (!isValid) {
+            return ResponseEntity.ok(false);
+        }
+
+        // Return user details if token is valid
+        AuthResponse userDetails = AuthResponse.builder()
+                .email(service.extractEmail(token))
+                .role(service.extractRole(token))
+                .userId(service.extractUserId(token))
+                .build();
+
+        return ResponseEntity.ok(userDetails);
     }
 
     @GetMapping("/extract/email")

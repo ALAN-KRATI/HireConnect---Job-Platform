@@ -65,7 +65,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.generateToken(user);
         String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
 
-        String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5175");
+        String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5173");
         String redirectUrl = frontendUrl + "/auth/callback";
 
         response.sendRedirect(

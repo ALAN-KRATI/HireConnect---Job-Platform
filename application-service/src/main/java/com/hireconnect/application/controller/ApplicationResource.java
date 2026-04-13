@@ -5,6 +5,7 @@ import com.hireconnect.application.dto.StatusUpdateRequest;
 import com.hireconnect.application.entity.Application;
 import com.hireconnect.application.enums.ApplicationStatus;
 import com.hireconnect.application.service.ApplicationService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +25,21 @@ public class ApplicationResource {
         }
 
         @PostMapping
-        public ResponseEntity<ApplicationResponse> submitApplication(@RequestBody Application application) {
+        public ResponseEntity<ApplicationResponse> submitApplication(
+                        @RequestBody Application application,
+                        HttpServletRequest request) {
+                // Extract candidate ID from authenticated user
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String email = authentication.getName();
+                
+                // Get candidate ID from request header set by API Gateway
+                // The gateway extracts it from JWT and sets it as X-User-Id header
+                String candidateIdStr = request.getHeader("X-User-Id");
+                if (candidateIdStr != null) {
+                        application.setCandidateId(UUID.fromString(candidateIdStr));
+                }
+                application.setCandidateEmail(email);
+                
                 Application saved = applicationService.submitApplication(application);
                 return ResponseEntity.ok(mapToResponse(saved));
         }
