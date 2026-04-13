@@ -42,7 +42,7 @@ public class AuthServiceImp implements AuthService {
 
         UserCredential user = UserCredential.builder()
                 .email(request.getEmail())
-                .mobileNumber(request.getMobileNumber())
+                .mobileNumber(request.getMobile())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(UserRole.valueOf(request.getRole().toUpperCase()))
                 .provider(Provider.LOCAL)

@@ -21,8 +21,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "jobs")
-@Setting(settingPath = "elastic/job-settings.json")
-@Mapping(mappingPath = "elastic/job-mapping.json")
 public class JobDocument {
 
     @Id

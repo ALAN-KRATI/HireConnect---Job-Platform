@@ -21,13 +21,13 @@ public class JwtAuthenticationFilter implements GlobalFilter {
     }
 
     private static final List<String> PUBLIC_PATHS = List.of(
-            "/auth/",
-            "/oauth2/",
-            "/login/",
-            "/swagger-ui/",
+            "/auth",
+            "/oauth2",
+            "/login",
+            "/swagger-ui",
             "/v3/api-docs",
-            "/jobs/",
-            "/actuator/"
+            "/jobs",
+            "/actuator"
     );
 
     @Override

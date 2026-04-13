@@ -14,19 +14,14 @@ public class SignupRequest {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must contain at least 8 characters")
-    @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).*$",
-            message = "Password must contain uppercase, lowercase, number and special character"
-    )
+    @Size(min = 6, message = "Password must contain at least 6 characters")
     private String password;
 
     @NotBlank(message = "Mobile number is required")
-    @Pattern(
-            regexp = "^[6-9]\\d{9}$",
-            message = "Enter a valid 10 digit mobile number"
-    )
-    private String mobileNumber;
+    private String mobile;
+
+    @NotBlank(message = "Full name is required")
+    private String fullName;
 
     @NotBlank(message = "Role is required")
     private String role;

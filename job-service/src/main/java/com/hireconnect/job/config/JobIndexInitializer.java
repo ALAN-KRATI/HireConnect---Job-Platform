@@ -22,6 +22,9 @@ public class JobIndexInitializer {
     @Bean
     public CommandLineRunner initializeJobIndex() {
         return args -> {
+            log.info("Job index initialization disabled for local development");
+            // Temporarily disabled - Elasticsearch mapping issues
+            /*
             log.info("Starting job index initialization...");
 
             try {
@@ -42,6 +45,7 @@ public class JobIndexInitializer {
             } catch (Exception e) {
                 log.error("Failed to initialize job index: {}", e.getMessage());
             }
+            */
         };
     }
 }

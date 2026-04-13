@@ -44,7 +44,7 @@ public class UserCredential {
     @Column(nullable = false, length = 20)
     private Provider provider;
 
-    @Column(nullable = false, length = 15)
+    @Column(length = 15)
     private String mobileNumber;
 
     @Column(nullable = false)

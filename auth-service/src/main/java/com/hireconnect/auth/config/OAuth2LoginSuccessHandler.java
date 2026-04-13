@@ -51,21 +51,21 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         final String email = extractedEmail;
 
         UserCredential user = authRepository.findByEmail(email)
-                .orElseGet(() -> authRepository.save(
-                        UserCredential.builder()
-                                .id(UUID.randomUUID())
-                                .email(email)
-                                .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                                .role(UserRole.CANDIDATE)
-                                .provider(Provider.GITHUB)
-                                .createdAt(LocalDateTime.now())
-                                .build()
-                ));
+                .orElseGet(() -> {
+                    UserCredential newUser = UserCredential.builder()
+                            .email(email)
+                            .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                            .role(UserRole.CANDIDATE)
+                            .provider(Provider.GITHUB)
+                            .createdAt(LocalDateTime.now())
+                            .build();
+                    return authRepository.save(newUser);
+                });
 
         String accessToken = jwtService.generateToken(user);
         String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
 
-        String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5173");
+        String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5175");
         String redirectUrl = frontendUrl + "/auth/callback";
 
         response.sendRedirect(
