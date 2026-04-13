@@ -38,6 +38,9 @@ public class Application {
     @Column(name = "candidate_id", nullable = false)
     private UUID candidateId;
 
+    @Column(name = "candidate_email")
+    private String candidateEmail;
+
     @Column(name = "recruiter_id", nullable = false)
     private Long recruiterId;
 

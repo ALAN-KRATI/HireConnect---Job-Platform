@@ -13,6 +13,8 @@ public interface InterviewRepository extends JpaRepository<Interview, UUID> {
 
     List<Interview> findByCandidateId(UUID candidateId);
 
+    List<Interview> findByCandidateEmail(String candidateEmail);
+
     List<Interview> findByRecruiterId(UUID recruiterId);
 
     List<Interview> findByApplicationId(UUID applicationId);

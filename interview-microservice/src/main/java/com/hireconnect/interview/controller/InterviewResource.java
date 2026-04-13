@@ -8,6 +8,8 @@ import com.hireconnect.interview.enums.InterviewStatus;
 import com.hireconnect.interview.service.InterviewService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -75,6 +77,19 @@ public class InterviewResource {
     public ResponseEntity<InterviewResponse> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(
                 mapToResponse(interviewService.getById(id))
+        );
+    }
+
+    @GetMapping("/my-interviews")
+    public ResponseEntity<List<InterviewResponse>> getMyInterviews() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        
+        return ResponseEntity.ok(
+                interviewService.getByCandidateEmail(email)
+                        .stream()
+                        .map(this::mapToResponse)
+                        .toList()
         );
     }
 

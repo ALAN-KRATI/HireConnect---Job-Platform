@@ -26,4 +26,6 @@ public interface InterviewService {
     List<Interview> getByStatus(InterviewStatus status);
 
     Interview getById(UUID interviewId);
+    
+    List<Interview> getByCandidateEmail(String email);
 }

@@ -2,6 +2,7 @@ package com.hireconnect.profile.controller;
 
 import com.hireconnect.profile.dto.ProfileRequest;
 import com.hireconnect.profile.dto.ProfileResponse;
+import com.hireconnect.profile.dto.SavedJobResponse;
 import com.hireconnect.profile.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +29,53 @@ public class ProfileResource {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return ResponseEntity.ok(profileService.getProfileByEmail(email));
+    }
+
+    @PutMapping("/me")
+    @PreAuthorize("hasAnyRole('CANDIDATE', 'RECRUITER')")
+    public ResponseEntity<ProfileResponse> updateMyProfile(
+            @Valid @RequestBody ProfileRequest request
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(profileService.updateProfileByEmail(email, request));
+    }
+
+    @PostMapping("/resume")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<String> uploadResume(
+            @RequestParam("file") MultipartFile file
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        String resumeUrl = profileService.uploadResume(email, file);
+        return ResponseEntity.ok(resumeUrl);
+    }
+
+    @GetMapping("/saved-jobs")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<List<SavedJobResponse>> getSavedJobs() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(profileService.getSavedJobs(email));
+    }
+
+    @PostMapping("/saved-jobs/{jobId}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<String> saveJob(@PathVariable UUID jobId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        profileService.saveJob(email, jobId);
+        return ResponseEntity.ok("Job saved successfully");
+    }
+
+    @DeleteMapping("/saved-jobs/{jobId}")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<String> unsaveJob(@PathVariable UUID jobId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        profileService.unsaveJob(email, jobId);
+        return ResponseEntity.ok("Job removed from saved list");
     }
 
     @GetMapping("/candidates/{userId}")

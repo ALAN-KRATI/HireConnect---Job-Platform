@@ -170,4 +170,9 @@ public class ApplicationServiceImp implements ApplicationService {
         Double avg = applicationRepository.findPlatformAverageTimeToHire();
         return avg != null ? avg : 0.0;
     }
+
+    @Override
+    public List<Application> getByCandidateEmail(String email) {
+        return applicationRepository.findByCandidateEmail(email);
+    }
 }

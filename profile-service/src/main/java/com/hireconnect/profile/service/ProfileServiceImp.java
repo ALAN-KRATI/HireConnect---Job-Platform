@@ -2,13 +2,17 @@ package com.hireconnect.profile.service;
 
 import com.hireconnect.profile.dto.ProfileRequest;
 import com.hireconnect.profile.dto.ProfileResponse;
+import com.hireconnect.profile.dto.SavedJobResponse;
 import com.hireconnect.profile.entity.CandidateProfile;
 import com.hireconnect.profile.entity.RecruiterProfile;
+import com.hireconnect.profile.entity.SavedJob;
 import com.hireconnect.profile.exception.ProfileNotFoundException;
 import com.hireconnect.profile.repository.CandidateProfileRepository;
 import com.hireconnect.profile.repository.RecruiterProfileRepository;
+import com.hireconnect.profile.repository.SavedJobRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +25,7 @@ public class ProfileServiceImp implements ProfileService {
 
     private final CandidateProfileRepository candidateRepository;
     private final RecruiterProfileRepository recruiterRepository;
+    private final SavedJobRepository savedJobRepository;
 
     @Override
     public void createDefaultProfile(
@@ -206,6 +211,116 @@ public class ProfileServiceImp implements ProfileService {
                         .map(this::mapRecruiter)
                         .orElseThrow(() -> new ProfileNotFoundException(
                                 "Profile not found for email: " + email)));
+    }
+
+    @Override
+    public ProfileResponse updateProfileByEmail(String email, ProfileRequest request) {
+        return candidateRepository.findByEmail(email)
+                .map(profile -> {
+                    updateCandidateProfileFields(profile, request);
+                    return mapCandidate(candidateRepository.save(profile));
+                })
+                .orElseGet(() -> recruiterRepository.findByEmail(email)
+                        .map(profile -> {
+                            updateRecruiterProfileFields(profile, request);
+                            return mapRecruiter(recruiterRepository.save(profile));
+                        })
+                        .orElseThrow(() -> new ProfileNotFoundException(
+                                "Profile not found for email: " + email)));
+    }
+
+    @Override
+    public String uploadResume(String email, MultipartFile file) {
+        CandidateProfile profile = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new ProfileNotFoundException(
+                        "Candidate profile not found for email: " + email));
+        
+        String resumeUrl = "/uploads/resumes/" + email + "/" + file.getOriginalFilename();
+        profile.setResumeUrl(resumeUrl);
+        profile.setUpdatedAt(LocalDateTime.now());
+        candidateRepository.save(profile);
+        
+        return resumeUrl;
+    }
+
+    @Override
+    public List<SavedJobResponse> getSavedJobs(String email) {
+        CandidateProfile profile = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new ProfileNotFoundException(
+                        "Candidate profile not found for email: " + email));
+        
+        return savedJobRepository.findByCandidateId(profile.getUserId())
+                .stream()
+                .map(this::mapSavedJob)
+                .toList();
+    }
+
+    @Override
+    public void saveJob(String email, UUID jobId) {
+        CandidateProfile profile = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new ProfileNotFoundException(
+                        "Candidate profile not found for email: " + email));
+        
+        if (savedJobRepository.existsByCandidateIdAndJobId(profile.getUserId(), jobId)) {
+            return;
+        }
+        
+        SavedJob savedJob = SavedJob.builder()
+                .candidateId(profile.getUserId())
+                .jobId(jobId)
+                .savedAt(LocalDateTime.now())
+                .build();
+        
+        savedJobRepository.save(savedJob);
+    }
+
+    @Override
+    public void unsaveJob(String email, UUID jobId) {
+        CandidateProfile profile = candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new ProfileNotFoundException(
+                        "Candidate profile not found for email: " + email));
+        
+        savedJobRepository.deleteByCandidateIdAndJobId(profile.getUserId(), jobId);
+    }
+
+    private void updateCandidateProfileFields(CandidateProfile profile, ProfileRequest request) {
+        profile.setFullName(request.getFullName());
+        profile.setEmail(request.getEmail());
+        profile.setMobile(request.getMobile());
+        profile.setHeadline(request.getHeadline());
+        profile.setLocation(request.getLocation());
+        profile.setBio(request.getBio());
+        profile.setSkills(request.getSkills() == null || request.getSkills().isBlank()
+                ? new java.util.ArrayList<>()
+                : new java.util.ArrayList<>(java.util.Arrays.asList(request.getSkills().split("\\s*,\\s*"))));
+        profile.setExperience(request.getExperience() == null || request.getExperience().isBlank()
+                ? 0
+                : Integer.parseInt(request.getExperience()));
+        profile.setUpdatedAt(LocalDateTime.now());
+    }
+
+    private void updateRecruiterProfileFields(RecruiterProfile profile, ProfileRequest request) {
+        profile.setFullName(request.getFullName());
+        profile.setEmail(request.getEmail());
+        profile.setMobile(request.getMobile());
+        profile.setCompanyName(request.getCompanyName());
+        profile.setWebsite(request.getCompanyWebsite());
+        profile.setIndustry(request.getHeadline());
+        profile.setOfficeLocation(request.getLocation());
+        profile.setUpdatedAt(LocalDateTime.now());
+    }
+
+    private SavedJobResponse mapSavedJob(SavedJob savedJob) {
+        return SavedJobResponse.builder()
+                .savedJobId(savedJob.getSavedJobId())
+                .jobId(savedJob.getJobId())
+                .jobTitle(savedJob.getJobTitle())
+                .companyName(savedJob.getCompanyName())
+                .location(savedJob.getLocation())
+                .type(savedJob.getJobType())
+                .status(savedJob.getStatus())
+                .savedAt(savedJob.getSavedAt())
+                .build();
     }
 
     private ProfileResponse mapCandidate(CandidateProfile profile) {

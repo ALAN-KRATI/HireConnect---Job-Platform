@@ -65,13 +65,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.generateToken(user);
         String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
 
-        String redirectUrl;
-
-        if (user.getRole() == UserRole.RECRUITER) {
-            redirectUrl = "http://localhost:5173/recruiter-dashboard";
-        } else {
-            redirectUrl = "http://localhost:5173/candidate-dashboard";
-        }
+        String frontendUrl = System.getenv().getOrDefault("FRONTEND_URL", "http://localhost:5173");
+        String redirectUrl = frontendUrl + "/auth/callback";
 
         response.sendRedirect(
                 redirectUrl

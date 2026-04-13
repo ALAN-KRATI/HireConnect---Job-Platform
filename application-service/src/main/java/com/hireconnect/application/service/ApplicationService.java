@@ -33,4 +33,6 @@ public interface ApplicationService {
     Double findAverageTimeToHireByRecruiterId(Long recruiterId);
 
     Double findPlatformAverageTimeToHire();
+    
+    List<Application> getByCandidateEmail(String email);
 }

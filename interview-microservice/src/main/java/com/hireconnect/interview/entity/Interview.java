@@ -36,6 +36,9 @@ public class Interview {
     @Column(nullable = false)
     private UUID candidateId;
 
+    @Column(name = "candidate_email")
+    private String candidateEmail;
+
     @Column(nullable = false)
     private UUID recruiterId;
 

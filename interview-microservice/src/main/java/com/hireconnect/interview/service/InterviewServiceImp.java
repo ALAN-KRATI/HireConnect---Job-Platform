@@ -186,4 +186,9 @@ public class InterviewServiceImp implements InterviewService {
                                 "Interview not found with id: " + interviewId
                         ));
     }
+    
+    @Override
+    public List<Interview> getByCandidateEmail(String email) {
+        return repository.findByCandidateEmail(email);
+    }
 }

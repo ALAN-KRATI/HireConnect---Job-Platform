@@ -6,6 +6,8 @@ import com.hireconnect.application.entity.Application;
 import com.hireconnect.application.enums.ApplicationStatus;
 import com.hireconnect.application.service.ApplicationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,17 @@ public class ApplicationResource {
         public ResponseEntity<ApplicationResponse> submitApplication(@RequestBody Application application) {
                 Application saved = applicationService.submitApplication(application);
                 return ResponseEntity.ok(mapToResponse(saved));
+        }
+
+        @GetMapping("/candidate/me")
+        public ResponseEntity<List<ApplicationResponse>> getMyApplications() {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                String email = authentication.getName();
+                List<ApplicationResponse> responses = applicationService.getByCandidateEmail(email)
+                                .stream()
+                                .map(this::mapToResponse)
+                                .toList();
+                return ResponseEntity.ok(responses);
         }
 
         @GetMapping("/candidate/{candidateId}")
