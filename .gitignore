@@ -5,3 +5,7 @@
 *.iml
 .env
 .vscode
+
+# Logs
+*.log
+logs/
