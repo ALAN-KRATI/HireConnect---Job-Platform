@@ -1,0 +1,2369 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-04-14T02:20:33.343+05:30  INFO 69080 --- [job-service] [           main] c.hireconnect.job.JobServiceApplication  : Starting JobServiceApplication v0.0.1-SNAPSHOT using Java 25.0.2 with PID 69080 (/Users/shivang.shukla/Desktop/Alan/HireConnect---Job-Platform/job-service/target/job-service-0.0.1-SNAPSHOT.jar started by shivang.shukla in /Users/shivang.shukla/Desktop/Alan/HireConnect---Job-Platform/job-service)
+2026-04-14T02:20:33.346+05:30 DEBUG 69080 --- [job-service] [           main] c.hireconnect.job.JobServiceApplication  : Running with Spring Boot v3.4.5, Spring v6.2.6
+2026-04-14T02:20:33.347+05:30  INFO 69080 --- [job-service] [           main] c.hireconnect.job.JobServiceApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-04-14T02:20:37.334+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-04-14T02:20:37.338+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2026-04-14T02:20:37.407+05:30  INFO 69080 --- [job-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Elasticsearch - Could not safely identify store assignment for repository candidate interface com.hireconnect.job.repository.JobRepository; If you want this repository to be a Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ElasticsearchRepository
+2026-04-14T02:20:37.665+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 313 ms. Found 1 Elasticsearch repository interface.
+2026-04-14T02:20:37.684+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-04-14T02:20:37.686+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2026-04-14T02:20:37.698+05:30  INFO 69080 --- [job-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Reactive Elasticsearch - Could not safely identify store assignment for repository candidate interface com.hireconnect.job.repository.JobRepository; If you want this repository to be a Reactive Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ReactiveElasticsearchRepository
+2026-04-14T02:20:37.703+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 0 Reactive Elasticsearch repository interfaces.
+2026-04-14T02:20:37.729+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-04-14T02:20:37.731+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-04-14T02:20:37.752+05:30  INFO 69080 --- [job-service] [           main] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.hireconnect.job.repository.JobSearchRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-04-14T02:20:37.757+05:30  INFO 69080 --- [job-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 1 JPA repository interface.
+2026-04-14T02:20:38.553+05:30  INFO 69080 --- [job-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=3b40d42b-5cfd-3d9e-9771-0218ef674613
+2026-04-14T02:20:40.350+05:30  INFO 69080 --- [job-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8083 (http)
+2026-04-14T02:20:40.371+05:30  INFO 69080 --- [job-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-04-14T02:20:40.372+05:30  INFO 69080 --- [job-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-04-14T02:20:40.420+05:30  INFO 69080 --- [job-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-04-14T02:20:40.422+05:30  INFO 69080 --- [job-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6923 ms
+2026-04-14T02:20:41.039+05:30 DEBUG 69080 --- [job-service] [           main] c.h.job.config.JwtAuthenticationFilter   : Filter 'jwtAuthenticationFilter' configured for use
+2026-04-14T02:20:41.042+05:30 DEBUG 69080 --- [job-service] [           main] o.s.w.f.ServerHttpObservationFilter      : Filter 'webMvcObservationFilter' configured for use
+2026-04-14T02:20:41.455+05:30  INFO 69080 --- [job-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-04-14T02:20:41.554+05:30  INFO 69080 --- [job-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-04-14T02:20:41.616+05:30  INFO 69080 --- [job-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-04-14T02:20:42.055+05:30  INFO 69080 --- [job-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-04-14T02:20:42.124+05:30  INFO 69080 --- [job-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-04-14T02:20:42.798+05:30  INFO 69080 --- [job-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3cd6d147
+2026-04-14T02:20:42.802+05:30  INFO 69080 --- [job-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-04-14T02:20:42.943+05:30  INFO 69080 --- [job-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.6
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-04-14T02:20:44.561+05:30  INFO 69080 --- [job-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-04-14T02:20:44.653+05:30 DEBUG 69080 --- [job-service] [           main] org.hibernate.SQL                        : 
+    alter table jobs 
+       modify column status enum ('CLOSED','DELETED','OPEN','PAUSED') not null
+Hibernate: 
+    alter table jobs 
+       modify column status enum ('CLOSED','DELETED','OPEN','PAUSED') not null
+2026-04-14T02:20:44.669+05:30 DEBUG 69080 --- [job-service] [           main] org.hibernate.SQL                        : 
+    alter table jobs 
+       modify column type enum ('APPRENTICESHIP','CONTRACT','FULL_TIME','HYBRID','INTERNSHIP','PART_TIME','REMOTE') not null
+Hibernate: 
+    alter table jobs 
+       modify column type enum ('APPRENTICESHIP','CONTRACT','FULL_TIME','HYBRID','INTERNSHIP','PART_TIME','REMOTE') not null
+2026-04-14T02:20:44.700+05:30  INFO 69080 --- [job-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-04-14T02:20:48.076+05:30  INFO 69080 --- [job-service] [           main] o.s.c.openfeign.FeignClientFactoryBean   : For 'analytics-service' URL not provided. Will try picking an instance via load-balancing.
+2026-04-14T02:20:49.098+05:30  WARN 69080 --- [job-service] [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 65ec0b22-d901-49b0-bf4f-acce131798ab
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-04-14T02:20:49.149+05:30  INFO 69080 --- [job-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-04-14T02:20:49.412+05:30 DEBUG 69080 --- [job-service] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 21 mappings in 'requestMappingHandlerMapping'
+2026-04-14T02:20:49.746+05:30 DEBUG 69080 --- [job-service] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2026-04-14T02:20:50.134+05:30  INFO 69080 --- [job-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoints beneath base path '/actuator'
+2026-04-14T02:20:50.318+05:30 DEBUG 69080 --- [job-service] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, LogoutFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2026-04-14T02:20:50.530+05:30 DEBUG 69080 --- [job-service] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-04-14T02:20:50.608+05:30 DEBUG 69080 --- [job-service] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 2 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-04-14T02:20:52.164+05:30  INFO 69080 --- [job-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-04-14T02:20:52.277+05:30  WARN 69080 --- [job-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-04-14T02:20:52.406+05:30  INFO 69080 --- [job-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-04-14T02:20:52.461+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-04-14T02:20:52.469+05:30  INFO 69080 --- [job-service] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-04-14T02:20:52.488+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-04-14T02:20:52.716+05:30 DEBUG 69080 --- [job-service] [           main] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/
+2026-04-14T02:20:53.036+05:30 DEBUG 69080 --- [job-service] [           main] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:20:53.114+05:30 DEBUG 69080 --- [job-service] [           main] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:20:53.117+05:30 DEBUG 69080 --- [job-service] [           main] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:20:53.182+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-04-14T02:20:53.186+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2026-04-14T02:20:53.189+05:30  INFO 69080 --- [job-service] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-04-14T02:20:53.192+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1776113453190 with initial instances count: 7
+2026-04-14T02:20:53.204+05:30  INFO 69080 --- [job-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application JOB-SERVICE with eureka with status UP
+2026-04-14T02:20:53.206+05:30  INFO 69080 --- [job-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1776113453206, current=UP, previous=STARTING]
+2026-04-14T02:20:53.209+05:30  INFO 69080 --- [job-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_JOB-SERVICE/job-service:8083: registering service...
+2026-04-14T02:20:53.223+05:30  INFO 69080 --- [job-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8083 (http) with context path '/'
+2026-04-14T02:20:53.226+05:30  INFO 69080 --- [job-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8083
+2026-04-14T02:20:53.230+05:30 DEBUG 69080 --- [job-service] [foReplicator-%d] o.s.web.client.RestTemplate              : HTTP POST http://localhost:8761/eureka/apps/JOB-SERVICE
+2026-04-14T02:20:53.236+05:30 DEBUG 69080 --- [job-service] [foReplicator-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:20:53.250+05:30  INFO 69080 --- [job-service] [           main] c.hireconnect.job.JobServiceApplication  : Started JobServiceApplication in 21.255 seconds (process running for 22.447)
+2026-04-14T02:20:53.272+05:30 DEBUG 69080 --- [job-service] [foReplicator-%d] o.s.web.client.RestTemplate              : Writing [InstanceInfo [instanceId = job-service:8083, appName = JOB-SERVICE, hostName = 192.168.43.30, status = UP, ipAddr = 192.168.43.30, port = 8083, securePort = 443, dataCenterInfo = com.netflix.appinfo.MyDataCenterInfo@1acf7db2] as "application/json"
+2026-04-14T02:20:53.330+05:30 DEBUG 69080 --- [job-service] [foReplicator-%d] o.s.web.client.RestTemplate              : Response 204 NO_CONTENT
+2026-04-14T02:20:53.332+05:30  INFO 69080 --- [job-service] [foReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_JOB-SERVICE/job-service:8083 - registration status: 204
+2026-04-14T02:20:53.389+05:30  INFO 69080 --- [job-service] [           main] c.h.job.config.JobIndexInitializer       : Job index initialization disabled for local development
+2026-04-14T02:21:23.194+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:21:23.195+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:21:23.196+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:21:23.202+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:21:23.203+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:21:23.220+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:21:23.225+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:21:53.224+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:21:53.225+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:21:53.228+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:21:53.228+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:21:53.230+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:21:53.234+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:21:53.235+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:22:23.240+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:22:23.242+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:22:23.242+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:22:23.243+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:22:23.248+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:22:23.248+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:22:23.249+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:22:27.377+05:30  INFO 69080 --- [job-service] [nio-8083-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-14T02:22:27.378+05:30  INFO 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-04-14T02:22:27.378+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2026-04-14T02:22:27.378+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2026-04-14T02:22:27.378+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2026-04-14T02:22:27.380+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@4dafea3f
+2026-04-14T02:22:27.380+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@19ad99fa
+2026-04-14T02:22:27.382+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-04-14T02:22:27.382+05:30  INFO 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2026-04-14T02:22:27.406+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:22:27.420+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-14T02:22:27.426+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:22:27.429+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:22:27.431+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:22:27.894+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:22:27.926+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:22:27.995+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:27.996+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:22:28.006+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.007+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:22:28.008+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.008+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:22:28.009+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.010+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:22:28.010+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.010+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:22:28.011+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.011+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:22:28.012+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.012+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:22:28.013+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.014+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:22:28.015+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.016+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:22:28.017+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.017+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:22:28.017+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.018+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:22:28.019+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:22:28.020+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:22:28.109+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:22:28.124+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:22:28.174+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:22:53.261+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:22:53.261+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:22:53.268+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:22:53.268+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:22:53.280+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:22:53.280+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:22:53.284+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:23:22.773+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:23:22.775+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-14T02:23:22.776+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:23:22.776+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:23:22.777+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:23:22.783+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:23:22.784+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:23:22.791+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.792+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:23:22.793+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.793+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:23:22.793+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.793+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:23:22.794+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.794+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:23:22.795+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.795+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:23:22.796+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.796+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:23:22.797+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.797+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:23:22.799+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.799+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:23:22.800+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.800+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:23:22.801+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.801+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:23:22.802+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.802+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:23:22.805+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:23:22.805+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:23:22.809+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:23:22.809+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:23:22.811+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:23:23.293+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:23:23.295+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:23:23.302+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:23:23.304+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:23:23.304+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:23:23.308+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:23:23.309+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:23:53.309+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:23:53.309+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:23:53.313+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:23:53.314+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:23:53.314+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:23:53.318+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:23:53.318+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:24:23.319+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:24:23.321+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:24:23.325+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:24:23.325+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:24:23.325+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:24:23.329+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:24:23.330+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:24:53.330+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:24:53.331+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:24:53.335+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:24:53.335+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:24:53.335+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:24:53.337+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:24:53.337+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:25:23.341+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:25:23.343+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:25:23.344+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:25:23.346+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:25:23.349+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:25:23.349+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:25:23.350+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:25:52.496+05:30  INFO 69080 --- [job-service] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-14T02:25:53.356+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:25:53.356+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:25:53.357+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:25:53.357+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:25:53.361+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:25:53.361+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:25:53.362+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:26:23.366+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:26:23.366+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:26:23.368+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:26:23.368+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:26:23.372+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:26:23.372+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:26:23.372+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:26:53.374+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:26:53.376+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:26:53.379+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:26:53.380+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:26:53.381+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:26:53.384+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:26:53.385+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:27:23.384+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:27:23.386+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:27:23.389+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:27:23.389+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:27:23.390+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:27:23.394+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:27:23.394+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:27:53.396+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:27:53.397+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:27:53.398+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:27:53.398+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:27:53.401+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:27:53.401+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:27:53.401+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:28:23.409+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:28:23.409+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:28:23.413+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:28:23.413+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:28:23.421+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:28:23.421+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:28:23.424+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:28:53.426+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:28:53.427+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:28:53.431+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:28:53.430+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:28:53.436+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:28:53.436+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:28:53.438+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:29:20.630+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:29:20.633+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-14T02:29:20.639+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:29:20.640+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:29:20.640+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:29:20.652+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:29:20.657+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:29:20.677+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.678+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:29:20.679+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.680+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:29:20.681+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.681+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:29:20.682+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.682+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:29:20.684+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.684+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:29:20.685+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.685+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:29:20.686+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.686+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:29:20.688+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.688+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:29:20.689+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.689+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:29:20.691+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.692+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:29:20.694+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.695+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:29:20.695+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:29:20.695+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:29:20.700+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:29:20.701+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:29:20.710+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:29:23.440+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:29:23.441+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:29:23.443+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:29:23.444+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:29:23.449+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:29:23.449+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:29:23.450+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:29:53.455+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:29:53.455+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:29:53.457+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:29:53.457+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:29:53.461+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:29:53.461+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:29:53.462+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:30:23.469+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:30:23.469+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:30:23.473+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:30:23.473+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:30:23.481+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:30:23.481+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:30:23.484+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:30:52.508+05:30  INFO 69080 --- [job-service] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-14T02:30:53.491+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:30:53.493+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:30:53.494+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:30:53.494+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:30:53.499+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:30:53.499+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:30:53.500+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:31:23.506+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:31:23.506+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:31:23.506+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:31:23.506+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:31:23.512+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:31:23.512+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:31:23.512+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:31:53.514+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:31:53.515+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:31:53.515+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:31:53.515+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:31:53.520+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:31:53.520+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:31:53.520+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:32:23.525+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:32:23.527+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:32:23.528+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:32:23.528+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:32:23.536+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:32:23.536+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:32:23.537+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:32:53.541+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:32:53.541+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:32:53.543+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:32:53.543+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:32:53.552+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:32:53.552+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:32:53.553+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:33:23.558+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:33:23.558+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:33:23.560+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:33:23.560+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:33:23.566+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:33:23.566+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:33:23.567+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:33:53.573+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:33:53.578+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:33:53.578+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:33:53.578+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:33:53.585+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:33:53.585+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:33:53.585+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:34:23.595+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:34:23.596+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:34:23.598+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:34:23.598+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:34:23.606+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:34:23.606+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:34:23.607+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:34:29.518+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:34:29.870+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:34:29.870+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:34:29.872+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:34:29.879+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:34:29.882+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:34:29.892+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.893+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:34:29.895+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.896+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:34:29.898+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.899+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:34:29.901+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.901+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:34:29.902+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.902+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:34:29.903+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.903+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:34:29.904+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.904+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:34:29.905+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.905+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:34:29.906+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.906+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:34:29.907+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.907+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:34:29.907+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.908+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:34:29.935+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.937+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:34:29.944+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:34:29.945+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:34:29.950+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:34:29.963+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:34:29.970+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:34:29.970+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:34:29.971+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:34:29.973+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:34:29.974+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:34:29.981+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.981+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:34:29.982+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.982+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:34:29.985+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.986+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:34:29.988+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.988+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:34:29.989+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.990+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:34:29.990+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.990+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:34:29.991+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.992+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:34:29.998+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:29.999+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:34:30.000+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:30.000+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:34:30.001+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:30.001+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:34:30.001+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:30.002+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:34:30.003+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:30.003+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:34:30.004+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:34:30.004+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:34:30.006+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:34:34.092+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:34:34.099+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:34:34.099+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:34:34.101+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:34:34.103+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:34:34.105+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:34:34.113+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.113+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:34:34.115+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.115+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:34:34.116+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.116+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:34:34.117+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.117+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:34:34.119+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.119+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:34:34.120+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.120+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:34:34.120+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.120+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:34:34.121+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.121+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:34:34.122+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.122+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:34:34.123+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.123+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:34:34.124+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.125+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:34:34.126+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.126+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:34:34.131+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:34:34.131+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:34:34.136+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:34:34.147+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:34:34.152+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:34:34.152+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:34:34.152+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:34:34.154+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:34:34.155+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:34:34.159+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.159+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:34:34.160+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.160+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:34:34.161+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.161+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:34:34.161+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.162+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:34:34.163+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.163+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:34:34.164+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.164+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:34:34.165+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.165+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:34:34.166+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.166+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:34:34.167+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.167+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:34:34.168+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.168+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:34:34.169+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.169+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:34:34.170+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:34:34.170+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-9] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:34:34.174+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [application/json, text/plain, */*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:34:34.174+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:34:34.176+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:34:53.612+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:34:53.612+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:34:53.615+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:34:53.615+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:34:53.629+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:34:53.629+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:34:53.632+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:35:23.638+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:35:23.645+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:35:23.645+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:35:23.645+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:35:23.651+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:35:23.651+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:35:23.652+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:35:48.311+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /jobs
+2026-04-14T02:35:48.313+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-04-14T02:35:48.315+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /jobs
+2026-04-14T02:35:48.315+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/jobs", parameters={}
+2026-04-14T02:35:48.317+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.hireconnect.job.controller.JobResource#getAllJobs()
+2026-04-14T02:35:48.322+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+Hibernate: 
+    select
+        j1_0.job_id,
+        j1_0.category,
+        j1_0.description,
+        j1_0.experience_required,
+        j1_0.location,
+        j1_0.max_salary,
+        j1_0.min_salary,
+        j1_0.posted_at,
+        j1_0.posted_by,
+        j1_0.status,
+        j1_0.title,
+        j1_0.type,
+        j1_0.view_count 
+    from
+        jobs j1_0 
+    where
+        j1_0.status=?
+2026-04-14T02:35:48.326+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:ENUM) <- [OPEN]
+2026-04-14T02:35:48.332+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.332+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [12]
+2026-04-14T02:35:48.333+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.333+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [11]
+2026-04-14T02:35:48.333+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.333+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [10]
+2026-04-14T02:35:48.334+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.334+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [9]
+2026-04-14T02:35:48.335+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.335+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [8]
+2026-04-14T02:35:48.336+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.336+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [7]
+2026-04-14T02:35:48.337+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.337+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [6]
+2026-04-14T02:35:48.338+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.338+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [5]
+2026-04-14T02:35:48.339+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.339+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [4]
+2026-04-14T02:35:48.340+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.340+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [3]
+2026-04-14T02:35:48.341+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.341+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [2]
+2026-04-14T02:35:48.342+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.SQL                        : 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+Hibernate: 
+    select
+        s1_0.job_id,
+        s1_0.skill 
+    from
+        job_skills s1_0 
+    where
+        s1_0.job_id=?
+2026-04-14T02:35:48.342+05:30 TRACE 69080 --- [job-service] [nio-8083-exec-1] org.hibernate.orm.jdbc.bind              : binding parameter (1:BIGINT) <- [1]
+2026-04-14T02:35:48.345+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/yaml]
+2026-04-14T02:35:48.346+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [[JobResponse(jobId=1, title=Senior Software Engineer, category=TECHNOLOGY, type=FULL_TIME, location= (truncated)...]
+2026-04-14T02:35:48.347+05:30 DEBUG 69080 --- [job-service] [nio-8083-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2026-04-14T02:35:52.513+05:30  INFO 69080 --- [job-service] [rap-executor-%d] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-04-14T02:35:53.655+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:35:53.655+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:35:53.656+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:35:53.657+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:35:53.660+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:35:53.660+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:35:53.660+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:36:23.666+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:36:23.666+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:36:23.667+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:36:23.667+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:36:23.671+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:36:23.671+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:36:23.671+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:36:53.678+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:36:53.678+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:36:53.679+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:36:53.679+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:36:53.684+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:36:53.684+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:36:53.685+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:37:23.693+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:37:23.693+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:37:23.700+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:37:23.700+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:37:23.707+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:37:23.706+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:37:23.707+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:37:53.717+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:37:53.717+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:37:53.721+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:37:53.721+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:37:53.727+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:37:53.727+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:37:53.728+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
+2026-04-14T02:38:23.733+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : HTTP GET http://localhost:8761/eureka/apps/delta
+2026-04-14T02:38:23.734+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : HTTP PUT http://localhost:8761/eureka/apps/JOB-SERVICE/job-service:8083?status=UP&lastDirtyTimestamp=1776113453205
+2026-04-14T02:38:23.734+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:38:23.734+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Accept=[application/json, application/yaml, application/*+json]
+2026-04-14T02:38:23.742+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:38:23.742+05:30 DEBUG 69080 --- [job-service] [beatExecutor-%d] o.s.web.client.RestTemplate              : Response 200 OK
+2026-04-14T02:38:23.743+05:30 DEBUG 69080 --- [job-service] [reshExecutor-%d] o.s.web.client.RestTemplate              : Reading to [org.springframework.cloud.netflix.eureka.http.EurekaApplications]
