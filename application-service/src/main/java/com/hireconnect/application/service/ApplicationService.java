@@ -12,6 +12,8 @@ public interface ApplicationService {
 
     List<Application> getByCandidate(UUID candidateId);
 
+    List<Application> getByRecruiter(Long recruiterId);
+
     List<Application> getByJob(Long jobId);
 
     Application getById(UUID applicationId);

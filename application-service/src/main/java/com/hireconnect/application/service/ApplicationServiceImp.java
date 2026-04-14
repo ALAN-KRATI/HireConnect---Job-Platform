@@ -71,6 +71,11 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
+    public List<Application> getByRecruiter(Long recruiterId) {
+        return applicationRepository.findByRecruiterId(recruiterId);
+    }
+
+    @Override
     public List<Application> getByJob(Long jobId) {
         return applicationRepository.findByJobId(jobId);
     }

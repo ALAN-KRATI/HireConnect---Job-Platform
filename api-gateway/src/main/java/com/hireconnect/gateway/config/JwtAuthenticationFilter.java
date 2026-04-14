@@ -26,8 +26,12 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             "/login",
             "/swagger-ui",
             "/v3/api-docs",
-            "/jobs",
             "/actuator"
+    );
+    
+    // Paths that can be accessed with OR without authentication
+    private static final List<String> OPTIONAL_AUTH_PATHS = List.of(
+            "/jobs"
     );
 
     @Override
@@ -35,15 +39,24 @@ public class JwtAuthenticationFilter implements GlobalFilter {
 
         String path = exchange.getRequest().getURI().getPath();
 
+        // Allow public paths without any auth
         boolean isPublic = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
-
         if (isPublic) {
             return chain.filter(exchange);
         }
+        
+        // Check if path allows optional authentication
+        boolean isOptionalAuth = OPTIONAL_AUTH_PATHS.stream().anyMatch(path::startsWith);
 
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
+        // If no auth header and path is optional auth, allow through
+        if ((authHeader == null || !authHeader.startsWith("Bearer ")) && isOptionalAuth) {
+            return chain.filter(exchange);
+        }
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("[JWT FILTER] Missing or invalid Authorization header for path: " + path);
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
@@ -51,6 +64,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String token = authHeader.substring(7);
 
         if (!jwtUtil.validateToken(token)) {
+            System.out.println("[JWT FILTER] Token validation failed for path: " + path);
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
@@ -61,9 +75,10 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String role = claims.get("role", String.class);
         String userId = claims.get("userId", String.class);
 
-        System.out.println("PATH = " + path);
-        System.out.println("ROLE = " + role);
-        System.out.println("USER_ID = " + userId);
+        System.out.println("[JWT FILTER] PATH = " + path);
+        System.out.println("[JWT FILTER] EMAIL = " + email);
+        System.out.println("[JWT FILTER] ROLE = " + role);
+        System.out.println("[JWT FILTER] USER_ID = " + userId);
 
         // Admin can access everything
         if ("ADMIN".equals(role)) {
@@ -79,12 +94,29 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             );
         }
 
-        // Candidate-only routes
-        if ((path.startsWith("/profiles")
-                || path.startsWith("/applications")
-                || path.startsWith("/interviews"))
-                && !"CANDIDATE".equals(role)) {
-
+        // Candidate-only routes (block non-candidates from candidate-specific endpoints)
+        boolean isCandidateOnlyPath = 
+            path.startsWith("/profiles/me") ||
+            path.startsWith("/profiles/candidates") ||
+            path.startsWith("/applications/candidate") ||
+            path.startsWith("/interviews/candidate");
+        
+        if (isCandidateOnlyPath && !"CANDIDATE".equals(role)) {
+            System.out.println("[JWT FILTER] 403 - Non-candidate accessing candidate-only path: " + path);
+            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+            return exchange.getResponse().setComplete();
+        }
+        
+        // Recruiter-only routes (block non-recruiters from recruiter-specific endpoints)
+        boolean isRecruiterOnlyPath = 
+            path.startsWith("/profiles/recruiters") ||
+            path.startsWith("/applications/recruiter") ||
+            path.startsWith("/interviews/recruiter") ||
+            path.startsWith("/subscriptions") ||
+            path.startsWith("/analytics");
+        
+        if (isRecruiterOnlyPath && !"RECRUITER".equals(role)) {
+            System.out.println("[JWT FILTER] 403 - Non-recruiter accessing recruiter-only path: " + path);
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
             return exchange.getResponse().setComplete();
         }

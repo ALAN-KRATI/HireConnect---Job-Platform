@@ -55,6 +55,20 @@ public class ApplicationResource {
                 return ResponseEntity.ok(responses);
         }
 
+        @GetMapping("/recruiter/me")
+        public ResponseEntity<List<ApplicationResponse>> getMyRecruiterApplications(HttpServletRequest request) {
+                String recruiterIdStr = request.getHeader("X-User-Id");
+                if (recruiterIdStr == null) {
+                        return ResponseEntity.badRequest().build();
+                }
+                Long recruiterId = Long.parseLong(recruiterIdStr);
+                List<ApplicationResponse> responses = applicationService.getByRecruiter(recruiterId)
+                                .stream()
+                                .map(this::mapToResponse)
+                                .toList();
+                return ResponseEntity.ok(responses);
+        }
+
         @GetMapping("/candidate/{candidateId}")
         public ResponseEntity<List<ApplicationResponse>> getByCandidate(@PathVariable UUID candidateId) {
                 List<ApplicationResponse> responses = applicationService.getByCandidate(candidateId)
