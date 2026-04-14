@@ -1,6 +1,7 @@
 package com.hireconnect.job.service;
 
 import com.hireconnect.job.client.AnalyticsClient;
+import com.hireconnect.job.document.JobDocument;
 import com.hireconnect.job.dto.JobRequest;
 import com.hireconnect.job.dto.JobResponse;
 import com.hireconnect.job.entity.Job;
@@ -8,6 +9,7 @@ import com.hireconnect.job.enums.JobStatus;
 import com.hireconnect.job.exception.JobNotFoundException;
 import com.hireconnect.job.messaging.JobNotificationProducer;
 import com.hireconnect.job.repository.JobRepository;
+import com.hireconnect.job.repository.JobSearchRepository;
 import com.hireconnect.job.util.JobMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,16 +17,17 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class JobServiceImp implements JobService {
 
     private final JobRepository repository;
+    private final JobSearchRepository jobSearchRepository;
     private final AnalyticsClient analyticsClient;
     private final JobNotificationProducer notificationProducer;
     private final JobMapper jobMapper;
-    private final JobSearchService jobSearchService;
 
     @Override
     public JobResponse addJob(JobRequest request) {
@@ -34,13 +37,35 @@ public class JobServiceImp implements JobService {
         Job job = jobMapper.toEntity(request);
 
         Job savedJob = repository.save(job);
-
+        
         // Index in Elasticsearch
-        jobSearchService.indexJob(savedJob);
+        try {
+            JobDocument doc = toJobDocument(savedJob);
+            jobSearchRepository.save(doc);
+        } catch (Exception e) {
+            // Log error but don't fail the request
+            System.err.println("Failed to index job in Elasticsearch: " + e.getMessage());
+        }
 
         notificationProducer.sendJobCreated(savedJob.getJobId());
 
         return jobMapper.toResponse(savedJob);
+    }
+    
+    private JobDocument toJobDocument(Job job) {
+        JobDocument doc = new JobDocument();
+        doc.setJobId(job.getJobId());
+        doc.setTitle(job.getTitle());
+        doc.setCategory(job.getCategory());
+        doc.setType(job.getType().name());
+        doc.setLocation(job.getLocation());
+        doc.setMinSalary(job.getMinSalary());
+        doc.setMaxSalary(job.getMaxSalary());
+        doc.setDescription(job.getDescription());
+        doc.setExperienceRequired(job.getExperienceRequired());
+        doc.setStatus(job.getStatus().name());
+        doc.setPostedBy(job.getPostedBy());
+        return doc;
     }
 
     @Override
@@ -83,9 +108,6 @@ public class JobServiceImp implements JobService {
 
         Job updatedJob = repository.save(job);
 
-        // Update in Elasticsearch
-        jobSearchService.indexJob(jobMapper.toResponse(updatedJob));
-
         return jobMapper.toResponse(updatedJob);
     }
 
@@ -97,9 +119,6 @@ public class JobServiceImp implements JobService {
         job.setStatus(JobStatus.DELETED);
 
         repository.save(job);
-
-        // Remove from Elasticsearch
-        jobSearchService.deleteJobIndex(jobId);
 
         notificationProducer.sendJobStatusChanged(jobId, JobStatus.DELETED.name());
     }
@@ -140,8 +159,65 @@ public class JobServiceImp implements JobService {
             Double maxSalary,
             Integer experience) {
 
-        // Use Elasticsearch for efficient search
-        return jobSearchService.searchJobs(title, location, category, minSalary, maxSalary, experience);
+        // Elasticsearch-based search with filtering
+        List<JobDocument> jobDocs;
+        
+        try {
+            // Start with keyword search or get all open jobs
+            if (title != null && !title.trim().isEmpty()) {
+                jobDocs = jobSearchRepository.searchByKeyword(title);
+            } else {
+                jobDocs = jobSearchRepository.findByStatus("OPEN");
+            }
+            
+            // Apply additional filters in memory (Elasticsearch for text search, Java for complex filtering)
+            return jobDocs.stream()
+                    .filter(doc -> doc.getStatus().equals("OPEN"))
+                    .filter(doc -> location == null || location.isEmpty() || 
+                            doc.getLocation().toLowerCase().contains(location.toLowerCase()))
+                    .filter(doc -> category == null || category.isEmpty() || 
+                            doc.getCategory().equalsIgnoreCase(category))
+                    .filter(doc -> minSalary == null || doc.getMaxSalary() >= minSalary)
+                    .filter(doc -> maxSalary == null || doc.getMinSalary() <= maxSalary)
+                    .filter(doc -> experience == null || doc.getExperienceRequired() <= experience)
+                    .map(this::toJobResponse)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            // Fallback to JPA if Elasticsearch fails
+            List<Job> jobs;
+            if (title != null && !title.trim().isEmpty()) {
+                jobs = repository.findByTitleContainingIgnoreCase(title);
+            } else {
+                jobs = repository.findByStatus(JobStatus.OPEN);
+            }
+            
+            return jobs.stream()
+                    .filter(job -> job.getStatus() == JobStatus.OPEN)
+                    .filter(job -> location == null || location.isEmpty() || 
+                            job.getLocation().toLowerCase().contains(location.toLowerCase()))
+                    .filter(job -> category == null || category.isEmpty() || 
+                            job.getCategory().equalsIgnoreCase(category))
+                    .filter(job -> minSalary == null || job.getMaxSalary() >= minSalary)
+                    .filter(job -> maxSalary == null || job.getMinSalary() <= maxSalary)
+                    .filter(job -> experience == null || job.getExperienceRequired() <= experience)
+                    .map(jobMapper::toResponse)
+                    .toList();
+        }
+    }
+    
+    private JobResponse toJobResponse(JobDocument doc) {
+        return JobResponse.builder()
+                .jobId(doc.getJobId())
+                .title(doc.getTitle())
+                .category(doc.getCategory())
+                .type(doc.getType() != null ? com.hireconnect.job.enums.JobType.valueOf(doc.getType()) : null)
+                .location(doc.getLocation())
+                .minSalary(doc.getMinSalary())
+                .maxSalary(doc.getMaxSalary())
+                .description(doc.getDescription())
+                .experienceRequired(doc.getExperienceRequired())
+                .status(doc.getStatus() != null ? com.hireconnect.job.enums.JobStatus.valueOf(doc.getStatus()) : null)
+                .build();
     }
 
     @Override

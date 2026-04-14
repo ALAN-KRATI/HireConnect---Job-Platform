@@ -1,7 +1,5 @@
 package com.hireconnect.job.document;
 
-import com.hireconnect.job.enums.JobStatus;
-import com.hireconnect.job.enums.JobType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Mapping;
-import org.springframework.data.elasticsearch.annotations.Setting;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -33,7 +26,7 @@ public class JobDocument {
     private String category;
 
     @Field(type = FieldType.Keyword)
-    private JobType type;
+    private String type;
 
     @Field(type = FieldType.Text, analyzer = "standard")
     private String location;
@@ -47,21 +40,12 @@ public class JobDocument {
     @Field(type = FieldType.Text, analyzer = "standard")
     private String description;
 
-    @Field(type = FieldType.Keyword)
-    private List<String> skills;
-
     @Field(type = FieldType.Integer)
     private Integer experienceRequired;
 
+    @Field(type = FieldType.Keyword)
+    private String status;
+
     @Field(type = FieldType.Long)
     private Long postedBy;
-
-    @Field(type = FieldType.Keyword)
-    private JobStatus status;
-
-    @Field(type = FieldType.Date, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime postedAt;
-
-    @Field(type = FieldType.Long)
-    private Long viewCount;
 }
