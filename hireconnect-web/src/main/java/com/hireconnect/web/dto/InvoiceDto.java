@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 public class InvoiceDto {
 
     private Long invoiceId;
-    private Long recruiterId;
+    private UUID recruiterId;
 
     private String recruiterName;
     private String invoiceNumber;

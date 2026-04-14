@@ -71,12 +71,12 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public List<Application> getByRecruiter(Long recruiterId) {
+    public List<Application> getByRecruiter(UUID recruiterId) {
         return applicationRepository.findByRecruiterId(recruiterId);
     }
 
     @Override
-    public List<Application> getByJob(Long jobId) {
+    public List<Application> getByJob(UUID jobId) {
         return applicationRepository.findByJobId(jobId);
     }
 
@@ -140,17 +140,17 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public long countByJob(Long jobId) {
+    public long countByJob(UUID jobId) {
         return applicationRepository.countByJobId(jobId);
     }
 
     @Override
-    public long countByRecruiterId(Long recruiterId) {
+    public long countByRecruiterId(UUID recruiterId) {
         return applicationRepository.countByRecruiterId(recruiterId);
     }
 
     @Override
-    public long countByRecruiterIdAndStatus(Long recruiterId, ApplicationStatus status) {
+    public long countByRecruiterIdAndStatus(UUID recruiterId, ApplicationStatus status) {
         return applicationRepository.countByRecruiterIdAndStatus(recruiterId, status);
     }
 
@@ -165,7 +165,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public Double findAverageTimeToHireByRecruiterId(Long recruiterId) {
+    public Double findAverageTimeToHireByRecruiterId(UUID recruiterId) {
         Double avg = applicationRepository.findAverageTimeToHireByRecruiterId(recruiterId);
         return avg != null ? avg : 0.0;
     }

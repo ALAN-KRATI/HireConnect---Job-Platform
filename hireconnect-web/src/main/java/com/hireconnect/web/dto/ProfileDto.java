@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -16,7 +17,7 @@ import java.util.List;
 public class ProfileDto {
 
     private Long profileId;
-    private Long userId;
+    private UUID userId;
 
     private String fullName;
     private String email;

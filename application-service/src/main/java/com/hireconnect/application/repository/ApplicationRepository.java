@@ -16,21 +16,21 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
 
     List<Application> findByCandidateEmail(String candidateEmail);
 
-    List<Application> findByJobId(Long jobId);
+    List<Application> findByJobId(UUID jobId);
 
-    List<Application> findByRecruiterId(Long recruiterId);
+    List<Application> findByRecruiterId(UUID recruiterId);
 
     List<Application> findByStatus(ApplicationStatus status);
 
     List<Application> findByAppliedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    long countByJobId(Long jobId);
+    long countByJobId(UUID jobId);
 
-    Optional<Application> findFirstByJobIdAndCandidateId(Long jobId, UUID candidateId);
+    Optional<Application> findFirstByJobIdAndCandidateId(UUID jobId, UUID candidateId);
 
-    long countByRecruiterId(Long recruiterId);
+    long countByRecruiterId(UUID recruiterId);
 
-    long countByRecruiterIdAndStatus(Long recruiterId, ApplicationStatus status);
+    long countByRecruiterIdAndStatus(UUID recruiterId, ApplicationStatus status);
 
     long countByStatus(ApplicationStatus status);
 
@@ -40,7 +40,7 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
             WHERE recruiter_id = :recruiterId
               AND status = 'OFFERED'
             """, nativeQuery = true)
-    Double findAverageTimeToHireByRecruiterId(Long recruiterId);
+    Double findAverageTimeToHireByRecruiterId(UUID recruiterId);
 
     @Query(value = """
             SELECT AVG(TIMESTAMPDIFF(DAY, applied_at, updated_at))

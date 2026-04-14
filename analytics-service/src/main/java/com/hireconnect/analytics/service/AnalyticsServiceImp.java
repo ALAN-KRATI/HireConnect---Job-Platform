@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class AnalyticsServiceImp implements AnalyticsService {
 
 
     @Override
-    public AnalyticsSummary getPipelineStats(Long recruiterId) {
+    public AnalyticsSummary getPipelineStats(UUID recruiterId) {
 
         log.info("Fetching analytics dashboard for recruiterId={}", recruiterId);
 
@@ -175,7 +176,7 @@ public class AnalyticsServiceImp implements AnalyticsService {
     }
 
     @Override
-    public double getTimeToHire(Long recruiterId) {
+    public double getTimeToHire(UUID recruiterId) {
 
         Double average = applicationServiceClient.getAverageTimeToHire(recruiterId);
 

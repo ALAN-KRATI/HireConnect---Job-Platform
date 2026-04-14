@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Repository
@@ -17,15 +18,15 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     List<Job> findByLocationIgnoreCase(String location);
 
-    List<Job> findByPostedBy(Long postedBy);
+    List<Job> findByPostedBy(UUID postedBy);
 
-    List<Job> findByPostedByAndStatus(Long postedBy, JobStatus status);
+    List<Job> findByPostedByAndStatus(UUID postedBy, JobStatus status);
 
     List<Job> findByStatus(JobStatus status);
 
-    long countByPostedBy(Long postedBy);
+    long countByPostedBy(UUID postedBy);
 
     long countByCategoryIgnoreCase(String category);
 
-    Long countByPostedByAndStatus(Long postedBy, JobStatus status);
+    Long countByPostedByAndStatus(UUID postedBy, JobStatus status);
 }

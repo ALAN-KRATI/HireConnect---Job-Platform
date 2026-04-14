@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -142,7 +143,7 @@ public class JobServiceImp implements JobService {
     }
 
     @Override
-    public List<JobResponse> getJobsByRecruiter(Long recruiterId) {
+    public List<JobResponse> getJobsByRecruiter(UUID recruiterId) {
         return repository.findByPostedBy(recruiterId)
                 .stream()
                 .filter(job -> job.getStatus() != JobStatus.DELETED)
@@ -252,7 +253,7 @@ public class JobServiceImp implements JobService {
     }
 
     @Override
-    public Long getRecruiterJobCount(Long recruiterId) {
+    public Long getRecruiterJobCount(UUID recruiterId) {
         return repository.countByPostedBy(recruiterId);
     }
 
@@ -287,7 +288,7 @@ public class JobServiceImp implements JobService {
     }
 
     @Override
-    public Long getRecruiterJobCountByStatus(Long recruiterId, JobStatus status) {
+    public Long getRecruiterJobCountByStatus(UUID recruiterId, JobStatus status) {
         return repository.countByPostedByAndStatus(recruiterId, status);
     }
 }

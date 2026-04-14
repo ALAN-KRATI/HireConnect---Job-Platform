@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/jobs")
@@ -50,7 +51,7 @@ public class JobResource {
     }
 
     @GetMapping("/recruiter/{recruiterId}")
-    public ResponseEntity<List<JobResponse>> getJobsByRecruiter(@PathVariable Long recruiterId) {
+    public ResponseEntity<List<JobResponse>> getJobsByRecruiter(@PathVariable UUID recruiterId) {
         return ResponseEntity.ok(jobService.getJobsByRecruiter(recruiterId));
     }
 
@@ -103,7 +104,7 @@ public class JobResource {
     
 
     @GetMapping("/recruiter/{recruiterId}/count")
-    public ResponseEntity<Long> getRecruiterJobCount(@PathVariable Long recruiterId) {
+    public ResponseEntity<Long> getRecruiterJobCount(@PathVariable UUID recruiterId) {
         return ResponseEntity.ok(jobService.getRecruiterJobCount(recruiterId));
     }
 
@@ -113,12 +114,12 @@ public class JobResource {
     }
 
     @GetMapping("/recruiter/{recruiterId}/active/count")
-    public ResponseEntity<Long> getActiveJobCount(@PathVariable Long recruiterId) {
+    public ResponseEntity<Long> getActiveJobCount(@PathVariable UUID recruiterId) {
         return ResponseEntity.ok(jobService.getRecruiterJobCountByStatus(recruiterId, JobStatus.OPEN));
     }
 
     @GetMapping("/recruiter/{recruiterId}/closed/count")
-    public ResponseEntity<Long> getClosedJobCount(@PathVariable Long recruiterId) {
+    public ResponseEntity<Long> getClosedJobCount(@PathVariable UUID recruiterId) {
         return ResponseEntity.ok(jobService.getRecruiterJobCountByStatus(recruiterId, JobStatus.CLOSED));
     }
 }

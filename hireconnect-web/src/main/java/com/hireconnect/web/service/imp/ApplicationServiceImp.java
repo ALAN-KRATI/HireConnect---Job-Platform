@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ApplicationServiceImp implements ApplicationService {
@@ -26,7 +27,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public void applyForJob(Long candidateId, Long jobId) {
+    public void applyForJob(UUID candidateId, Long jobId) {
         try {
             restTemplate.postForObject(
                     UrlConstants.APPLICATION_SERVICE + "/apply?candidateId={candidateId}&jobId={jobId}",
@@ -43,7 +44,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public List<ApplicationDto> getApplicationsByCandidate(Long candidateId) {
+    public List<ApplicationDto> getApplicationsByCandidate(UUID candidateId) {
         try {
             ResponseEntity<List<ApplicationDto>> response = restTemplate.exchange(
                     UrlConstants.APPLICATION_SERVICE + "/candidate/{candidateId}",
@@ -63,7 +64,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public List<ApplicationDto> getApplicationsForRecruiter(Long recruiterId) {
+    public List<ApplicationDto> getApplicationsForRecruiter(UUID recruiterId) {
         try {
             ResponseEntity<List<ApplicationDto>> response = restTemplate.exchange(
                     UrlConstants.APPLICATION_SERVICE + "/recruiter/{recruiterId}",

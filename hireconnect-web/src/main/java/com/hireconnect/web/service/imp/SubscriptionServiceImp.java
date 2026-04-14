@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SubscriptionServiceImp implements SubscriptionService {
@@ -28,7 +29,7 @@ public class SubscriptionServiceImp implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionDto getCurrentPlan(Long recruiterId) {
+    public SubscriptionDto getCurrentPlan(UUID recruiterId) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.SUBSCRIPTION_SERVICE + "/{recruiterId}",
@@ -43,7 +44,7 @@ public class SubscriptionServiceImp implements SubscriptionService {
     }
 
     @Override
-    public List<InvoiceDto> getInvoices(Long recruiterId) {
+    public List<InvoiceDto> getInvoices(UUID recruiterId) {
         try {
             ResponseEntity<List<InvoiceDto>> response = restTemplate.exchange(
                     UrlConstants.SUBSCRIPTION_SERVICE + "/{recruiterId}/invoices",
@@ -101,7 +102,7 @@ public class SubscriptionServiceImp implements SubscriptionService {
     }
 
     @Override
-    public SubscriptionDto upgradePlan(Long recruiterId, String planName) {
+    public SubscriptionDto upgradePlan(UUID recruiterId, String planName) {
         if (planName == null || planName.isBlank()) {
             throw new BadRequestException("Subscription plan is required.");
         }
@@ -122,7 +123,7 @@ public class SubscriptionServiceImp implements SubscriptionService {
     }
 
     @Override
-    public void cancelPlan(Long recruiterId) {
+    public void cancelPlan(UUID recruiterId) {
         try {
             restTemplate.postForObject(
                     UrlConstants.SUBSCRIPTION_SERVICE + "/{recruiterId}/cancel",

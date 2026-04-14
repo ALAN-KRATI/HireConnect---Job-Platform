@@ -33,7 +33,7 @@ public class Application {
     private UUID applicationId;
 
     @Column(name = "job_id", nullable = false)
-    private Long jobId;
+    private UUID jobId;
 
     @Column(name = "candidate_id", nullable = false)
     private UUID candidateId;
@@ -42,7 +42,7 @@ public class Application {
     private String candidateEmail;
 
     @Column(name = "recruiter_id", nullable = false)
-    private Long recruiterId;
+    private UUID recruiterId;
 
     @Column(name = "applied_at", nullable = false)
     private LocalDateTime appliedAt;

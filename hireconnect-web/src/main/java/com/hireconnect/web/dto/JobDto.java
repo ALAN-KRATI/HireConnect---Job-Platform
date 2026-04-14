@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class JobDto {
 
-    private Long recruiterId;
+    private UUID recruiterId;
     private String companyName;
     private Long jobId;
     private String title;
@@ -27,7 +28,7 @@ public class JobDto {
     private Double maxSalary;
     private List<String> skills;
     private Integer experienceRequired;
-    private Long postedBy;
+    private UUID postedBy;
     private JobStatus status;
     private LocalDateTime postedAt;
     private String description;

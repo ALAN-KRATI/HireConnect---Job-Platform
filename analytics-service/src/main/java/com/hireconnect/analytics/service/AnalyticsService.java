@@ -3,6 +3,7 @@ package com.hireconnect.analytics.service;
 import com.hireconnect.analytics.dto.AnalyticsSummary;
 
 import java.util.Map;
+import java.util.UUID;
 
 
 public interface AnalyticsService {
@@ -13,9 +14,9 @@ public interface AnalyticsService {
 
     double getViewToApplyRatio(Long jobId);
 
-    double getTimeToHire(Long recruiterId);
+    double getTimeToHire(UUID recruiterId);
 
-    AnalyticsSummary getPipelineStats(Long recruiterId);
+    AnalyticsSummary getPipelineStats(UUID recruiterId);
 
     AnalyticsSummary getPlatformStats();
 

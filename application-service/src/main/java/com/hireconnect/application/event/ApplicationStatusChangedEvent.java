@@ -15,8 +15,8 @@ public class ApplicationStatusChangedEvent {
 
     private UUID applicationId;
     private UUID candidateId;
-    private Long recruiterId;
-    private Long jobId;
+    private UUID recruiterId;
+    private UUID jobId;
 
     private ApplicationStatus status;
 

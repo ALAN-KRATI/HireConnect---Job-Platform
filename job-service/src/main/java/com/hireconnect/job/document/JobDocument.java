@@ -9,6 +9,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -46,6 +48,6 @@ public class JobDocument {
     @Field(type = FieldType.Keyword)
     private String status;
 
-    @Field(type = FieldType.Long)
-    private Long postedBy;
+    @Field(type = FieldType.Keyword)
+    private UUID postedBy;
 }

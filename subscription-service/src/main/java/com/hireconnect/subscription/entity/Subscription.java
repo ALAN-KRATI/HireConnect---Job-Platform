@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.hireconnect.subscription.enums.SubscriptionPlan;
 import com.hireconnect.subscription.enums.SubscriptionStatus;
@@ -21,7 +22,7 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer subscriptionId;
 
-    private Integer recruiterId;
+    private UUID recruiterId;
 
     @Enumerated(EnumType.STRING)
     private SubscriptionPlan plan; // FREE, PROFESSIONAL, ENTERPRISE

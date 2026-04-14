@@ -4,20 +4,21 @@ import com.hireconnect.web.dto.InvoiceDto;
 import com.hireconnect.web.dto.SubscriptionDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface SubscriptionService {
 
-    SubscriptionDto getCurrentPlan(Long recruiterId);
+    SubscriptionDto getCurrentPlan(UUID recruiterId);
 
-    List<InvoiceDto> getInvoices(Long recruiterId);
+    List<InvoiceDto> getInvoices(UUID recruiterId);
 
     List<SubscriptionDto> getAllSubscriptions();
 
     List<InvoiceDto> getAllInvoices();
 
-    SubscriptionDto upgradePlan(Long recruiterId, String planName);
+    SubscriptionDto upgradePlan(UUID recruiterId, String planName);
 
-    void cancelPlan(Long recruiterId);
+    void cancelPlan(UUID recruiterId);
 
     List<String> getAvailablePlans();
 }

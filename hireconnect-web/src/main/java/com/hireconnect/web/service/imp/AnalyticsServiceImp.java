@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 @Service
 public class AnalyticsServiceImp implements AnalyticsService {
 
@@ -21,7 +23,7 @@ public class AnalyticsServiceImp implements AnalyticsService {
     }
 
     @Override
-    public AnalyticsDto getRecruiterAnalytics(Long recruiterId) {
+    public AnalyticsDto getRecruiterAnalytics(UUID recruiterId) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.ANALYTICS_SERVICE + "/recruiter/{recruiterId}",

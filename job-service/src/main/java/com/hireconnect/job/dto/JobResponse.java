@@ -2,6 +2,7 @@ package com.hireconnect.job.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import com.hireconnect.job.enums.JobStatus;
 import com.hireconnect.job.enums.JobType;
@@ -21,7 +22,7 @@ public class JobResponse {
     private Double maxSalary;
     private List<String> skills;
     private Integer experienceRequired;
-    private Long postedBy;
+    private UUID postedBy;
     private JobStatus status;
     private LocalDateTime postedAt;
     private String description;

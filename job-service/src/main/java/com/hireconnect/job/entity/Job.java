@@ -23,6 +23,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "jobs")
@@ -68,7 +69,7 @@ public class Job {
     private Integer experienceRequired;
 
     @Column(nullable = false)
-    private Long postedBy;
+    private UUID postedBy;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -16,8 +17,8 @@ public class ApplicationDto {
 
     private Long applicationId;
 
-    private Long candidateId;
-    private Long recruiterId;
+    private UUID candidateId;
+    private UUID recruiterId;
     private Long jobId;
 
     private String candidateName;

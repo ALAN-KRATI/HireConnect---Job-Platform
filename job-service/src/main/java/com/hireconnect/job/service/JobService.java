@@ -6,6 +6,7 @@ import com.hireconnect.job.enums.JobStatus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface JobService {
 
@@ -23,7 +24,7 @@ public interface JobService {
 
     List<JobResponse> getJobsByLocation(String location);
 
-    List<JobResponse> getJobsByRecruiter(Long recruiterId);
+    List<JobResponse> getJobsByRecruiter(UUID recruiterId);
 
     List<JobResponse> searchJobs(
             String title,
@@ -38,9 +39,9 @@ public interface JobService {
 
     Long getJobViewCount(Long jobId);
 
-    Long getRecruiterJobCount(Long recruiterId);
+    Long getRecruiterJobCount(UUID recruiterId);
 
     Map<String, Long> getTopCategories();
 
-    Long getRecruiterJobCountByStatus(Long recruiterId, JobStatus status);
+    Long getRecruiterJobCountByStatus(UUID recruiterId, JobStatus status);
 }

@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class JobServiceImp implements JobService {
@@ -61,7 +62,7 @@ public class JobServiceImp implements JobService {
     }
 
     @Override
-    public List<JobDto> getJobsByRecruiter(Long recruiterId) {
+    public List<JobDto> getJobsByRecruiter(UUID recruiterId) {
         try {
             ResponseEntity<List<JobDto>> response = restTemplate.exchange(
                     UrlConstants.JOB_SERVICE + "/recruiter/{recruiterId}",
@@ -161,7 +162,7 @@ public class JobServiceImp implements JobService {
     }
 
     @Override
-    public List<JobDto> getSavedJobs(Long candidateId) {
+    public List<JobDto> getSavedJobs(UUID candidateId) {
         try {
             ResponseEntity<List<JobDto>> response = restTemplate.exchange(
                     UrlConstants.JOB_SERVICE + "/saved/{candidateId}",

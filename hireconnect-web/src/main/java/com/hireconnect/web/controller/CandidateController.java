@@ -9,6 +9,8 @@ import com.hireconnect.web.service.ProfileService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+
+import java.util.UUID;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,7 @@ public class CandidateController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         model.addAttribute("pageTitle", "Candidate Dashboard");
         model.addAttribute("profile", profileService.getCandidateProfile(candidateId));
@@ -93,7 +95,7 @@ public class CandidateController {
     @GetMapping("/profile")
     public String viewProfile(Model model, Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         model.addAttribute("pageTitle", "My Profile");
         model.addAttribute("profile", profileService.getCandidateProfile(candidateId));
@@ -132,7 +134,7 @@ public class CandidateController {
     public String applyForJob(@PathVariable Long jobId,
                               Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         applicationService.applyForJob(candidateId, jobId);
 
@@ -143,7 +145,7 @@ public class CandidateController {
     public String bookmarkJob(@PathVariable Long jobId,
                               Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         profileService.bookmarkJob(candidateId, jobId);
 
@@ -154,7 +156,7 @@ public class CandidateController {
     public String viewApplications(Model model,
                                    Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         model.addAttribute("pageTitle", "My Applications");
         model.addAttribute("applications",
@@ -167,7 +169,7 @@ public class CandidateController {
     public String viewInterviews(Model model,
                                  Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         model.addAttribute("pageTitle", "My Interviews");
         model.addAttribute("interviews",
@@ -180,7 +182,7 @@ public class CandidateController {
     public String viewNotifications(Model model,
                                     Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         model.addAttribute("pageTitle", "Notifications");
         model.addAttribute("notifications",
@@ -201,14 +203,14 @@ public class CandidateController {
     public String addMoneyToWallet(@RequestParam Double amount,
                                    Authentication authentication) {
 
-        Long candidateId = getCandidateId(authentication);
+        UUID candidateId = getCandidateId(authentication);
 
         profileService.addMoneyToWallet(candidateId, amount);
 
         return "redirect:/candidate/profile?success=Wallet updated successfully";
     }
 
-    private Long getCandidateId(Authentication authentication) {
+    private UUID getCandidateId(Authentication authentication) {
         return profileService.getCandidateIdByEmail(authentication.getName());
     }
 }

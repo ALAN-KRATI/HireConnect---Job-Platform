@@ -12,9 +12,9 @@ public interface ApplicationService {
 
     List<Application> getByCandidate(UUID candidateId);
 
-    List<Application> getByRecruiter(Long recruiterId);
+    List<Application> getByRecruiter(UUID recruiterId);
 
-    List<Application> getByJob(Long jobId);
+    List<Application> getByJob(UUID jobId);
 
     Application getById(UUID applicationId);
 
@@ -22,17 +22,17 @@ public interface ApplicationService {
 
     void withdrawApplication(UUID applicationId);
 
-    long countByJob(Long jobId);
+    long countByJob(UUID jobId);
 
-    long countByRecruiterId(Long recruiterId);
+    long countByRecruiterId(UUID recruiterId);
 
-    long countByRecruiterIdAndStatus(Long recruiterId, ApplicationStatus status);
+    long countByRecruiterIdAndStatus(UUID recruiterId, ApplicationStatus status);
 
     long countByStatus(ApplicationStatus status);
 
     long count();
 
-    Double findAverageTimeToHireByRecruiterId(Long recruiterId);
+    Double findAverageTimeToHireByRecruiterId(UUID recruiterId);
 
     Double findPlatformAverageTimeToHire();
     

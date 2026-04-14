@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class BookmarkJobDto {
 
     private Long bookmarkId;
-    private Long candidateId;
+    private UUID candidateId;
     private Long jobId;
 
     private String jobTitle;

@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProfileServiceImp implements ProfileService {
@@ -58,7 +59,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public ProfileDto getCandidateProfile(Long candidateId) {
+    public ProfileDto getCandidateProfile(UUID candidateId) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.PROFILE_SERVICE + "/candidate/{candidateId}",
@@ -73,7 +74,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public ProfileDto getRecruiterProfile(Long recruiterId) {
+    public ProfileDto getRecruiterProfile(UUID recruiterId) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.PROFILE_SERVICE + "/recruiter/{recruiterId}",
@@ -88,7 +89,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public ProfileDto updateProfile(Long userId, ProfileDto dto) {
+    public ProfileDto updateProfile(UUID userId, ProfileDto dto) {
         try {
             restTemplate.put(
                     UrlConstants.PROFILE_SERVICE + "/{userId}",
@@ -125,17 +126,17 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public void suspendUser(Long userId) {
+    public void suspendUser(UUID userId) {
         updateUserStatus(userId, "suspend", "suspend");
     }
 
     @Override
-    public void activateUser(Long userId) {
+    public void activateUser(UUID userId) {
         updateUserStatus(userId, "activate", "activate");
     }
 
     @Override
-    public void bookmarkJob(Long candidateId, Long jobId) {
+    public void bookmarkJob(UUID candidateId, Long jobId) {
         try {
             restTemplate.postForObject(
                     UrlConstants.PROFILE_SERVICE + "/{candidateId}/bookmark/{jobId}",
@@ -150,7 +151,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public void addMoneyToWallet(Long candidateId, Double amount) {
+    public void addMoneyToWallet(UUID candidateId, Double amount) {
         if (amount == null || amount <= 0) {
             throw new BadRequestException("Wallet amount must be greater than 0.");
         }
@@ -169,7 +170,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public ProfileDto getUserById(Long userId) {
+    public ProfileDto getUserById(UUID userId) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.PROFILE_SERVICE + "/{userId}",
@@ -184,7 +185,7 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public void updateWalletBalance(Long userId, Double amount) {
+    public void updateWalletBalance(UUID userId, Double amount) {
         if (amount == null) {
             throw new BadRequestException("Amount is required.");
         }
@@ -203,11 +204,11 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public Long getCandidateIdByEmail(String email) {
+    public UUID getCandidateIdByEmail(String email) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.PROFILE_SERVICE + "/candidate/email/{email}",
-                    Long.class,
+                    UUID.class,
                     email
             );
         } catch (HttpClientErrorException.NotFound ex) {
@@ -218,11 +219,11 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public Long getRecruiterIdByEmail(String email) {
+    public UUID getRecruiterIdByEmail(String email) {
         try {
             return restTemplate.getForObject(
                     UrlConstants.PROFILE_SERVICE + "/recruiter/email/{email}",
-                    Long.class,
+                    UUID.class,
                     email
             );
         } catch (HttpClientErrorException.NotFound ex) {
@@ -232,7 +233,7 @@ public class ProfileServiceImp implements ProfileService {
         }
     }
 
-    private void updateUserStatus(Long userId, String action, String actionName) {
+    private void updateUserStatus(UUID userId, String action, String actionName) {
         try {
             restTemplate.postForObject(
                     UrlConstants.PROFILE_SERVICE + "/{userId}/" + action,

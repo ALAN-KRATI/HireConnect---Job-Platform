@@ -3,6 +3,7 @@ package com.hireconnect.analytics.client;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import java.util.UUID;
 
 
 @FeignClient(name = "application-service")
@@ -12,22 +13,22 @@ public interface ApplicationServiceClient {
     Integer getApplicationCountByJob(@PathVariable Long jobId);
 
     @GetMapping("/applications/recruiter/{recruiterId}/count")
-    Long getRecruiterApplicationCount(@PathVariable Long recruiterId);
+    Long getRecruiterApplicationCount(@PathVariable UUID recruiterId);
 
     @GetMapping("/applications/recruiter/{recruiterId}/shortlisted/count")
-    Integer getShortlistedCount(@PathVariable Long recruiterId);
+    Integer getShortlistedCount(@PathVariable UUID recruiterId);
 
     @GetMapping("/applications/recruiter/{recruiterId}/interview-scheduled/count")
-    Integer getInterviewScheduledCount(@PathVariable Long recruiterId);
+    Integer getInterviewScheduledCount(@PathVariable UUID recruiterId);
 
     @GetMapping("/applications/recruiter/{recruiterId}/offered/count")
-    Integer getOfferedCount(@PathVariable Long recruiterId);
+    Integer getOfferedCount(@PathVariable UUID recruiterId);
 
     @GetMapping("/applications/recruiter/{recruiterId}/rejected/count")
-    Integer getRejectedCount(@PathVariable Long recruiterId);
+    Integer getRejectedCount(@PathVariable UUID recruiterId);
 
     @GetMapping("/applications/recruiter/{recruiterId}/avg-time-to-hire")
-    Double getAverageTimeToHire(@PathVariable Long recruiterId);
+    Double getAverageTimeToHire(@PathVariable UUID recruiterId);
 
     @GetMapping("/applications/platform/total")
     Long getPlatformApplicationCount();

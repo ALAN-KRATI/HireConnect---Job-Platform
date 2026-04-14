@@ -7,22 +7,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Integer> {
 
-    List<Subscription> findByRecruiterId(Integer recruiterId);
+    List<Subscription> findByRecruiterId(UUID recruiterId);
 
     List<Subscription> findByStatus(SubscriptionStatus status);
 
     Optional<Subscription> findByRecruiterIdAndStatus(
-            Integer recruiterId,
+            UUID recruiterId,
             SubscriptionStatus status
     );
 
     long countByPlan(SubscriptionPlan plan);
 
     boolean existsByRecruiterIdAndStatus(
-            Integer recruiterId,
+            UUID recruiterId,
             SubscriptionStatus status
     );
 }

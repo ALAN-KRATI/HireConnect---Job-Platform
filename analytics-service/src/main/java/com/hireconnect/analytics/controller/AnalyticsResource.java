@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/analytics")
@@ -51,7 +52,7 @@ public class AnalyticsResource {
         @GetMapping("/recruiter/{recruiterId}/dashboard")
         @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
         public ResponseEntity<AnalyticsSummary> getRecruiterDashboard(
-                        @PathVariable Long recruiterId) {
+                        @PathVariable UUID recruiterId) {
 
                 return ResponseEntity.ok(
                                 analyticsService.getPipelineStats(recruiterId));
@@ -95,7 +96,7 @@ public class AnalyticsResource {
         @GetMapping("/recruiter/{recruiterId}/time-to-hire")
         @PreAuthorize("hasRole('RECRUITER') or hasRole('ADMIN')")
         public ResponseEntity<Double> getAverageTimeToHire(
-                        @PathVariable Long recruiterId) {
+                        @PathVariable UUID recruiterId) {
 
                 return ResponseEntity.ok(
                                 analyticsService.getTimeToHire(recruiterId));

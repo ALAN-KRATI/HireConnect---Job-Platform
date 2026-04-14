@@ -61,7 +61,7 @@ public class ApplicationResource {
                 if (recruiterIdStr == null) {
                         return ResponseEntity.badRequest().build();
                 }
-                Long recruiterId = Long.parseLong(recruiterIdStr);
+                UUID recruiterId = UUID.fromString(recruiterIdStr);
                 List<ApplicationResponse> responses = applicationService.getByRecruiter(recruiterId)
                                 .stream()
                                 .map(this::mapToResponse)
@@ -80,7 +80,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/job/{jobId}")
-        public ResponseEntity<List<ApplicationResponse>> getByJob(@PathVariable Long jobId) {
+        public ResponseEntity<List<ApplicationResponse>> getByJob(@PathVariable UUID jobId) {
                 List<ApplicationResponse> responses = applicationService.getByJob(jobId)
                                 .stream()
                                 .map(this::mapToResponse)
@@ -139,17 +139,17 @@ public class ApplicationResource {
         }
 
         @GetMapping("/job/{jobId}/count")
-        public ResponseEntity<Long> countByJob(@PathVariable Long jobId) {
+        public ResponseEntity<Long> countByJob(@PathVariable UUID jobId) {
                 return ResponseEntity.ok(applicationService.countByJob(jobId));
         }
 
         @GetMapping("/recruiter/{recruiterId}/count")
-        public ResponseEntity<Long> getRecruiterApplicationCount(@PathVariable Long recruiterId) {
+        public ResponseEntity<Long> getRecruiterApplicationCount(@PathVariable UUID recruiterId) {
                 return ResponseEntity.ok(applicationService.countByRecruiterId(recruiterId));
         }
 
         @GetMapping("/recruiter/{recruiterId}/shortlisted/count")
-        public ResponseEntity<Long> getShortlistedCount(@PathVariable Long recruiterId) {
+        public ResponseEntity<Long> getShortlistedCount(@PathVariable UUID recruiterId) {
                 return ResponseEntity.ok(
                                 applicationService.countByRecruiterIdAndStatus(
                                                 recruiterId,
@@ -157,7 +157,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/recruiter/{recruiterId}/offered/count")
-        public ResponseEntity<Long> getOfferedCount(@PathVariable Long recruiterId) {
+        public ResponseEntity<Long> getOfferedCount(@PathVariable UUID recruiterId) {
                 return ResponseEntity.ok(
                                 applicationService.countByRecruiterIdAndStatus(
                                                 recruiterId,
@@ -165,7 +165,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/recruiter/{recruiterId}/rejected/count")
-        public ResponseEntity<Long> getRejectedCount(@PathVariable Long recruiterId) {
+        public ResponseEntity<Long> getRejectedCount(@PathVariable UUID recruiterId) {
                 return ResponseEntity.ok(
                                 applicationService.countByRecruiterIdAndStatus(
                                                 recruiterId,
@@ -173,7 +173,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/recruiter/{recruiterId}/avg-time-to-hire")
-        public ResponseEntity<Double> getAverageTimeToHire(@PathVariable Long recruiterId) {
+        public ResponseEntity<Double> getAverageTimeToHire(@PathVariable UUID recruiterId) {
                 return ResponseEntity.ok(
                                 applicationService.findAverageTimeToHireByRecruiterId(recruiterId));
         }
@@ -220,7 +220,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/recruiter/{recruiterId}/interview-scheduled/count")
-        public ResponseEntity<Long> getInterviewScheduledCount(@PathVariable Long recruiterId) {
+        public ResponseEntity<Long> getInterviewScheduledCount(@PathVariable UUID recruiterId) {
                 return ResponseEntity.ok(
                                 applicationService.countByRecruiterIdAndStatus(
                                                 recruiterId,

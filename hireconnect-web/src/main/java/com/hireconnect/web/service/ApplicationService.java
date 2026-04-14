@@ -3,14 +3,15 @@ package com.hireconnect.web.service;
 import com.hireconnect.web.dto.ApplicationDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ApplicationService {
 
-    void applyForJob(Long candidateId, Long jobId);
+    void applyForJob(UUID candidateId, Long jobId);
 
-    List<ApplicationDto> getApplicationsByCandidate(Long candidateId);
+    List<ApplicationDto> getApplicationsByCandidate(UUID candidateId);
 
-    List<ApplicationDto> getApplicationsForRecruiter(Long recruiterId);
+    List<ApplicationDto> getApplicationsForRecruiter(UUID recruiterId);
 
     void shortlistCandidate(Long applicationId);
 

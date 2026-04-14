@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
+import java.util.UUID;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,7 +78,7 @@ public class AdminController {
     }
 
     @PostMapping("/users/{userId}/suspend")
-    public String suspendUser(@PathVariable Long userId) {
+    public String suspendUser(@PathVariable UUID userId) {
 
         profileService.suspendUser(userId);
 
@@ -84,7 +86,7 @@ public class AdminController {
     }
 
     @PostMapping("/users/{userId}/activate")
-    public String activateUser(@PathVariable Long userId) {
+    public String activateUser(@PathVariable UUID userId) {
 
         profileService.activateUser(userId);
 

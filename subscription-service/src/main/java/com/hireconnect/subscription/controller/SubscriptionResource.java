@@ -1,18 +1,21 @@
 package com.hireconnect.subscription.controller;
 
-import com.hireconnect.subscription.dto.InvoiceResponse;
-import com.hireconnect.subscription.dto.SubscriptionRequest;
-import com.hireconnect.subscription.dto.SubscriptionResponse;
+import com.hireconnect.subscription.dto.*;
 import com.hireconnect.subscription.enums.PaymentMode;
 import com.hireconnect.subscription.enums.SubscriptionPlan;
+import com.hireconnect.subscription.service.StripePaymentService;
 import com.hireconnect.subscription.service.SubscriptionService;
+import com.stripe.exception.StripeException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/subscriptions")
@@ -20,6 +23,7 @@ import java.util.List;
 public class SubscriptionResource {
 
     private final SubscriptionService subscriptionService;
+    private final StripePaymentService stripePaymentService;
 
     @GetMapping("/plans")
     @PreAuthorize("hasRole('RECRUITER')")
@@ -30,7 +34,7 @@ public class SubscriptionResource {
     @GetMapping("/current")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<SubscriptionResponse> getCurrentSubscription(
-            @RequestParam Integer recruiterId
+            @RequestParam UUID recruiterId
     ) {
         List<SubscriptionResponse> subs = subscriptionService.getByRecruiter(recruiterId);
         return ResponseEntity.ok(subs.stream()
@@ -42,7 +46,7 @@ public class SubscriptionResource {
     @PostMapping("/upgrade")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<SubscriptionResponse> upgradePlan(
-            @RequestParam Integer recruiterId,
+            @RequestParam UUID recruiterId,
             @RequestParam String plan
     ) {
         return ResponseEntity.ok(
@@ -91,7 +95,7 @@ public class SubscriptionResource {
     @GetMapping("/recruiter/{recruiterId}")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<List<SubscriptionResponse>> getByRecruiter(
-            @PathVariable Integer recruiterId
+            @PathVariable UUID recruiterId
     ) {
         return ResponseEntity.ok(subscriptionService.getByRecruiter(recruiterId));
     }
@@ -99,7 +103,7 @@ public class SubscriptionResource {
     @GetMapping("/invoices/{recruiterId}")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<List<InvoiceResponse>> getInvoices(
-            @PathVariable Integer recruiterId
+            @PathVariable UUID recruiterId
     ) {
         return ResponseEntity.ok(subscriptionService.getInvoices(recruiterId));
     }
@@ -107,7 +111,7 @@ public class SubscriptionResource {
     @GetMapping("/recruiter/{recruiterId}/job-limit")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<Integer> getJobLimit(
-            @PathVariable Integer recruiterId
+            @PathVariable UUID recruiterId
     ) {
         return ResponseEntity.ok(
                 subscriptionService.getAllowedJobLimit(recruiterId)
@@ -117,10 +121,65 @@ public class SubscriptionResource {
     @GetMapping("/recruiter/{recruiterId}/can-post")
     @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<Boolean> canPostMoreJobs(
-            @PathVariable Integer recruiterId
+            @PathVariable UUID recruiterId
     ) {
         return ResponseEntity.ok(
                 subscriptionService.canPostMoreJobs(recruiterId)
         );
+    }
+
+    @PostMapping("/payment/checkout")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<PaymentResponseDTO> createCheckoutSession(
+            @RequestParam UUID recruiterId,
+            @Valid @RequestBody CreatePaymentRequestDTO request
+    ) throws StripeException {
+        return ResponseEntity.ok(stripePaymentService.createCheckoutSession(recruiterId, request));
+    }
+
+    @PostMapping("/payment/intent")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<PaymentResponseDTO> createPaymentIntent(
+            @RequestParam UUID recruiterId,
+            @Valid @RequestBody CreatePaymentRequestDTO request
+    ) throws StripeException {
+        return ResponseEntity.ok(stripePaymentService.createPaymentIntent(recruiterId, request));
+    }
+
+    @GetMapping("/stripe-config")
+    public ResponseEntity<java.util.Map<String, String>> getStripeConfig() {
+        return ResponseEntity.ok(java.util.Map.of("publishableKey", stripePaymentService.getPublishableKey()));
+    }
+
+    @GetMapping("/invoices/{invoiceId}/download")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<byte[]> downloadInvoice(@PathVariable Integer invoiceId) {
+        byte[] pdfBytes = subscriptionService.generateInvoicePdf(invoiceId);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "invoice-" + invoiceId + ".pdf");
+        
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfBytes);
+    }
+
+    @GetMapping("/invoices/{invoiceId}/details")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<InvoiceResponseDTO> getInvoiceDetails(@PathVariable Integer invoiceId) {
+        return ResponseEntity.ok(subscriptionService.getInvoiceDetails(invoiceId));
+    }
+
+    @GetMapping("/analytics/recruiter/{recruiterId}")
+    @PreAuthorize("hasRole('RECRUITER')")
+    public ResponseEntity<SubscriptionAnalyticsDTO> getRecruiterAnalytics(@PathVariable UUID recruiterId) {
+        return ResponseEntity.ok(stripePaymentService.getAnalytics(recruiterId));
+    }
+
+    @GetMapping("/analytics/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<SubscriptionAnalyticsDTO> getAdminAnalytics() {
+        return ResponseEntity.ok(stripePaymentService.getAdminAnalytics());
     }
 }

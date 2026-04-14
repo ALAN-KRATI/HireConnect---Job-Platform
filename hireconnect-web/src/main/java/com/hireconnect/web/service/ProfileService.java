@@ -4,34 +4,35 @@ import com.hireconnect.web.dto.ProfileDto;
 import com.hireconnect.web.dto.RegisterRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ProfileService {
 
     void registerCandidate(RegisterRequest request);
 
-    Long getCandidateIdByEmail(String email);
+    UUID getCandidateIdByEmail(String email);
 
-    Long getRecruiterIdByEmail(String email);
+    UUID getRecruiterIdByEmail(String email);
 
     void registerRecruiter(RegisterRequest request);
 
-    ProfileDto getCandidateProfile(Long candidateId);
+    ProfileDto getCandidateProfile(UUID candidateId);
 
-    ProfileDto getRecruiterProfile(Long recruiterId);
+    ProfileDto getRecruiterProfile(UUID recruiterId);
 
-    ProfileDto updateProfile(Long userId, ProfileDto profileDto);
+    ProfileDto updateProfile(UUID userId, ProfileDto profileDto);
 
     List<ProfileDto> getAllUsers();
 
-    void activateUser(Long userId);
+    void activateUser(UUID userId);
 
-    void suspendUser(Long userId);
+    void suspendUser(UUID userId);
 
-    void bookmarkJob(Long candidateId, Long jobId);
+    void bookmarkJob(UUID candidateId, Long jobId);
 
-    void addMoneyToWallet(Long candidateId, Double amount);
+    void addMoneyToWallet(UUID candidateId, Double amount);
 
-    ProfileDto getUserById(Long userId);
+    ProfileDto getUserById(UUID userId);
 
-    void updateWalletBalance(Long userId, Double amount);
+    void updateWalletBalance(UUID userId, Double amount);
 }

@@ -12,6 +12,8 @@ import com.hireconnect.web.service.ProfileService;
 import com.hireconnect.web.service.SubscriptionService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+
+import java.util.UUID;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +46,7 @@ public class RecruiterController {
     public String recruiterDashboard(Model model,
                                      org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "Recruiter Dashboard");
         model.addAttribute("profile", profileService.getRecruiterProfile(recruiterId));
@@ -63,7 +65,7 @@ public class RecruiterController {
     public String recruiterJobs(Model model,
                                 org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "My Jobs");
         model.addAttribute("jobs", jobService.getJobsByRecruiter(recruiterId));
@@ -89,7 +91,7 @@ public class RecruiterController {
     public String postJob(@Valid @ModelAttribute("job") JobDto jobDto,
                           org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         jobDto.setRecruiterId(recruiterId);
 
@@ -115,7 +117,7 @@ public class RecruiterController {
                             @ModelAttribute("job") JobDto jobDto,
                             org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         jobDto.setRecruiterId(recruiterId);
 
@@ -152,7 +154,7 @@ public class RecruiterController {
     public String viewApplications(Model model,
                                    org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "Applications");
         model.addAttribute("applications",
@@ -202,7 +204,7 @@ public class RecruiterController {
     public String scheduleInterview(@ModelAttribute("interview") InterviewDto interviewDto,
                                     org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
         interviewDto.setRecruiterId(recruiterId);
 
         interviewService.scheduleInterview(interviewDto);
@@ -214,7 +216,7 @@ public class RecruiterController {
     public String viewInterviews(Model model,
                                  org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "Interviews");
         model.addAttribute("interviews",
@@ -227,7 +229,7 @@ public class RecruiterController {
     public String viewAnalytics(Model model,
                                 org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "Recruiter Analytics");
         model.addAttribute("analytics",
@@ -240,7 +242,7 @@ public class RecruiterController {
     public String managePlan(Model model,
                              org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "Subscription");
         model.addAttribute("subscription",
@@ -255,7 +257,7 @@ public class RecruiterController {
     public String upgradeSubscription(@RequestParam String plan,
                                       org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         subscriptionService.upgradePlan(recruiterId, plan);
 
@@ -265,7 +267,7 @@ public class RecruiterController {
     @PostMapping("/subscription/cancel")
     public String cancelSubscription(org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         subscriptionService.cancelPlan(recruiterId);
 
@@ -276,7 +278,7 @@ public class RecruiterController {
     public String viewInvoices(Model model,
                                org.springframework.security.core.Authentication authentication) {
 
-        Long recruiterId = getRecruiterId(authentication);
+        UUID recruiterId = getRecruiterId(authentication);
 
         model.addAttribute("pageTitle", "Invoices");
         model.addAttribute("invoices",
@@ -285,7 +287,7 @@ public class RecruiterController {
         return "recruiter/invoices";
     }
 
-    private Long getRecruiterId(org.springframework.security.core.Authentication authentication) {
+    private UUID getRecruiterId(org.springframework.security.core.Authentication authentication) {
         return profileService.getRecruiterIdByEmail(authentication.getName());
     }
 }

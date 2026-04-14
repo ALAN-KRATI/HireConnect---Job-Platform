@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Data
@@ -52,7 +53,7 @@ public class JobRequest {
     private JobStatus status;
 
     @NotNull(message = "Recruiter ID is required")
-    private Long postedBy;
+    private UUID postedBy;
 
     @NotBlank(message = "Job description is required")
     @Size(min = 20, max = 5000, message = "Description must be between 20 and 5000 characters")

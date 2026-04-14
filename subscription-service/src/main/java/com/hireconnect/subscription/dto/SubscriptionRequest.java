@@ -5,11 +5,13 @@ import com.hireconnect.subscription.enums.SubscriptionPlan;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class SubscriptionRequest {
 
     @NotNull(message = "Recruiter id is required")
-    private Integer recruiterId;
+    private UUID recruiterId;
 
     @NotNull(message = "Subscription plan is required")
     private SubscriptionPlan plan;

@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class NotificationServiceImp implements NotificationService {
@@ -26,7 +27,7 @@ public class NotificationServiceImp implements NotificationService {
     }
 
     @Override
-    public List<NotificationDto> getNotifications(Long userId) {
+    public List<NotificationDto> getNotifications(UUID userId) {
         try {
             ResponseEntity<List<NotificationDto>> response = restTemplate.exchange(
                     UrlConstants.NOTIFICATION_SERVICE + "/{userId}",
@@ -62,7 +63,7 @@ public class NotificationServiceImp implements NotificationService {
     }
 
     @Override
-    public void markAllAsRead(Long userId) {
+    public void markAllAsRead(UUID userId) {
         try {
             restTemplate.postForObject(
                     UrlConstants.NOTIFICATION_SERVICE + "/user/{userId}/read-all",

@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.hireconnect.subscription.enums.PaymentMode;
+import com.hireconnect.subscription.enums.PaymentStatus;
 
 @Entity
 @Table(name = "invoices")
@@ -29,7 +31,30 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private PaymentMode paymentMode;
 
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
     private String transactionId;
 
-    private Integer recruiterId;
+    private String stripePaymentIntentId;
+
+    private String stripeCheckoutSessionId;
+
+    private UUID recruiterId;
+
+    @Column(length = 500)
+    private String invoiceUrl;
+
+    @Column(length = 500)
+    private String receiptUrl;
+
+    @Column(length = 1000)
+    private String failureReason;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.paymentStatus == null) {
+            this.paymentStatus = PaymentStatus.PENDING;
+        }
+    }
 }

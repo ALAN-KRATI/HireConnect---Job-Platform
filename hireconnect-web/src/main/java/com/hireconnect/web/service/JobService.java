@@ -3,6 +3,7 @@ package com.hireconnect.web.service;
 import com.hireconnect.web.dto.JobDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface JobService {
 
@@ -16,7 +17,7 @@ public interface JobService {
 
     List<JobDto> searchJobs(String keyword, String location);
 
-    List<JobDto> getJobsByRecruiter(Long recruiterId);
+    List<JobDto> getJobsByRecruiter(UUID recruiterId);
 
     JobDto createJob(JobDto jobDto);
 
@@ -24,5 +25,5 @@ public interface JobService {
 
     void deleteJob(Long jobId);
 
-    List<JobDto> getSavedJobs(Long candidateId);
+    List<JobDto> getSavedJobs(UUID candidateId);
 }

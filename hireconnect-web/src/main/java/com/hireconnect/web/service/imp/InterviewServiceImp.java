@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class InterviewServiceImp implements InterviewService {
@@ -41,7 +42,7 @@ public class InterviewServiceImp implements InterviewService {
     }
 
     @Override
-    public List<InterviewDto> getCandidateInterviews(Long candidateId) {
+    public List<InterviewDto> getCandidateInterviews(UUID candidateId) {
         try {
             ResponseEntity<List<InterviewDto>> response = restTemplate.exchange(
                     UrlConstants.INTERVIEW_SERVICE + "/candidate/{candidateId}",
@@ -61,7 +62,7 @@ public class InterviewServiceImp implements InterviewService {
     }
 
     @Override
-    public List<InterviewDto> getRecruiterInterviews(Long recruiterId) {
+    public List<InterviewDto> getRecruiterInterviews(UUID recruiterId) {
         try {
             ResponseEntity<List<InterviewDto>> response = restTemplate.exchange(
                     UrlConstants.INTERVIEW_SERVICE + "/recruiter/{recruiterId}",
