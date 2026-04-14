@@ -1,5 +1,6 @@
 package com.hireconnect.profile.service;
 
+import com.hireconnect.profile.client.JobServiceClient;
 import com.hireconnect.profile.dto.ProfileRequest;
 import com.hireconnect.profile.dto.ProfileResponse;
 import com.hireconnect.profile.dto.SavedJobResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -26,6 +28,7 @@ public class ProfileServiceImp implements ProfileService {
     private final CandidateProfileRepository candidateRepository;
     private final RecruiterProfileRepository recruiterRepository;
     private final SavedJobRepository savedJobRepository;
+    private final JobServiceClient jobServiceClient;
 
     @Override
     public void createDefaultProfile(
@@ -209,8 +212,11 @@ public class ProfileServiceImp implements ProfileService {
                 .map(this::mapCandidate)
                 .orElseGet(() -> recruiterRepository.findByEmail(email)
                         .map(this::mapRecruiter)
-                        .orElseThrow(() -> new ProfileNotFoundException(
-                                "Profile not found for email: " + email)));
+                        .orElseGet(() -> {
+                            // Auto-create candidate profile if not found
+                            CandidateProfile newProfile = createDefaultCandidateProfileFromEmail(email);
+                            return mapCandidate(newProfile);
+                        }));
     }
 
     @Override
@@ -245,29 +251,50 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public List<SavedJobResponse> getSavedJobs(String email) {
+        // If profile doesn't exist, create it automatically
         CandidateProfile profile = candidateRepository.findByEmail(email)
-                .orElseThrow(() -> new ProfileNotFoundException(
-                        "Candidate profile not found for email: " + email));
+                .orElseGet(() -> createDefaultCandidateProfileFromEmail(email));
         
         return savedJobRepository.findByCandidateId(profile.getUserId())
                 .stream()
                 .map(this::mapSavedJob)
                 .toList();
     }
+    
+    private CandidateProfile createDefaultCandidateProfileFromEmail(String email) {
+        // Generate a UUID from the email hash
+        UUID userId = UUID.nameUUIDFromBytes(email.getBytes());
+        
+        // Create default profile with a valid mobile number
+        createDefaultProfile(userId, email, "CANDIDATE", "9999999999");
+        
+        // Return the newly created profile
+        return candidateRepository.findByEmail(email)
+                .orElseThrow(() -> new ProfileNotFoundException(
+                        "Failed to create profile for email: " + email));
+    }
 
     @Override
-    public void saveJob(String email, UUID jobId) {
+    public void saveJob(String email, Long jobId) {
+        // If profile doesn't exist, create it automatically
         CandidateProfile profile = candidateRepository.findByEmail(email)
-                .orElseThrow(() -> new ProfileNotFoundException(
-                        "Candidate profile not found for email: " + email));
+                .orElseGet(() -> createDefaultCandidateProfileFromEmail(email));
         
         if (savedJobRepository.existsByCandidateIdAndJobId(profile.getUserId(), jobId)) {
             return;
         }
         
+        // Fetch job details from job service
+        Map<String, Object> jobDetails = jobServiceClient.getJobById(jobId);
+        
         SavedJob savedJob = SavedJob.builder()
                 .candidateId(profile.getUserId())
                 .jobId(jobId)
+                .jobTitle(jobDetails != null ? (String) jobDetails.get("title") : "Unknown Job")
+                .companyName(jobDetails != null ? (String) jobDetails.get("companyName") : "Unknown Company")
+                .location(jobDetails != null ? (String) jobDetails.get("location") : "")
+                .jobType(jobDetails != null ? (String) jobDetails.get("type") : "")
+                .status(jobDetails != null ? (String) jobDetails.get("status") : "")
                 .savedAt(LocalDateTime.now())
                 .build();
         
@@ -275,10 +302,10 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     @Override
-    public void unsaveJob(String email, UUID jobId) {
+    public void unsaveJob(String email, Long jobId) {
+        // If profile doesn't exist, create it automatically (nothing to unsave anyway)
         CandidateProfile profile = candidateRepository.findByEmail(email)
-                .orElseThrow(() -> new ProfileNotFoundException(
-                        "Candidate profile not found for email: " + email));
+                .orElseGet(() -> createDefaultCandidateProfileFromEmail(email));
         
         savedJobRepository.deleteByCandidateIdAndJobId(profile.getUserId(), jobId);
     }

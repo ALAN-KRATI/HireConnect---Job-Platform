@@ -62,7 +62,7 @@ public class ProfileResource {
 
     @PostMapping("/saved-jobs/{jobId}")
     @PreAuthorize("hasRole('CANDIDATE')")
-    public ResponseEntity<String> saveJob(@PathVariable UUID jobId) {
+    public ResponseEntity<String> saveJob(@PathVariable Long jobId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         profileService.saveJob(email, jobId);
@@ -71,7 +71,7 @@ public class ProfileResource {
 
     @DeleteMapping("/saved-jobs/{jobId}")
     @PreAuthorize("hasRole('CANDIDATE')")
-    public ResponseEntity<String> unsaveJob(@PathVariable UUID jobId) {
+    public ResponseEntity<String> unsaveJob(@PathVariable Long jobId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         profileService.unsaveJob(email, jobId);

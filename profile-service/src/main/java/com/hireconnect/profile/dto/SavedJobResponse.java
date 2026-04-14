@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SavedJobResponse {
     private UUID savedJobId;
-    private UUID jobId;
+    private Long jobId;
     private String jobTitle;
     private String companyName;
     private String location;

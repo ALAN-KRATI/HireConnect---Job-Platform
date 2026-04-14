@@ -30,7 +30,7 @@ public class SavedJob {
     private UUID candidateId;
 
     @Column(name = "job_id", nullable = false)
-    private UUID jobId;
+    private Long jobId;
 
     @Column(name = "job_title")
     private String jobTitle;

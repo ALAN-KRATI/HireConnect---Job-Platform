@@ -41,7 +41,7 @@ public interface ProfileService {
     
     List<SavedJobResponse> getSavedJobs(String email);
     
-    void saveJob(String email, UUID jobId);
+    void saveJob(String email, Long jobId);
     
-    void unsaveJob(String email, UUID jobId);
+    void unsaveJob(String email, Long jobId);
 }
