@@ -44,7 +44,6 @@ public class ProfileServiceImp implements ProfileService {
             }
 
             CandidateProfile profile = CandidateProfile.builder()
-                    .headline("")
                     .location("")
                     .bio("")
                     .skills(List.of())
@@ -122,7 +121,6 @@ public class ProfileServiceImp implements ProfileService {
         profile.setFullName(request.getFullName());
         profile.setEmail(request.getEmail());
         profile.setMobile(request.getMobile());
-        profile.setHeadline(request.getHeadline());
         profile.setLocation(request.getLocation());
         profile.setBio(request.getBio());
 
@@ -213,7 +211,6 @@ public class ProfileServiceImp implements ProfileService {
                 .orElseGet(() -> recruiterRepository.findByEmail(email)
                         .map(this::mapRecruiter)
                         .orElseGet(() -> {
-                            // Auto-create candidate profile if not found
                             CandidateProfile newProfile = createDefaultCandidateProfileFromEmail(email);
                             return mapCandidate(newProfile);
                         }));
@@ -251,7 +248,6 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public List<SavedJobResponse> getSavedJobs(String email) {
-        // If profile doesn't exist, create it automatically
         CandidateProfile profile = candidateRepository.findByEmail(email)
                 .orElseGet(() -> createDefaultCandidateProfileFromEmail(email));
         
@@ -262,13 +258,9 @@ public class ProfileServiceImp implements ProfileService {
     }
     
     private CandidateProfile createDefaultCandidateProfileFromEmail(String email) {
-        // Generate a UUID from the email hash
         UUID userId = UUID.nameUUIDFromBytes(email.getBytes());
-        
-        // Create default profile with a valid mobile number
         createDefaultProfile(userId, email, "CANDIDATE", "9999999999");
-        
-        // Return the newly created profile
+    
         return candidateRepository.findByEmail(email)
                 .orElseThrow(() -> new ProfileNotFoundException(
                         "Failed to create profile for email: " + email));
@@ -276,7 +268,6 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public void saveJob(String email, Long jobId) {
-        // If profile doesn't exist, create it automatically
         CandidateProfile profile = candidateRepository.findByEmail(email)
                 .orElseGet(() -> createDefaultCandidateProfileFromEmail(email));
         
@@ -284,7 +275,6 @@ public class ProfileServiceImp implements ProfileService {
             return;
         }
         
-        // Fetch job details from job service
         Map<String, Object> jobDetails = jobServiceClient.getJobById(jobId);
         
         SavedJob savedJob = SavedJob.builder()
@@ -303,7 +293,6 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public void unsaveJob(String email, Long jobId) {
-        // If profile doesn't exist, create it automatically (nothing to unsave anyway)
         CandidateProfile profile = candidateRepository.findByEmail(email)
                 .orElseGet(() -> createDefaultCandidateProfileFromEmail(email));
         
@@ -314,7 +303,6 @@ public class ProfileServiceImp implements ProfileService {
         profile.setFullName(request.getFullName());
         profile.setEmail(request.getEmail());
         profile.setMobile(request.getMobile());
-        profile.setHeadline(request.getHeadline());
         profile.setLocation(request.getLocation());
         profile.setBio(request.getBio());
         profile.setSkills(request.getSkills() == null || request.getSkills().isBlank()
@@ -358,7 +346,6 @@ public class ProfileServiceImp implements ProfileService {
                 .email(profile.getEmail())
                 .mobile(profile.getMobile())
                 .role("CANDIDATE")
-                .headline(profile.getHeadline())
                 .location(profile.getLocation())
                 .bio(profile.getBio())
                 .skills(profile.getSkills() == null

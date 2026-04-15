@@ -26,7 +26,8 @@ public class JobServiceClient {
             String url = jobServiceUrl + "/jobs/" + jobId;
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
             return response.getBody();
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             log.error("Error fetching job {}: {}", jobId, e.getMessage());
             return null;
         }

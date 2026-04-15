@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,21 +22,16 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                // CORS disabled - handled by API Gateway
-                // .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-
-                        // Swagger
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
 
-                        // Candidate profile endpoints
                         .requestMatchers(HttpMethod.GET, "/profiles/candidates/**")
                         .hasAnyRole("CANDIDATE", "RECRUITER")
 
@@ -47,7 +41,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/profiles/candidates/**")
                         .hasRole("CANDIDATE")
 
-                        // Recruiter profile endpoints
                         .requestMatchers(HttpMethod.GET, "/profiles/recruiters/**")
                         .hasAnyRole("RECRUITER", "CANDIDATE")
 

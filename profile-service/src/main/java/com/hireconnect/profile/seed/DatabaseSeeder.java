@@ -2,6 +2,7 @@ package com.hireconnect.profile.seed;
 
 import com.hireconnect.profile.entity.CandidateProfile;
 import com.hireconnect.profile.entity.RecruiterProfile;
+import com.hireconnect.profile.entity.UserProfile;
 import com.hireconnect.profile.repository.CandidateProfileRepository;
 import com.hireconnect.profile.repository.RecruiterProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -31,7 +33,6 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private void seedProfiles() {
-        // Seed Recruiter Profiles
         UUID recruiter1 = UUID.fromString("602933df-bdc5-40e7-b9db-7ced2d14ede1");
         UUID recruiter2 = UUID.fromString("702933df-bdc5-40e7-b9db-7ced2d14ede2");
 
@@ -39,26 +40,24 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .userId(recruiter1)
                 .fullName("Rajesh Kumar")
                 .email("rajesh.kumar@techsolutions.com")
-                .phone("+91 98765 43210")
-                .company("Tech Solutions Inc.")
+                .mobile("+91 98765 43210")
+                .companyName("Tech Solutions Inc.")
                 .industry("Information Technology")
                 .companySize("100-500 employees")
-                .location("Bangalore, Karnataka")
+                .officeLocation("Bangalore, Karnataka")
                 .website("https://techsolutions.com")
-                .bio("Experienced hiring manager with 10+ years in tech recruitment. Passionate about building great engineering teams.")
                 .build();
 
         RecruiterProfile recruiterProfile2 = RecruiterProfile.builder()
                 .userId(recruiter2)
                 .fullName("Priya Sharma")
                 .email("priya.sharma@innovationlabs.com")
-                .phone("+91 87654 32109")
-                .company("Innovation Labs")
+                .mobile("+91 87654 32109")
+                .companyName("Innovation Labs")
                 .industry("Software Development")
                 .companySize("50-200 employees")
-                .location("Hyderabad, Telangana")
+                .officeLocation("Hyderabad, Telangana")
                 .website("https://innovationlabs.io")
-                .bio("HR Director specializing in startup hiring. Looking for innovative minds to join our growing team.")
                 .build();
 
         recruiterRepository.save(recruiterProfile1);
@@ -102,14 +101,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .userId(candidateIds[i])
                     .fullName(candidateData[i][0])
                     .email(candidateData[i][1])
-                    .phone(candidateData[i][2])
+                    .mobile(candidateData[i][2])
                     .location(candidateData[i][3])
-                    .currentTitle(candidateData[i][4])
-                    .experienceLevel(candidateData[i][5])
-                    .skills(skills[i])
-                    .summary(summaries[i])
-                    .expectedSalary("₹" + (10 + i * 3) + "L - ₹" + (15 + i * 3) + "L")
-                    .preferredLocation("Bangalore, Hyderabad, Remote")
+                    .experience(Integer.parseInt(candidateData[i][5]))
+                    .skills(List.of(skills[i].split(", ")))
+                    .bio(summaries[i])
                     .resumeUrl("https://storage.hireconnect.com/resumes/" + candidateIds[i] + ".pdf")
                     .build();
             

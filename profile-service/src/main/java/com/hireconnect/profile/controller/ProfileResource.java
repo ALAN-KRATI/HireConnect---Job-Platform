@@ -33,9 +33,7 @@ public class ProfileResource {
 
     @PutMapping("/me")
     @PreAuthorize("hasAnyRole('CANDIDATE', 'RECRUITER')")
-    public ResponseEntity<ProfileResponse> updateMyProfile(
-            @Valid @RequestBody ProfileRequest request
-    ) {
+    public ResponseEntity<ProfileResponse> updateMyProfile(@Valid @RequestBody ProfileRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return ResponseEntity.ok(profileService.updateProfileByEmail(email, request));
@@ -43,9 +41,7 @@ public class ProfileResource {
 
     @PostMapping("/resume")
     @PreAuthorize("hasRole('CANDIDATE')")
-    public ResponseEntity<String> uploadResume(
-            @RequestParam("file") MultipartFile file
-    ) {
+    public ResponseEntity<String> uploadResume(@RequestParam("file") MultipartFile file) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         String resumeUrl = profileService.uploadResume(email, file);
@@ -105,9 +101,7 @@ public class ProfileResource {
 
     @DeleteMapping("/candidates/{userId}")
     @PreAuthorize("hasRole('CANDIDATE')")
-    public ResponseEntity<String> deleteCandidateProfile(
-            @PathVariable UUID userId
-    ) {
+    public ResponseEntity<String> deleteCandidateProfile(@PathVariable UUID userId) {
         profileService.deleteCandidateProfile(userId);
 
         return ResponseEntity.ok("Candidate profile deleted successfully");
@@ -129,10 +123,7 @@ public class ProfileResource {
 
     @PutMapping("/recruiters/{userId}")
     @PreAuthorize("hasRole('RECRUITER')")
-    public ResponseEntity<ProfileResponse> updateRecruiterProfile(
-            @PathVariable UUID userId,
-            @Valid @RequestBody ProfileRequest request
-    ) {
+    public ResponseEntity<ProfileResponse> updateRecruiterProfile(@PathVariable UUID userId, @Valid @RequestBody ProfileRequest request) {
         return ResponseEntity.ok(
                 profileService.updateRecruiterProfile(userId, request)
         );
@@ -140,11 +131,8 @@ public class ProfileResource {
 
     @DeleteMapping("/recruiters/{userId}")
     @PreAuthorize("hasRole('RECRUITER')")
-    public ResponseEntity<String> deleteRecruiterProfile(
-            @PathVariable UUID userId
-    ) {
+    public ResponseEntity<String> deleteRecruiterProfile(@PathVariable UUID userId) {
         profileService.deleteRecruiterProfile(userId);
-
         return ResponseEntity.ok("Recruiter profile deleted successfully");
     }
 }

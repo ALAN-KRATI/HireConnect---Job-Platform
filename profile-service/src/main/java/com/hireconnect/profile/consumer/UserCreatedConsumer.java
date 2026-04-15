@@ -37,7 +37,6 @@ public class UserCreatedConsumer {
             }
 
             CandidateProfile profile = CandidateProfile.builder()
-                    .headline("")
                     .location("")
                     .bio("")
                     .skills(List.of())

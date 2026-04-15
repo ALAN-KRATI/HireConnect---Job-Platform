@@ -89,7 +89,9 @@ public class Job {
         }
     }
 
-    // Job.java
+    @Column
+    private String company;
+
     @Column(nullable = false)
     private Long viewCount = 0L;
 }
