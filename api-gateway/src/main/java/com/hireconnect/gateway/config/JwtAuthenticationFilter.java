@@ -29,7 +29,6 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             "/actuator"
     );
     
-    // Paths that can be accessed with OR without authentication
     private static final List<String> OPTIONAL_AUTH_PATHS = List.of(
             "/jobs"
     );
@@ -39,18 +38,16 @@ public class JwtAuthenticationFilter implements GlobalFilter {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        // Allow public paths without any auth
+    
         boolean isPublic = PUBLIC_PATHS.stream().anyMatch(path::startsWith);
         if (isPublic) {
             return chain.filter(exchange);
         }
         
-        // Check if path allows optional authentication
         boolean isOptionalAuth = OPTIONAL_AUTH_PATHS.stream().anyMatch(path::startsWith);
 
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        // If no auth header and path is optional auth, allow through
         if ((authHeader == null || !authHeader.startsWith("Bearer ")) && isOptionalAuth) {
             return chain.filter(exchange);
         }
@@ -80,7 +77,6 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         System.out.println("[JWT FILTER] ROLE = " + role);
         System.out.println("[JWT FILTER] USER_ID = " + userId);
 
-        // Admin can access everything
         if ("ADMIN".equals(role)) {
             return chain.filter(
                     exchange.mutate()
@@ -94,7 +90,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             );
         }
 
-        // Candidate-only routes (block non-candidates from candidate-specific endpoints)
+       
         boolean isCandidateOnlyPath = 
             path.startsWith("/profiles/me") ||
             path.startsWith("/profiles/candidates") ||
@@ -107,7 +103,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             return exchange.getResponse().setComplete();
         }
         
-        // Recruiter-only routes (block non-recruiters from recruiter-specific endpoints)
+      
         boolean isRecruiterOnlyPath = 
             path.startsWith("/profiles/recruiters") ||
             path.startsWith("/applications/recruiter") ||
@@ -117,15 +113,6 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         
         if (isRecruiterOnlyPath && !"RECRUITER".equals(role)) {
             System.out.println("[JWT FILTER] 403 - Non-recruiter accessing recruiter-only path: " + path);
-            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-            return exchange.getResponse().setComplete();
-        }
-
-        // Recruiter-only routes
-        if ((path.startsWith("/subscriptions")
-                || path.startsWith("/analytics"))
-                && !"RECRUITER".equals(role)) {
-
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
             return exchange.getResponse().setComplete();
         }

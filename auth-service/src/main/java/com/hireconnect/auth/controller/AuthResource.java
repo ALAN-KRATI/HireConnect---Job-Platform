@@ -28,9 +28,7 @@ public class AuthResource {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(
-            @RequestHeader("Authorization") String authorizationHeader) {
-
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         service.logout(token);
 
@@ -38,16 +36,12 @@ public class AuthResource {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(
-            @Valid @RequestBody RefreshTokenRequest request) {
-
+    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.ok(service.refreshToken(request.getRefreshToken()));
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(
-            @RequestHeader("Authorization") String authorizationHeader) {
-
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
         boolean isValid = service.validateToken(token);
@@ -55,7 +49,6 @@ public class AuthResource {
             return ResponseEntity.ok(false);
         }
 
-        // Return user details if token is valid
         AuthResponse userDetails = AuthResponse.builder()
                 .email(service.extractEmail(token))
                 .role(service.extractRole(token))
@@ -66,27 +59,21 @@ public class AuthResource {
     }
 
     @GetMapping("/extract/email")
-    public ResponseEntity<String> extractEmail(
-            @RequestHeader("Authorization") String authorizationHeader) {
-
+    public ResponseEntity<String> extractEmail(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
         return ResponseEntity.ok(service.extractEmail(token));
     }
 
     @GetMapping("/extract/role")
-    public ResponseEntity<String> extractRole(
-            @RequestHeader("Authorization") String authorizationHeader) {
-
+    public ResponseEntity<String> extractRole(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
         return ResponseEntity.ok(service.extractRole(token));
     }
 
     @GetMapping("/extract/userId")
-    public ResponseEntity<String> extractUserId(
-            @RequestHeader("Authorization") String authorizationHeader) {
-
+    public ResponseEntity<String> extractUserId(@RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
         return ResponseEntity.ok(service.extractUserId(token));

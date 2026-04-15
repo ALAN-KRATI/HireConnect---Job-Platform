@@ -36,7 +36,7 @@ public class DataSeeder {
     @Bean
     public CommandLineRunner seedData() {
         return args -> {
-            log.info("🌱 Starting data seeding...");
+            log.info(" Starting data seeding...");
 
             try {
                 String forceSeed = System.getenv().getOrDefault("FORCE_SEED", "false");
@@ -50,12 +50,12 @@ public class DataSeeder {
                     seedRecruiters();
                     Thread.sleep(3000);
                     seedJobs();
-                    log.info("✅ Data seeding completed successfully!");
+                    log.info("Data seeding completed successfully!");
                 } else {
-                    log.info("ℹ️ Database already contains data, skipping seeding.");
+                    log.info("Database already contains data, skipping seeding.");
                 }
             } catch (Exception e) {
-                log.error("❌ Error during data seeding: {}", e.getMessage(), e);
+                log.error("Error during data seeding: {}", e.getMessage(), e);
             }
         };
     }
@@ -130,14 +130,14 @@ public class DataSeeder {
                     .build();
 
             user = authRepository.save(user);
-            log.info("✓ Created user: {} ({})", email, role);
+            log.info("Created user: {} ({})", email, role);
             
-            // Generate token and create profile
             String token = jwtService.generateToken(user);
             createUserProfile(token, user.getId(), name, mobile, email, role);
             
             return user;
-        } catch (Exception e) {
+        }
+         catch (Exception e) {
             log.error("Failed to create user {}: {}", email, e.getMessage());
             return null;
         }
@@ -180,7 +180,7 @@ public class DataSeeder {
                 request,
                 Void.class
             );
-            log.info("✓ Created profile for: {}", fullName);
+            log.info("Created profile for: {}", fullName);
         } catch (Exception e) {
             log.warn("Could not create profile for {}: {}", fullName, e.getMessage());
         }
@@ -189,7 +189,6 @@ public class DataSeeder {
     private void seedJobs() {
         log.info("Creating job postings...");
 
-        // Get all recruiters
         List<UserCredential> recruiters = authRepository.findAll().stream()
             .filter(u -> u.getRole() == UserRole.RECRUITER)
             .toList();
@@ -244,7 +243,6 @@ public class DataSeeder {
                 3, 1600000, 3000000, "FULL_TIME")
         );
 
-        // Assign jobs to recruiters round-robin
         int recruiterIndex = 0;
         for (Map<String, Object> job : jobs) {
             if (recruiters.isEmpty()) break;
