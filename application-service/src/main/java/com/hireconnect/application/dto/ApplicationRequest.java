@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ApplicationRequest {
 
     @NotNull(message = "Job ID is required")
-    private UUID jobId;
+    private Long jobId;
 
     @NotNull(message = "Candidate ID is required")
     private UUID candidateId;

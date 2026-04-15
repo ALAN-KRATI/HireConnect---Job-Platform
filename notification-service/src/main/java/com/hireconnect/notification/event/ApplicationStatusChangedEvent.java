@@ -8,7 +8,7 @@ public class ApplicationStatusChangedEvent {
     private UUID applicationId;
     private UUID candidateId;
     private UUID recruiterId;
-    private UUID jobId;
+    private Long jobId;
     private String status;
     private LocalDateTime updatedAt;
 
@@ -39,11 +39,11 @@ public class ApplicationStatusChangedEvent {
         this.recruiterId = recruiterId;
     }
 
-    public UUID getJobId() {
+    public Long getJobId() {
         return jobId;
     }
 
-    public void setJobId(UUID jobId) {
+    public void setJobId(Long jobId) {
         this.jobId = jobId;
     }
 

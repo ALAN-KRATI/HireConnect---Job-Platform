@@ -18,7 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 @Slf4j
 @Configuration
@@ -63,18 +69,37 @@ public class DataSeeder {
     private void seedCandidates() {
         log.info("Creating candidate users...");
 
-        List<Map<String, String>> candidates = Arrays.asList(
-            createCandidate("john.dev@email.com", "John Developer", "9876543210"),
-            createCandidate("sarah.tech@email.com", "Sarah Tech", "9876543211"),
-            createCandidate("mike.code@email.com", "Mike Coder", "9876543212"),
-            createCandidate("emma.fullstack@email.com", "Emma Fullstack", "9876543213"),
-            createCandidate("alex.data@email.com", "Alex Data Scientist", "9876543214")
+        // These UUIDs match the profile seeders
+        List<Map<String, Object>> candidates = Arrays.asList(
+            createCandidateWithId("amit.patel@email.com", "Amit Patel", "7654321098", 
+                UUID.fromString("802933df-bdc5-40e7-b9db-7ced2d14ede3")),
+            createCandidateWithId("neha.gupta@email.com", "Neha Gupta", "6543210987",
+                UUID.fromString("902933df-bdc5-40e7-b9db-7ced2d14ede4")),
+            createCandidateWithId("vikram.singh@email.com", "Vikram Singh", "5432109876",
+                UUID.fromString("a02933df-bdc5-40e7-b9db-7ced2d14ede5")),
+            createCandidateWithId("ananya.reddy@email.com", "Ananya Reddy", "4321098765",
+                UUID.fromString("b02933df-bdc5-40e7-b9db-7ced2d14ede6")),
+            createCandidateWithId("rahul.verma@email.com", "Rahul Verma", "3210987654",
+                UUID.fromString("c02933df-bdc5-40e7-b9db-7ced2d14ede7"))
         );
 
-        for (Map<String, String> candidate : candidates) {
-            createUser(candidate.get("email"), candidate.get("name"), 
-                      candidate.get("mobile"), UserRole.CANDIDATE);
+        for (Map<String, Object> candidate : candidates) {
+            createUserWithId(
+                (UUID) candidate.get("id"),
+                (String) candidate.get("email"), 
+                (String) candidate.get("name"),
+                (String) candidate.get("mobile"), 
+                UserRole.CANDIDATE);
         }
+    }
+
+    private Map<String, Object> createCandidateWithId(String email, String name, String mobile, UUID id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("email", email);
+        map.put("name", name);
+        map.put("mobile", mobile);
+        return map;
     }
 
     private Map<String, String> createCandidate(String email, String name, String mobile) {
@@ -88,20 +113,32 @@ public class DataSeeder {
     private void seedRecruiters() {
         log.info("Creating recruiter users with companies...");
 
-        List<Map<String, String>> recruiters = Arrays.asList(
-            createRecruiter("hr@google.com", "Google HR", "9000000001", "Google"),
-            createRecruiter("careers@microsoft.com", "Microsoft Careers", "9000000002", "Microsoft"),
-            createRecruiter("talent@amazon.com", "Amazon Talent", "9000000003", "Amazon"),
-            createRecruiter("jobs@meta.com", "Meta Recruiting", "9000000004", "Meta"),
-            createRecruiter("hiring@netflix.com", "Netflix Hiring", "9000000005", "Netflix"),
-            createRecruiter("recruit@apple.com", "Apple Recruitment", "9000000006", "Apple"),
-            createRecruiter("careers@spotify.com", "Spotify Careers", "9000000007", "Spotify")
+        // These UUIDs match the profile seeders and job seeders
+        List<Map<String, Object>> recruiters = Arrays.asList(
+            createRecruiterWithId("rajesh.kumar@techsolutions.com", "Rajesh Kumar", "9876543210", "Tech Solutions Inc.", 
+                UUID.fromString("602933df-bdc5-40e7-b9db-7ced2d14ede1")),
+            createRecruiterWithId("priya.sharma@innovationlabs.com", "Priya Sharma", "8765432109", "Innovation Labs",
+                UUID.fromString("702933df-bdc5-40e7-b9db-7ced2d14ede2"))
         );
 
-        for (Map<String, String> recruiter : recruiters) {
-            UserCredential user = createUser(recruiter.get("email"), recruiter.get("name"),
-                                            recruiter.get("mobile"), UserRole.RECRUITER);
+        for (Map<String, Object> recruiter : recruiters) {
+            UserCredential user = createUserWithId(
+                (UUID) recruiter.get("id"),
+                (String) recruiter.get("email"), 
+                (String) recruiter.get("name"),
+                (String) recruiter.get("mobile"), 
+                UserRole.RECRUITER);
         }
+    }
+
+    private Map<String, Object> createRecruiterWithId(String email, String name, String mobile, String company, UUID id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("email", email);
+        map.put("name", name);
+        map.put("mobile", mobile);
+        map.put("company", company);
+        return map;
     }
 
     private Map<String, String> createRecruiter(String email, String name, String mobile, String company) {
@@ -113,13 +150,14 @@ public class DataSeeder {
         return map;
     }
 
-    private UserCredential createUser(String email, String name, String mobile, UserRole role) {
+    private UserCredential createUserWithId(UUID id, String email, String name, String mobile, UserRole role) {
         try {
             if (authRepository.existsByEmail(email)) {
                 return authRepository.findByEmail(email).orElse(null);
             }
 
             UserCredential user = UserCredential.builder()
+                    .id(id)
                     .email(email)
                     .password(passwordEncoder.encode("password123"))
                     .role(role)
@@ -130,7 +168,7 @@ public class DataSeeder {
                     .build();
 
             user = authRepository.save(user);
-            log.info("Created user: {} ({})", email, role);
+            log.info("✓ Created user: {} ({})", email, role);
             
             String token = jwtService.generateToken(user);
             createUserProfile(token, user.getId(), name, mobile, email, role);

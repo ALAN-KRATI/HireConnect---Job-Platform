@@ -80,7 +80,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/job/{jobId}")
-        public ResponseEntity<List<ApplicationResponse>> getByJob(@PathVariable UUID jobId) {
+        public ResponseEntity<List<ApplicationResponse>> getByJob(@PathVariable Long jobId) {
                 List<ApplicationResponse> responses = applicationService.getByJob(jobId)
                                 .stream()
                                 .map(this::mapToResponse)
@@ -139,7 +139,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/job/{jobId}/count")
-        public ResponseEntity<Long> countByJob(@PathVariable UUID jobId) {
+        public ResponseEntity<Long> countByJob(@PathVariable Long jobId) {
                 return ResponseEntity.ok(applicationService.countByJob(jobId));
         }
 

@@ -33,7 +33,7 @@ public class Application {
     private UUID applicationId;
 
     @Column(name = "job_id", nullable = false)
-    private UUID jobId;
+    private Long jobId;
 
     @Column(name = "candidate_id", nullable = false)
     private UUID candidateId;
