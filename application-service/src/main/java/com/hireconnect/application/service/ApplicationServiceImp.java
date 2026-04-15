@@ -76,7 +76,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public List<Application> getByJob(UUID jobId) {
+    public List<Application> getByJob(Long jobId) {
         return applicationRepository.findByJobId(jobId);
     }
 
@@ -140,7 +140,7 @@ public class ApplicationServiceImp implements ApplicationService {
     }
 
     @Override
-    public long countByJob(UUID jobId) {
+    public long countByJob(Long jobId) {
         return applicationRepository.countByJobId(jobId);
     }
 

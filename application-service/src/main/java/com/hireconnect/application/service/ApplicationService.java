@@ -14,7 +14,7 @@ public interface ApplicationService {
 
     List<Application> getByRecruiter(UUID recruiterId);
 
-    List<Application> getByJob(UUID jobId);
+    List<Application> getByJob(Long jobId);
 
     Application getById(UUID applicationId);
 
@@ -22,7 +22,7 @@ public interface ApplicationService {
 
     void withdrawApplication(UUID applicationId);
 
-    long countByJob(UUID jobId);
+    long countByJob(Long jobId);
 
     long countByRecruiterId(UUID recruiterId);
 

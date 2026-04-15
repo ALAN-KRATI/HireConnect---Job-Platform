@@ -16,7 +16,7 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
 
     List<Application> findByCandidateEmail(String candidateEmail);
 
-    List<Application> findByJobId(UUID jobId);
+    List<Application> findByJobId(Long jobId);
 
     List<Application> findByRecruiterId(UUID recruiterId);
 
@@ -24,9 +24,9 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
 
     List<Application> findByAppliedAtBetween(LocalDateTime start, LocalDateTime end);
 
-    long countByJobId(UUID jobId);
+    long countByJobId(Long jobId);
 
-    Optional<Application> findFirstByJobIdAndCandidateId(UUID jobId, UUID candidateId);
+    Optional<Application> findFirstByJobIdAndCandidateId(Long jobId, UUID candidateId);
 
     long countByRecruiterId(UUID recruiterId);
 
