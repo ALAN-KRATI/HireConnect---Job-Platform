@@ -3,6 +3,8 @@ package com.hireconnect.profile.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -49,6 +51,21 @@ public class GlobalExceptionHandler {
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error("Validation Failed")
                         .message(message)
+                        .path(request.getRequestURI())
+                        .build());
+    }
+
+    @ExceptionHandler({AuthorizationDeniedException.class, AccessDeniedException.class})
+    public ResponseEntity<ErrorResponse> handleAccessDenied(
+            Exception ex,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ErrorResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .error("Forbidden")
+                        .message("You don't have permission to access this resource")
                         .path(request.getRequestURI())
                         .build());
     }
