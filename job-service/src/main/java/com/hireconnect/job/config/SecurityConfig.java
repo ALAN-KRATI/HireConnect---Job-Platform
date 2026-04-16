@@ -39,15 +39,18 @@ public class SecurityConfig {
                                 "/actuator/**"
                         ).permitAll()
 
-                        // Public job browsing
-                        .requestMatchers(HttpMethod.GET, "/jobs/**").permitAll()
-
-                        // Recruiter only
+                        // Recruiter-only routes must be declared BEFORE the
+                        // blanket GET /jobs/** permitAll so first-match wins
+                        // correctly and doesn't open up /jobs/recruiter/** to
+                        // every caller.
+                        .requestMatchers(HttpMethod.GET, "/jobs/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.POST, "/jobs").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.PUT, "/jobs/**").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.DELETE, "/jobs/**").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.PATCH, "/jobs/*/status").hasRole("RECRUITER")
-                        .requestMatchers(HttpMethod.GET, "/jobs/recruiter/**").hasRole("RECRUITER")
+
+                        // Public job browsing
+                        .requestMatchers(HttpMethod.GET, "/jobs/**").permitAll()
 
                         // Authenticated candidate or recruiter
                         .requestMatchers(HttpMethod.GET, "/jobs/*/views")
