@@ -1,5 +1,6 @@
 package com.hireconnect.application.controller;
 
+import com.hireconnect.application.client.JobServiceClient;
 import com.hireconnect.application.dto.ApplicationResponse;
 import com.hireconnect.application.dto.StatusUpdateRequest;
 import com.hireconnect.application.entity.Application;
@@ -19,27 +20,34 @@ import java.util.UUID;
 public class ApplicationResource {
 
         private final ApplicationService applicationService;
+        private final JobServiceClient jobServiceClient;
 
-        public ApplicationResource(ApplicationService applicationService) {
+        public ApplicationResource(ApplicationService applicationService,
+                                   JobServiceClient jobServiceClient) {
                 this.applicationService = applicationService;
+                this.jobServiceClient = jobServiceClient;
         }
 
         @PostMapping
         public ResponseEntity<ApplicationResponse> submitApplication(
                         @RequestBody Application application,
                         HttpServletRequest request) {
-                // Extract candidate ID from authenticated user
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String email = authentication.getName();
-                
-                // Get candidate ID from request header set by API Gateway
-                // The gateway extracts it from JWT and sets it as X-User-Id header
+
                 String candidateIdStr = request.getHeader("X-User-Id");
-                if (candidateIdStr != null) {
+                if (candidateIdStr != null && !candidateIdStr.isBlank()) {
                         application.setCandidateId(UUID.fromString(candidateIdStr));
                 }
                 application.setCandidateEmail(email);
-                
+
+                if (application.getRecruiterId() == null && application.getJobId() != null) {
+                        UUID recruiterId = jobServiceClient.getPostedBy(application.getJobId());
+                        if (recruiterId != null) {
+                                application.setRecruiterId(recruiterId);
+                        }
+                }
+
                 Application saved = applicationService.submitApplication(application);
                 return ResponseEntity.ok(mapToResponse(saved));
         }
