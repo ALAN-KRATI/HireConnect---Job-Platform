@@ -1,19 +1,12 @@
-FROM eclipse-temurin:21-jdk AS builder
-
+FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
-
 COPY pom.xml .
+RUN mvn -B dependency:go-offline -DskipTests || true
 COPY src ./src
-
-RUN apt-get update && apt-get install -y maven && \
-    mvn clean package -DskipTests
+RUN mvn -B clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
-
 WORKDIR /app
-
 COPY --from=builder /app/target/*.jar app.jar
-
 EXPOSE 8086
-
 ENTRYPOINT ["java", "-jar", "app.jar"]

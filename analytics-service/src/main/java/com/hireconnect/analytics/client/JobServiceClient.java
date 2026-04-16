@@ -9,7 +9,6 @@ import java.util.UUID;
 
 @FeignClient(
         name = "job-service",
-        url = "${JOB_SERVICE_URL:http://localhost:8083}",
         path = "/jobs"
 )
 public interface JobServiceClient {

@@ -14,7 +14,7 @@ public class JobServiceClient {
 
     private final RestTemplate restTemplate;
     
-    @Value("${JOB_SERVICE_URL:http://localhost:8083}")
+    @Value("${JOB_SERVICE_URL:http://job-service:8083}")
     private String jobServiceUrl;
 
     public JobServiceClient(RestTemplate restTemplate) {

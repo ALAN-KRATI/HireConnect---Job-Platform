@@ -37,7 +37,7 @@ public class DataSeeder {
     private final JwtService jwtService;
     private final RestTemplate restTemplate;
 
-    private final String GATEWAY_URL = "http://localhost:8080";
+    private final String GATEWAY_URL = System.getenv().getOrDefault("GATEWAY_URL", "http://localhost:8080");
 
     @Bean
     public CommandLineRunner seedData() {
