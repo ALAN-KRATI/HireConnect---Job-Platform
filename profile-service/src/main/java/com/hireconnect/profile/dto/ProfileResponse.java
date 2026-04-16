@@ -32,6 +32,9 @@ public class ProfileResponse {
     private String companyName;
     private String companyWebsite;
 
+    private String resumeUrl;
+    private String resumeName;
+
     private boolean active;
 
     private LocalDateTime createdAt;

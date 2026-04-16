@@ -2,8 +2,10 @@ package com.hireconnect.profile.controller;
 
 import com.hireconnect.profile.dto.ProfileRequest;
 import com.hireconnect.profile.dto.ProfileResponse;
+import com.hireconnect.profile.dto.ResumeParseResponse;
 import com.hireconnect.profile.dto.SavedJobResponse;
 import com.hireconnect.profile.service.ProfileService;
+import com.hireconnect.profile.util.ResumeParser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +25,7 @@ import java.util.UUID;
 public class ProfileResource {
 
     private final ProfileService profileService;
+    private final ResumeParser resumeParser;
 
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('CANDIDATE', 'RECRUITER')")
@@ -46,6 +50,18 @@ public class ProfileResource {
         String email = authentication.getName();
         String resumeUrl = profileService.uploadResume(email, file);
         return ResponseEntity.ok(resumeUrl);
+    }
+
+    @PostMapping("/resume/parse")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<ResumeParseResponse> parseResume(
+            @RequestParam(value = "resume", required = false) MultipartFile resume,
+            @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        MultipartFile incoming = resume != null ? resume : file;
+        if (incoming == null || incoming.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(resumeParser.parse(incoming));
     }
 
     @GetMapping("/saved-jobs")

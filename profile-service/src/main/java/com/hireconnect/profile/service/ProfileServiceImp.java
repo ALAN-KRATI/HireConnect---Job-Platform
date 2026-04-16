@@ -238,11 +238,15 @@ public class ProfileServiceImp implements ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException(
                         "Candidate profile not found for email: " + email));
         
-        String resumeUrl = "/uploads/resumes/" + email + "/" + file.getOriginalFilename();
+        String originalName = file.getOriginalFilename() == null
+                ? "resume"
+                : file.getOriginalFilename();
+        String resumeUrl = "/uploads/resumes/" + email + "/" + originalName;
         profile.setResumeUrl(resumeUrl);
+        profile.setResumeName(originalName);
         profile.setUpdatedAt(LocalDateTime.now());
         candidateRepository.save(profile);
-        
+
         return resumeUrl;
     }
 
@@ -354,6 +358,8 @@ public class ProfileServiceImp implements ProfileService {
                 .experience(profile.getExperience() == null
                         ? "0"
                         : String.valueOf(profile.getExperience()))
+                .resumeUrl(profile.getResumeUrl())
+                .resumeName(profile.getResumeName())
                 .active(profile.isActive())
                 .createdAt(profile.getCreatedAt())
                 .updatedAt(profile.getUpdatedAt())

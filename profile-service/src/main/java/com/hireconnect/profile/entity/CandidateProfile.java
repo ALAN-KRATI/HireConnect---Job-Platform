@@ -45,6 +45,8 @@ public class CandidateProfile extends UserProfile {
 
     private String resumeUrl;
 
+    private String resumeName;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "candidate_profiles_addresses",
