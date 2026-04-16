@@ -41,12 +41,16 @@ public class AuthResource {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
+    public ResponseEntity<?> validateToken(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(false);
+        }
+        String token = authorizationHeader.substring(7);
 
         boolean isValid = service.validateToken(token);
         if (!isValid) {
-            return ResponseEntity.ok(false);
+            return ResponseEntity.status(401).body(false);
         }
 
         AuthResponse userDetails = AuthResponse.builder()

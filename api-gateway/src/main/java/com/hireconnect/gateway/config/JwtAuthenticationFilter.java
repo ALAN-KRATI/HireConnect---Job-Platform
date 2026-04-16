@@ -105,13 +105,14 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             return exchange.getResponse().setComplete();
         }
         
-      
-        boolean isRecruiterOnlyPath = 
+        // Analytics is NOT in this list because /analytics/candidate exists
+        // and should be reachable by candidates. Per-endpoint @PreAuthorize in
+        // the analytics service handles role enforcement.
+        boolean isRecruiterOnlyPath =
             path.startsWith("/profiles/recruiters") ||
             path.startsWith("/applications/recruiter") ||
             path.startsWith("/interviews/recruiter") ||
-            path.startsWith("/subscriptions") ||
-            path.startsWith("/analytics");
+            path.startsWith("/subscriptions");
         
         if (isRecruiterOnlyPath && !"RECRUITER".equals(role)) {
             System.out.println("[JWT FILTER] 403 - Non-recruiter accessing recruiter-only path: " + path);
