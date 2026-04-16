@@ -83,11 +83,4 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .servers(List.of(
-                        new Server().url("http://localhost:8081")
-                ));
-    }
 }
