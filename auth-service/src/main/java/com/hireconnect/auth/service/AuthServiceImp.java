@@ -1,5 +1,6 @@
 package com.hireconnect.auth.service;
 
+import java.util.UUID;
 import com.hireconnect.auth.config.JwtService;
 import com.hireconnect.auth.dto.AuthResponse;
 import com.hireconnect.auth.dto.LoginRequest;
@@ -41,6 +42,7 @@ public class AuthServiceImp implements AuthService {
         }
 
         UserCredential user = UserCredential.builder()
+                .id(UUID.randomUUID())
                 .email(request.getEmail())
                 .mobileNumber(request.getMobile())
                 .password(passwordEncoder.encode(request.getPassword()))
