@@ -40,7 +40,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .userId(recruiter1)
                 .fullName("Rajesh Kumar")
                 .email("rajesh.kumar@techsolutions.com")
-                .mobile("+91 98765 43210")
+                .mobile("9876543210")
                 .companyName("Tech Solutions Inc.")
                 .industry("Information Technology")
                 .companySize("100-500 employees")
@@ -52,7 +52,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .userId(recruiter2)
                 .fullName("Priya Sharma")
                 .email("priya.sharma@innovationlabs.com")
-                .mobile("+91 87654 32109")
+                .mobile("8765432109")
                 .companyName("Innovation Labs")
                 .industry("Software Development")
                 .companySize("50-200 employees")
@@ -73,11 +73,11 @@ public class DatabaseSeeder implements CommandLineRunner {
         };
 
         String[][] candidateData = {
-            {"Amit Patel", "amit.patel@email.com", "+91 76543 21098", "Bangalore", "Software Engineer", "5 years"},
-            {"Neha Gupta", "neha.gupta@email.com", "+91 65432 10987", "Mumbai", "Frontend Developer", "3 years"},
-            {"Vikram Singh", "vikram.singh@email.com", "+91 54321 09876", "Delhi", "Full Stack Developer", "4 years"},
-            {"Ananya Reddy", "ananya.reddy@email.com", "+91 43210 98765", "Hyderabad", "Data Scientist", "2 years"},
-            {"Rahul Verma", "rahul.verma@email.com", "+91 32109 87654", "Pune", "DevOps Engineer", "6 years"}
+            {"Amit Patel", "amit.patel@email.com", "7654321098", "Bangalore", "Software Engineer", "5"},
+            {"Neha Gupta", "neha.gupta@email.com", "6543210987", "Mumbai", "Frontend Developer", "3"},
+            {"Vikram Singh", "vikram.singh@email.com", "6543210976", "Delhi", "Full Stack Developer", "4"},
+            {"Ananya Reddy", "ananya.reddy@email.com", "7321098765", "Hyderabad", "Data Scientist", "2"},
+            {"Rahul Verma", "rahul.verma@email.com", "8210987654", "Pune", "DevOps Engineer", "6"}
         };
 
         String[] skills = {

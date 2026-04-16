@@ -75,11 +75,11 @@ public class DataSeeder {
                 UUID.fromString("802933df-bdc5-40e7-b9db-7ced2d14ede3")),
             createCandidateWithId("neha.gupta@email.com", "Neha Gupta", "6543210987",
                 UUID.fromString("902933df-bdc5-40e7-b9db-7ced2d14ede4")),
-            createCandidateWithId("vikram.singh@email.com", "Vikram Singh", "5432109876",
+            createCandidateWithId("vikram.singh@email.com", "Vikram Singh", "9532109876",
                 UUID.fromString("a02933df-bdc5-40e7-b9db-7ced2d14ede5")),
-            createCandidateWithId("ananya.reddy@email.com", "Ananya Reddy", "4321098765",
+            createCandidateWithId("ananya.reddy@email.com", "Ananya Reddy", "9321098765",
                 UUID.fromString("b02933df-bdc5-40e7-b9db-7ced2d14ede6")),
-            createCandidateWithId("rahul.verma@email.com", "Rahul Verma", "3210987654",
+            createCandidateWithId("rahul.verma@email.com", "Rahul Verma", "9210987654",
                 UUID.fromString("c02933df-bdc5-40e7-b9db-7ced2d14ede7"))
         );
 

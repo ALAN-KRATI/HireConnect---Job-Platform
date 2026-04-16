@@ -91,9 +91,11 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         }
 
        
-        boolean isCandidateOnlyPath = 
-            path.startsWith("/profiles/me") ||
-            path.startsWith("/profiles/candidates") ||
+        // /profiles/me and /profiles/candidates are not strictly candidate-only
+        // (recruiters view /profiles/me for their own profile and /profiles/candidates
+        // to list candidates). Leave role enforcement to the downstream services'
+        // @PreAuthorize annotations.
+        boolean isCandidateOnlyPath =
             path.startsWith("/applications/candidate") ||
             path.startsWith("/interviews/candidate");
         
