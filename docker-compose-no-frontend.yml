@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8
+'...' is not recognized as an internal or external command,
+operable program or batch file.

@@ -169,7 +169,6 @@ services:
 
       ELASTICSEARCH_HOST: elasticsearch
       ELASTICSEARCH_PORT: 9200
-      ELASTICSEARCH_URI: http://elasticsearch:9200
 
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
@@ -431,19 +430,19 @@ services:
     networks:
       - hireconnect-network
 
-  # frontend:
-  #   build: ../HireConnect-Frontend
-  #   container_name: hireconnect-frontend
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #   environment:
-  #     - VITE_API_URL=http://api-gateway:8080
-  #   depends_on:
-  #     api-gateway:
-  #       condition: service_started
-  #   networks:
-  #     - hireconnect-network
+  frontend:
+    build: ../HireConnect-Frontend
+    container_name: hireconnect-frontend
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_URL=http://api-gateway:8080
+    depends_on:
+      api-gateway:
+        condition: service_started
+    networks:
+      - hireconnect-network
 
 volumes:
   mysql-data:
