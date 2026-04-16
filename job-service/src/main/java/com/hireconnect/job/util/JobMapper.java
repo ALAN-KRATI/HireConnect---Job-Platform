@@ -39,6 +39,9 @@ public class JobMapper {
                 .postedBy(job.getPostedBy())
                 .status(job.getStatus())
                 .postedAt(job.getPostedAt())
+                .company(job.getCompany())
+                .companyName(job.getCompany())
+                .viewCount(job.getViewCount())
                 .build();
     }
 }

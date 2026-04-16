@@ -26,4 +26,7 @@ public class JobResponse {
     private JobStatus status;
     private LocalDateTime postedAt;
     private String description;
+    private String company;
+    private String companyName;
+    private Long viewCount;
 }

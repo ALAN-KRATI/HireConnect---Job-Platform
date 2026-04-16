@@ -1,6 +1,7 @@
 package com.hireconnect.application.controller;
 
 import com.hireconnect.application.client.JobServiceClient;
+import com.hireconnect.application.client.ProfileServiceClient;
 import com.hireconnect.application.dto.ApplicationResponse;
 import com.hireconnect.application.dto.StatusUpdateRequest;
 import com.hireconnect.application.entity.Application;
@@ -21,11 +22,14 @@ public class ApplicationResource {
 
         private final ApplicationService applicationService;
         private final JobServiceClient jobServiceClient;
+        private final ProfileServiceClient profileServiceClient;
 
         public ApplicationResource(ApplicationService applicationService,
-                                   JobServiceClient jobServiceClient) {
+                                   JobServiceClient jobServiceClient,
+                                   ProfileServiceClient profileServiceClient) {
                 this.applicationService = applicationService;
                 this.jobServiceClient = jobServiceClient;
+                this.profileServiceClient = profileServiceClient;
         }
 
         @PostMapping
@@ -49,16 +53,17 @@ public class ApplicationResource {
                 }
 
                 Application saved = applicationService.submitApplication(application);
-                return ResponseEntity.ok(mapToResponse(saved));
+                return ResponseEntity.ok(mapToResponse(saved, request.getHeader("Authorization")));
         }
 
         @GetMapping("/candidate/me")
-        public ResponseEntity<List<ApplicationResponse>> getMyApplications() {
+        public ResponseEntity<List<ApplicationResponse>> getMyApplications(HttpServletRequest request) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String email = authentication.getName();
+                String bearer = request.getHeader("Authorization");
                 List<ApplicationResponse> responses = applicationService.getByCandidateEmail(email)
                                 .stream()
-                                .map(this::mapToResponse)
+                                .map(a -> mapToResponse(a, bearer))
                                 .toList();
                 return ResponseEntity.ok(responses);
         }
@@ -70,47 +75,56 @@ public class ApplicationResource {
                         return ResponseEntity.badRequest().build();
                 }
                 UUID recruiterId = UUID.fromString(recruiterIdStr);
+                String bearer = request.getHeader("Authorization");
                 List<ApplicationResponse> responses = applicationService.getByRecruiter(recruiterId)
                                 .stream()
-                                .map(this::mapToResponse)
+                                .map(a -> mapToResponse(a, bearer))
                                 .toList();
                 return ResponseEntity.ok(responses);
         }
 
         @GetMapping("/candidate/{candidateId}")
-        public ResponseEntity<List<ApplicationResponse>> getByCandidate(@PathVariable UUID candidateId) {
+        public ResponseEntity<List<ApplicationResponse>> getByCandidate(
+                        @PathVariable UUID candidateId, HttpServletRequest request) {
+                String bearer = request.getHeader("Authorization");
                 List<ApplicationResponse> responses = applicationService.getByCandidate(candidateId)
                                 .stream()
-                                .map(this::mapToResponse)
+                                .map(a -> mapToResponse(a, bearer))
                                 .toList();
 
                 return ResponseEntity.ok(responses);
         }
 
         @GetMapping("/job/{jobId}")
-        public ResponseEntity<List<ApplicationResponse>> getByJob(@PathVariable Long jobId) {
+        public ResponseEntity<List<ApplicationResponse>> getByJob(
+                        @PathVariable Long jobId, HttpServletRequest request) {
+                String bearer = request.getHeader("Authorization");
                 List<ApplicationResponse> responses = applicationService.getByJob(jobId)
                                 .stream()
-                                .map(this::mapToResponse)
+                                .map(a -> mapToResponse(a, bearer))
                                 .toList();
 
                 return ResponseEntity.ok(responses);
         }
 
         @GetMapping("/{applicationId}")
-        public ResponseEntity<ApplicationResponse> getById(@PathVariable UUID applicationId) {
+        public ResponseEntity<ApplicationResponse> getById(
+                        @PathVariable UUID applicationId, HttpServletRequest request) {
                 return ResponseEntity.ok(
-                                mapToResponse(applicationService.getById(applicationId)));
+                                mapToResponse(applicationService.getById(applicationId),
+                                                request.getHeader("Authorization")));
         }
 
         @PutMapping("/{applicationId}/status")
         public ResponseEntity<ApplicationResponse> updateStatus(
                         @PathVariable UUID applicationId,
-                        @RequestBody StatusUpdateRequest request) {
+                        @RequestBody StatusUpdateRequest request,
+                        HttpServletRequest httpRequest) {
 
                 return ResponseEntity.ok(
                                 mapToResponse(
-                                                applicationService.updateStatus(applicationId, request.getStatus())));
+                                                applicationService.updateStatus(applicationId, request.getStatus()),
+                                                httpRequest.getHeader("Authorization")));
         }
 
         @PutMapping("/{applicationId}/withdraw")
@@ -215,16 +229,54 @@ public class ApplicationResource {
         }
 
         private ApplicationResponse mapToResponse(Application application) {
-                return new ApplicationResponse(
-                                application.getApplicationId(),
-                                application.getJobId(),
-                                application.getCandidateId(),
-                                application.getRecruiterId(),
-                                application.getAppliedAt(),
-                                application.getUpdatedAt(),
-                                application.getStatus(),
-                                application.getCoverLetter(),
-                                application.getResumeUrl());
+                return mapToResponse(application, null);
+        }
+
+        private ApplicationResponse mapToResponse(Application application, String bearer) {
+                ApplicationResponse resp = ApplicationResponse.builder()
+                                .applicationId(application.getApplicationId())
+                                .jobId(application.getJobId())
+                                .candidateId(application.getCandidateId())
+                                .recruiterId(application.getRecruiterId())
+                                .appliedAt(application.getAppliedAt())
+                                .updatedAt(application.getUpdatedAt())
+                                .status(application.getStatus())
+                                .coverLetter(application.getCoverLetter())
+                                .resumeUrl(application.getResumeUrl())
+                                .candidateEmail(application.getCandidateEmail())
+                                .build();
+
+                // Enrich with job details (title, company, location, type, skills)
+                if (application.getJobId() != null) {
+                        var job = jobServiceClient.getJob(application.getJobId());
+                        if (!job.isEmpty()) {
+                                resp.setJobTitle((String) job.get("title"));
+                                Object company = job.get("company");
+                                if (company != null) resp.setCompanyName(company.toString());
+                                resp.setLocation((String) job.get("location"));
+                                Object type = job.get("type");
+                                if (type != null) resp.setJobType(type.toString());
+                                Object skills = job.get("skills");
+                                if (skills instanceof List<?> sList) {
+                                        resp.setSkills(sList.stream().map(String::valueOf).toList());
+                                }
+                        }
+                }
+
+                // Enrich with candidate profile (name)
+                if (application.getCandidateId() != null) {
+                        var candidate = profileServiceClient.getCandidate(application.getCandidateId(), bearer);
+                        if (!candidate.isEmpty()) {
+                                Object name = candidate.get("fullName");
+                                if (name != null) resp.setCandidateName(name.toString());
+                                if (resp.getCandidateEmail() == null) {
+                                        Object em = candidate.get("email");
+                                        if (em != null) resp.setCandidateEmail(em.toString());
+                                }
+                        }
+                }
+
+                return resp;
         }
 
         @GetMapping("/recruiter/{recruiterId}/interview-scheduled/count")

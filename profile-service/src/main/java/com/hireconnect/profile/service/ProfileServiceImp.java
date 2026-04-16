@@ -330,16 +330,58 @@ public class ProfileServiceImp implements ProfileService {
     }
 
     private SavedJobResponse mapSavedJob(SavedJob savedJob) {
-        return SavedJobResponse.builder()
+        SavedJobResponse resp = SavedJobResponse.builder()
                 .savedJobId(savedJob.getSavedJobId())
                 .jobId(savedJob.getJobId())
                 .jobTitle(savedJob.getJobTitle())
+                .title(savedJob.getJobTitle())
                 .companyName(savedJob.getCompanyName())
                 .location(savedJob.getLocation())
                 .type(savedJob.getJobType())
                 .status(savedJob.getStatus())
                 .savedAt(savedJob.getSavedAt())
                 .build();
+
+        // Enrich with the live job (skills, salary range, experience required) so
+        // the SavedJobs UI can render the full card without an extra round-trip
+        // per job.
+        try {
+            Map<String, Object> job = jobServiceClient.getJobById(savedJob.getJobId());
+            if (job != null && !job.isEmpty()) {
+                if (resp.getTitle() == null) {
+                    Object t = job.get("title");
+                    if (t != null) {
+                        resp.setTitle(t.toString());
+                        resp.setJobTitle(t.toString());
+                    }
+                }
+                if (resp.getCompanyName() == null) {
+                    Object c = job.get("companyName");
+                    if (c == null) c = job.get("company");
+                    if (c != null) resp.setCompanyName(c.toString());
+                }
+                if (resp.getLocation() == null) {
+                    Object l = job.get("location");
+                    if (l != null) resp.setLocation(l.toString());
+                }
+                if (resp.getType() == null) {
+                    Object t = job.get("type");
+                    if (t != null) resp.setType(t.toString());
+                }
+                Object skills = job.get("skills");
+                if (skills instanceof List<?> sList) {
+                    resp.setSkills(sList.stream().map(String::valueOf).toList());
+                }
+                Object exp = job.get("experienceRequired");
+                if (exp instanceof Number n) resp.setExperienceRequired(n.intValue());
+                Object mn = job.get("minSalary");
+                if (mn instanceof Number n) resp.setMinSalary(n.doubleValue());
+                Object mx = job.get("maxSalary");
+                if (mx instanceof Number n) resp.setMaxSalary(n.doubleValue());
+            }
+        } catch (Exception ignored) { /* fall back to stored fields */ }
+
+        return resp;
     }
 
     private ProfileResponse mapCandidate(CandidateProfile profile) {

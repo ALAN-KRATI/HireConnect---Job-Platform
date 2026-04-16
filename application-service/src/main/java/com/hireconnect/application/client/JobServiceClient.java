@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,16 +23,26 @@ public class JobServiceClient {
         this.restTemplate = restTemplate;
     }
 
-    public UUID getPostedBy(Long jobId) {
+    @SuppressWarnings("rawtypes")
+    public Map<String, Object> getJob(Long jobId) {
         try {
             String url = jobServiceUrl + "/jobs/" + jobId;
-            @SuppressWarnings("rawtypes")
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
-            Object postedBy = response.getBody() != null ? response.getBody().get("postedBy") : null;
-            if (postedBy == null) return null;
+            @SuppressWarnings("unchecked")
+            Map<String, Object> body = response.getBody();
+            return body != null ? body : Collections.emptyMap();
+        } catch (Exception e) {
+            log.warn("Could not fetch job {}: {}", jobId, e.getMessage());
+            return Collections.emptyMap();
+        }
+    }
+
+    public UUID getPostedBy(Long jobId) {
+        Object postedBy = getJob(jobId).get("postedBy");
+        if (postedBy == null) return null;
+        try {
             return UUID.fromString(postedBy.toString());
         } catch (Exception e) {
-            log.warn("Could not resolve recruiter for job {}: {}", jobId, e.getMessage());
             return null;
         }
     }
