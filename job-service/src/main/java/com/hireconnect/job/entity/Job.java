@@ -87,6 +87,10 @@ public class Job {
         if (status == null) {
             status = JobStatus.OPEN;
         }
+
+        if (viewCount == null) {
+            viewCount = 0L;
+        }
     }
 
     @Column
