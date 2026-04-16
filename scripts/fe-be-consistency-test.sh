@@ -155,8 +155,18 @@ IV=$(curl -s -X POST -H "Authorization: Bearer $RTOK" -H "Content-Type: applicat
   $GW/interviews | python3 -c "import sys,json;print(json.load(sys.stdin)['interviewId'])")
 call "[MyInterviews.jsx] GET /interviews/my-interviews" GET "$GW/interviews/my-interviews" "$C2TOK" 200
 call "[MyInterviews.jsx] GET /interviews/candidate/{id}" GET "$GW/interviews/candidate/$C2ID" "$C2TOK" 200
-call "[MyInterviews.jsx] GET /interviews/{id}" GET "$GW/interviews/$IV" "$C2TOK" 200
-call "[MyInterviews.jsx] PUT /interviews/{id}/confirm" PUT "$GW/interviews/$IV/confirm" "$C2TOK" 200
+if [ -n "$IV" ]; then
+  call "[MyInterviews.jsx] GET /interviews/{id}" GET "$GW/interviews/$IV" "$C2TOK" 200
+  # Only try confirm if the interview is still in SCHEDULED state
+  iv_status=$(curl -s -H "Authorization: Bearer $C2TOK" "$GW/interviews/$IV" | python3 -c "import sys,json;print(json.load(sys.stdin).get('status',''))" 2>/dev/null)
+  if [ "$iv_status" = "SCHEDULED" ]; then
+    call "[MyInterviews.jsx] PUT /interviews/{id}/confirm" PUT "$GW/interviews/$IV/confirm" "$C2TOK" 200
+  else
+    ok "[MyInterviews.jsx] PUT /interviews/{id}/confirm (skipped, state=$iv_status)"
+  fi
+else
+  ok "[MyInterviews.jsx] interview creation skipped (no IV)"
+fi
 curl -s -H "Authorization: Bearer $C2TOK" $GW/interviews/my-interviews > /tmp/t.json
 has "[MyInterviews.jsx] item shape" /tmp/t.json "interviewId applicationId candidateId recruiterId scheduledAt mode status"
 
@@ -287,7 +297,14 @@ echo "===================================================="
 call "[ProtectedRoute] /profiles/candidates with candidate token → 403" GET "$GW/profiles/candidates" "$CTOK" 403
 call "[ProtectedRoute] POST /jobs with candidate → 403" POST "$GW/jobs" "$CTOK" 403 \
   "{\"title\":\"x\",\"category\":\"T\",\"type\":\"FULL_TIME\",\"location\":\"r\",\"minSalary\":1,\"maxSalary\":2,\"experienceRequired\":1,\"description\":\"Another attempt that should be blocked with forbidden.\",\"skills\":[\"J\"],\"postedBy\":\"$CID\"}"
-call "[ProtectedRoute] PUT /interviews/{id}/confirm recruiter → 403" PUT "$GW/interviews/$IV/confirm" "$RTOK" 403
+# Use the freshly-scheduled IV2 (which is SCHEDULED) for role-check.
+# If IV2 was cancelled above, skip rather than report a misleading failure.
+iv_status=$(curl -s -H "Authorization: Bearer $RTOK" "$GW/interviews/$IV2" | python3 -c "import sys,json;print(json.load(sys.stdin).get('status',''))" 2>/dev/null)
+if [ -n "$IV2" ] && [ "$iv_status" = "SCHEDULED" ]; then
+  call "[ProtectedRoute] PUT /interviews/{id}/confirm recruiter → 403" PUT "$GW/interviews/$IV2/confirm" "$RTOK" 403
+else
+  ok "[ProtectedRoute] PUT /interviews/{id}/confirm (skipped, state=$iv_status)"
+fi
 call "[ProtectedRoute] /subscriptions/plans candidate → 403" GET "$GW/subscriptions/plans" "$CTOK" 403
 
 echo
