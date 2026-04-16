@@ -81,15 +81,29 @@ public class InterviewResource {
     }
 
     @GetMapping("/my-interviews")
-    public ResponseEntity<List<InterviewResponse>> getMyInterviews() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        
+    public ResponseEntity<List<InterviewResponse>> getMyInterviews(
+            jakarta.servlet.http.HttpServletRequest request) {
+        // Prefer candidateId propagated from the gateway (X-User-Id). Fall back
+        // to looking up by email from the SecurityContext in case an older
+        // gateway doesn't set the header.
+        List<Interview> interviews = null;
+        String userIdHeader = request.getHeader("X-User-Id");
+        if (userIdHeader != null && !userIdHeader.isBlank()) {
+            try {
+                UUID candidateId = UUID.fromString(userIdHeader);
+                interviews = interviewService.getByCandidate(candidateId);
+            } catch (IllegalArgumentException ignored) { /* bad UUID; try email */ }
+        }
+        if (interviews == null || interviews.isEmpty()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication != null ? authentication.getName() : null;
+            if (email != null) {
+                interviews = interviewService.getByCandidateEmail(email);
+            }
+        }
+        if (interviews == null) interviews = List.of();
         return ResponseEntity.ok(
-                interviewService.getByCandidateEmail(email)
-                        .stream()
-                        .map(this::mapToResponse)
-                        .toList()
+                interviews.stream().map(this::mapToResponse).toList()
         );
     }
 
