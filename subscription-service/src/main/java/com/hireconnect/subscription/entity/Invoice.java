@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.hireconnect.subscription.enums.PaymentMode;
 import com.hireconnect.subscription.enums.PaymentStatus;
+import com.hireconnect.subscription.enums.SubscriptionPlan;
 
 @Entity
 @Table(name = "invoices")
@@ -57,4 +58,7 @@ public class Invoice {
             this.paymentStatus = PaymentStatus.PENDING;
         }
     }
+
+    @Enumerated(EnumType.STRING)
+    private SubscriptionPlan planType;
 }

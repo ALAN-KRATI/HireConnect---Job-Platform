@@ -1,5 +1,6 @@
 package com.hireconnect.subscription.service;
 
+import com.hireconnect.subscription.client.NotificationClient;
 import com.hireconnect.subscription.dto.*;
 import com.hireconnect.subscription.entity.Invoice;
 import com.hireconnect.subscription.entity.Subscription;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+
 @Service
 @RequiredArgsConstructor
 public class SubscriptionServiceImp implements SubscriptionService {
@@ -29,6 +31,7 @@ public class SubscriptionServiceImp implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final InvoiceRepository invoiceRepository;
     private final PdfGenerator pdfGenerator;
+    private final NotificationClient notificationClient;
 
     @Override
     @Transactional
@@ -138,16 +141,17 @@ public class SubscriptionServiceImp implements SubscriptionService {
     }
 
     @Override
-    public Subscription getActiveSubscription(UUID recruiterId) {
+        public Subscription getActiveSubscription(UUID recruiterId) {
 
-        return subscriptionRepository.findByRecruiterIdAndStatus(
+        return subscriptionRepository
+                .findTopByRecruiterIdAndStatusOrderBySubscriptionIdDesc(
                         recruiterId,
                         SubscriptionStatus.ACTIVE
                 )
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "No active subscription found for recruiter: " + recruiterId
                 ));
-    }
+        }
 
     @Override
     @Transactional
@@ -155,33 +159,85 @@ public class SubscriptionServiceImp implements SubscriptionService {
         throw new UnsupportedOperationException("Use StripePaymentService for payment intents");
     }
 
-    @Override
-    @Transactional
-    public void handlePaymentSuccess(String paymentIntentId) {
+        @Override
+        @Transactional
+        public void handlePaymentSuccess(String paymentIntentId) {
+
         Invoice invoice = invoiceRepository.findByStripePaymentIntentId(paymentIntentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found for payment: " + paymentIntentId));
-        
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Invoice not found for payment: " + paymentIntentId
+                ));
+
         invoice.setPaymentStatus(PaymentStatus.COMPLETED);
         invoice.setPaymentDate(LocalDateTime.now());
         invoice.setTransactionId("TXN-" + System.currentTimeMillis());
-        invoiceRepository.save(invoice);
-    }
 
-    @Override
-    @Transactional
-    public void handlePaymentFailure(String paymentIntentId, String failureMessage) {
+        invoiceRepository.save(invoice);
+
+        Subscription subscription = subscriptionRepository.findById(invoice.getSubscriptionId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Subscription not found"
+                ));
+
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+
+        if (invoice.getAmount() >= 2999) {
+                subscription.setPlan(SubscriptionPlan.ENTERPRISE);
+        } else if (invoice.getAmount() >= 999) {
+                subscription.setPlan(SubscriptionPlan.PROFESSIONAL);
+        } else {
+                subscription.setPlan(SubscriptionPlan.FREE);
+        }
+
+        subscription.setStartDate(LocalDate.now());
+        subscription.setEndDate(LocalDate.now().plusMonths(1));
+
+        subscriptionRepository.save(subscription);
+
+        notificationClient.sendEmail(
+                "recruiter@example.com",
+                "Payment Successful",
+                "Your payment was successful.\n\n"
+                        + "Plan: " + subscription.getPlan() + "\n"
+                        + "Amount: ₹" + invoice.getAmount() + "\n"
+                        + "Transaction ID: " + invoice.getTransactionId()
+        );
+        }
+
+
+
+        @Override
+        @Transactional
+        public void handlePaymentFailure(String paymentIntentId, String failureMessage) {
+
         Invoice invoice = invoiceRepository.findByStripePaymentIntentId(paymentIntentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found for payment: " + paymentIntentId));
-        
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Invoice not found for payment: " + paymentIntentId
+                ));
+
         invoice.setPaymentStatus(PaymentStatus.FAILED);
         invoice.setFailureReason(failureMessage);
+
         invoiceRepository.save(invoice);
-        
+
         Subscription subscription = subscriptionRepository.findById(invoice.getSubscriptionId())
-                .orElseThrow(() -> new ResourceNotFoundException("Subscription not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Subscription not found"
+                ));
+
         subscription.setStatus(SubscriptionStatus.CANCELLED);
+
         subscriptionRepository.save(subscription);
-    }
+
+        notificationClient.sendEmail(
+                "recruiter@example.com",
+                "Payment Failed",
+                "Your payment could not be completed.\n\n"
+                        + "Reason: " + failureMessage
+        );
+        }
+
+
 
     @Override
     public byte[] generateInvoicePdf(Integer invoiceId) {
@@ -215,9 +271,11 @@ public class SubscriptionServiceImp implements SubscriptionService {
                 .mapToDouble(Invoice::getAmount)
                 .sum();
         
-        Subscription activeSub = subscriptions.stream()
-                .filter(Subscription::isActive)
-                .findFirst()
+        Subscription activeSub = subscriptionRepository
+                .findTopByRecruiterIdAndStatusOrderBySubscriptionIdDesc(
+                        recruiterId,
+                        SubscriptionStatus.ACTIVE
+                )
                 .orElse(null);
         
         SubscriptionAnalyticsDTO.RecruiterStatsDTO stats = SubscriptionAnalyticsDTO.RecruiterStatsDTO.builder()
@@ -345,7 +403,8 @@ public class SubscriptionServiceImp implements SubscriptionService {
                 .stripePaymentIntentId(invoice.getStripePaymentIntentId())
                 .invoiceUrl(invoice.getInvoiceUrl())
                 .receiptUrl(invoice.getReceiptUrl())
-                .pdfDownloadUrl("/subscriptions/invoices/" + invoice.getInvoiceId() + "/download")
+                .pdfDownloadUrl(null)
                 .build();
     }
 }
+

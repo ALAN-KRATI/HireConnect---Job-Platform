@@ -170,12 +170,28 @@ public class ApplicationResource {
                 return ResponseEntity.ok(applicationService.countByRecruiterId(recruiterId));
         }
 
-        @GetMapping("/recruiter/{recruiterId}/shortlisted/count")
+       @GetMapping("/recruiter/{recruiterId}/shortlisted/count")
         public ResponseEntity<Long> getShortlistedCount(@PathVariable UUID recruiterId) {
-                return ResponseEntity.ok(
-                                applicationService.countByRecruiterIdAndStatus(
-                                                recruiterId,
-                                                ApplicationStatus.SHORTLISTED));
+        return ResponseEntity.ok(
+                applicationService.countByRecruiterIdAndStatusIn(
+                        recruiterId,
+                        List.of(
+                                ApplicationStatus.SHORTLISTED,
+                                ApplicationStatus.INTERVIEW_SCHEDULED
+                        )
+                )
+        );
+        }
+
+        @GetMapping("/recruiter/{recruiterId}/interview-scheduled/count")
+        public ResponseEntity<Long> getInterviewScheduledCount(@PathVariable UUID recruiterId) {
+        return ResponseEntity.ok(
+                applicationService.countByRecruiterIdAndStatusIn(
+                        recruiterId,
+                        List.of(
+                                ApplicationStatus.INTERVIEW_SCHEDULED)
+                )
+        );
         }
 
         @GetMapping("/recruiter/{recruiterId}/offered/count")
@@ -279,18 +295,14 @@ public class ApplicationResource {
                 return resp;
         }
 
-        @GetMapping("/recruiter/{recruiterId}/interview-scheduled/count")
-        public ResponseEntity<Long> getInterviewScheduledCount(@PathVariable UUID recruiterId) {
-                return ResponseEntity.ok(
-                                applicationService.countByRecruiterIdAndStatus(
-                                                recruiterId,
-                                                ApplicationStatus.INTERVIEW_SCHEDULED));
-        }
-
-        @GetMapping("/platform/interview-scheduled/count")
+       @GetMapping("/platform/interview-scheduled/count")
         public ResponseEntity<Long> getPlatformInterviewScheduledCount() {
-                return ResponseEntity.ok(
-                        applicationService.countByStatus(ApplicationStatus.INTERVIEW_SCHEDULED)
-                );
+        return ResponseEntity.ok(
+                applicationService.countByStatusIn(
+                        List.of(
+                                ApplicationStatus.INTERVIEW_SCHEDULED
+                        )
+                )
+        );
         }
 }

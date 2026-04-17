@@ -32,16 +32,18 @@ public class SubscriptionResource {
     }
 
     @GetMapping("/current")
-    @PreAuthorize("hasRole('RECRUITER')")
-    public ResponseEntity<SubscriptionResponse> getCurrentSubscription(
-            @RequestParam UUID recruiterId
-    ) {
+        @PreAuthorize("hasRole('RECRUITER')")
+        public ResponseEntity<?> getCurrentSubscription(
+                @RequestParam UUID recruiterId
+        ) {
         List<SubscriptionResponse> subs = subscriptionService.getByRecruiter(recruiterId);
-        return ResponseEntity.ok(subs.stream()
+
+        return subs.stream()
                 .filter(s -> s.getStatus().name().equals("ACTIVE"))
                 .findFirst()
-                .orElse(null));
-    }
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+        }
 
     @PostMapping("/upgrade")
     @PreAuthorize("hasRole('RECRUITER')")

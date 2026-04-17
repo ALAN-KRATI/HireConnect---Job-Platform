@@ -20,6 +20,11 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
             SubscriptionStatus status
     );
 
+    Optional<Subscription> findTopByRecruiterIdAndStatusOrderBySubscriptionIdDesc(
+            UUID recruiterId,
+            SubscriptionStatus status
+    );
+
     long countByPlan(SubscriptionPlan plan);
 
     boolean existsByRecruiterIdAndStatus(

@@ -1,6 +1,11 @@
 package com.hireconnect.interview.service;
 
+import com.hireconnect.interview.client.ApplicationServiceClient;
+import com.hireconnect.interview.client.NotificationClient;
+import com.hireconnect.interview.dto.EmailRequest;
+import com.hireconnect.interview.dto.StatusUpdateRequest;
 import com.hireconnect.interview.entity.Interview;
+import com.hireconnect.interview.enums.ApplicationStatus;
 import com.hireconnect.interview.enums.InterviewStatus;
 import com.hireconnect.interview.event.InterviewNotificationEvent;
 import com.hireconnect.interview.exception.InterviewAlreadyExistsException;
@@ -18,11 +23,17 @@ public class InterviewServiceImp implements InterviewService {
 
     private final InterviewRepository repository;
     private final RabbitTemplate rabbitTemplate;
+    private final ApplicationServiceClient applicationServiceClient;
+    private final NotificationClient notificationClient;
 
     public InterviewServiceImp(InterviewRepository repository,
-                               RabbitTemplate rabbitTemplate) {
+                               RabbitTemplate rabbitTemplate,
+                               ApplicationServiceClient applicationServiceClient,
+                               NotificationClient notificationClient) {
         this.repository = repository;
         this.rabbitTemplate = rabbitTemplate;
+        this.applicationServiceClient = applicationServiceClient;
+        this.notificationClient = notificationClient;
     }
 
     @Override
@@ -51,6 +62,20 @@ public class InterviewServiceImp implements InterviewService {
 
         Interview saved = repository.save(interview);
 
+        applicationServiceClient.updateStatus(
+                saved.getApplicationId(),
+                new StatusUpdateRequest(ApplicationStatus.INTERVIEW_SCHEDULED)
+        );
+
+        notificationClient.sendEmail( new EmailRequest(
+                saved.getCandidateEmail(),
+                "Interview Scheduled",
+                "Your interview has been scheduled.\n\n"
+                        + "Date & Time: " + saved.getScheduledAt() + "\n"
+                        + "Mode: " + saved.getMode() + "\n\n"
+                        + "Best of luck. Go cook, respectfully."
+        ));
+
         rabbitTemplate.convertAndSend(
                 "notification.exchange",
                 "interview.scheduled",
@@ -76,6 +101,13 @@ public class InterviewServiceImp implements InterviewService {
         interview.setStatus(InterviewStatus.CONFIRMED);
 
         Interview saved = repository.save(interview);
+
+        notificationClient.sendEmail( new EmailRequest(
+                saved.getCandidateEmail(),
+                "Interview Confirmed",
+                "You confirmed your interview scheduled for "
+                        + saved.getScheduledAt()
+        ));
 
         rabbitTemplate.convertAndSend(
                 "notification.exchange",
@@ -117,6 +149,13 @@ public class InterviewServiceImp implements InterviewService {
 
         Interview saved = repository.save(interview);
 
+        notificationClient.sendEmail(new EmailRequest(
+                saved.getCandidateEmail(),
+                "Interview Rescheduled",
+                "Your interview has been rescheduled to "
+                        + saved.getScheduledAt()
+        ));
+
         rabbitTemplate.convertAndSend(
                 "notification.exchange",
                 "interview.rescheduled",
@@ -142,6 +181,14 @@ public class InterviewServiceImp implements InterviewService {
         interview.setStatus(InterviewStatus.CANCELLED);
 
         Interview saved = repository.save(interview);
+
+        notificationClient.sendEmail( new EmailRequest(
+                saved.getCandidateEmail(),
+                "Interview Cancelled",
+                "Your interview scheduled for "
+                        + saved.getScheduledAt()
+                        + " has been cancelled."
+        ));
 
         rabbitTemplate.convertAndSend(
                 "notification.exchange",
@@ -186,7 +233,7 @@ public class InterviewServiceImp implements InterviewService {
                                 "Interview not found with id: " + interviewId
                         ));
     }
-    
+
     @Override
     public List<Interview> getByCandidateEmail(String email) {
         return repository.findByCandidateEmail(email);

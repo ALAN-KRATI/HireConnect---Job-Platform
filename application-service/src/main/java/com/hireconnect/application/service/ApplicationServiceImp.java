@@ -1,5 +1,7 @@
 package com.hireconnect.application.service;
 
+import com.hireconnect.application.client.NotificationClient;
+import com.hireconnect.application.dto.EmailRequest;
 import com.hireconnect.application.entity.Application;
 import com.hireconnect.application.enums.ApplicationStatus;
 import com.hireconnect.application.event.ApplicationStatusChangedEvent;
@@ -18,11 +20,14 @@ public class ApplicationServiceImp implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final NotificationClient notificationClient;
 
     public ApplicationServiceImp(ApplicationRepository applicationRepository,
-                                 RabbitTemplate rabbitTemplate) {
+                                 RabbitTemplate rabbitTemplate, NotificationClient notificationClient) {
         this.applicationRepository = applicationRepository;
         this.rabbitTemplate = rabbitTemplate;
+        this.notificationClient = notificationClient;
+
     }
 
     @Override
@@ -48,6 +53,9 @@ public class ApplicationServiceImp implements ApplicationService {
         application.setStatus(ApplicationStatus.APPLIED);
 
         Application savedApplication = applicationRepository.save(application);
+        notificationClient.sendEmail( new EmailRequest(savedApplication.getCandidateEmail(), "Application Submitted Successfully", 
+            "You have successfully applied for '" + 
+            savedApplication.getJobTitle() + "'.\n\nCurrent Status: APPLIED" ));
 
         rabbitTemplate.convertAndSend(
                 "application.exchange",
@@ -112,6 +120,30 @@ public class ApplicationServiceImp implements ApplicationService {
                 )
         );
 
+        String subject = "Application Status Updated"; 
+        String body = "Your application for '" + updatedApplication.getJobTitle() + "' is now marked as " + updatedApplication.getStatus(); 
+        
+        switch (status) { 
+            case SHORTLISTED -> { 
+                subject = "Application Shortlisted 🎉"; 
+                body = "Congrats! Your application for '" + updatedApplication.getJobTitle() + "' has been shortlisted."; 
+            } 
+            case INTERVIEW_SCHEDULED -> { 
+                subject = "Interview Scheduled"; 
+                body = "Your application for '" + updatedApplication.getJobTitle() + "' has moved to interview stage."; 
+            } 
+            case OFFERED -> { 
+                subject = "Offer Received 🚀"; 
+                body = "You received an offer for '" + updatedApplication.getJobTitle() + "'."; 
+            }
+            case REJECTED -> { 
+                subject = "Application Update"; 
+                body = "Your application for '" + updatedApplication.getJobTitle() + "' was not selected this time."; 
+            } 
+        } 
+        
+        notificationClient.sendEmail( new EmailRequest(updatedApplication.getCandidateEmail(), subject, body) );
+
         return updatedApplication;
     }
 
@@ -137,6 +169,10 @@ public class ApplicationServiceImp implements ApplicationService {
                         updatedApplication.getUpdatedAt()
                 )
         );
+
+        notificationClient.sendEmail( new EmailRequest(
+            updatedApplication.getCandidateEmail(), 
+            "Application Withdrawn", "You withdrew your application for '" + updatedApplication.getJobTitle() + "'." ) );
     }
 
     @Override
@@ -180,4 +216,21 @@ public class ApplicationServiceImp implements ApplicationService {
     public List<Application> getByCandidateEmail(String email) {
         return applicationRepository.findByCandidateEmail(email);
     }
+
+    @Override
+    public long countByRecruiterIdAndStatusIn(
+            UUID recruiterId,
+            List<ApplicationStatus> statuses
+    ) {
+        return applicationRepository.countByRecruiterIdAndStatusIn(
+                recruiterId,
+                statuses
+        );
+    }
+
+    @Override
+    public long countByStatusIn(List<ApplicationStatus> statuses) {
+        return applicationRepository.countByStatusIn(statuses);
+    }
+
 }

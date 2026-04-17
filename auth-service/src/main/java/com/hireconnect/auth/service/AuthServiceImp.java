@@ -1,8 +1,11 @@
 package com.hireconnect.auth.service;
 
 import java.util.UUID;
+
+import com.hireconnect.auth.client.NotificationClient;
 import com.hireconnect.auth.config.JwtService;
 import com.hireconnect.auth.dto.AuthResponse;
+import com.hireconnect.auth.dto.EmailRequest;
 import com.hireconnect.auth.dto.LoginRequest;
 import com.hireconnect.auth.dto.SignupRequest;
 import com.hireconnect.auth.entity.Provider;
@@ -33,6 +36,7 @@ public class AuthServiceImp implements AuthService {
     private final StringRedisTemplate redisTemplate;
     private final UserEventPublisher userEventPublisher;
     private final RefreshTokenService refreshTokenService;
+    private final NotificationClient notificationClient;
 
     @Override
     public AuthResponse register(SignupRequest request) {
@@ -54,6 +58,14 @@ public class AuthServiceImp implements AuthService {
                 .build();
 
         user = authRepository.save(user);
+
+        notificationClient.sendEmail(new EmailRequest(
+            request.getEmail(),
+            "Welcome to HireConnect 🎉",
+            "Hi " + request.getFullName() + ",\n\n" +
+            "Your HireConnect account has been created successfully.\n" +
+            "You can now log in and start using the platform."
+        ));
 
         userEventPublisher.publishUserCreatedEvent(
                 UserCreatedEvent.builder()

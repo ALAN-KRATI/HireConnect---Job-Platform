@@ -62,6 +62,8 @@ public class Application {
     @Column(name = "resume_url")
     private String resumeUrl;
 
+    private String jobTitle;
+
     @PrePersist
     public void prePersist() {
         if (applicationId == null) {

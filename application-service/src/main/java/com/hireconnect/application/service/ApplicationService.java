@@ -37,4 +37,8 @@ public interface ApplicationService {
     Double findPlatformAverageTimeToHire();
     
     List<Application> getByCandidateEmail(String email);
+
+    long countByRecruiterIdAndStatusIn(UUID recruiterId, List<ApplicationStatus> statuses);
+
+    long countByStatusIn(List<ApplicationStatus> statuses);
 }

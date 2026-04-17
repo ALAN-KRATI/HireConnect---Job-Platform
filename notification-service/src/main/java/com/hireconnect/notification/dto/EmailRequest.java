@@ -7,7 +7,7 @@ public class EmailRequest {
 
     @Email(message = "Invalid email address")
     @NotBlank(message = "Email is required")
-    private String email;
+    private String to;
 
     @NotBlank(message = "Subject is required")
     private String subject;
@@ -18,18 +18,18 @@ public class EmailRequest {
     public EmailRequest() {
     }
 
-    public EmailRequest(String email, String subject, String body) {
-        this.email = email;
+    public EmailRequest(String to, String subject, String body) {
+        this.to = to;
         this.subject = subject;
         this.body = body;
     }
 
-    public String getEmail() {
-        return email;
+    public String getTo() {
+        return to;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getSubject() {

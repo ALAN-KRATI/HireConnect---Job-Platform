@@ -1,11 +1,10 @@
 package com.hireconnect.notification.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -38,7 +37,11 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // frontend calls GET /notifications
+                        // internal service-to-service email endpoint
+                        .requestMatchers(HttpMethod.POST, "/notifications/email")
+                        .permitAll()
+
+                        // frontend notifications
                         .requestMatchers(HttpMethod.GET, "/notifications")
                         .authenticated()
 
@@ -62,3 +65,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+

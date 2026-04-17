@@ -4,9 +4,12 @@ import com.hireconnect.notification.entity.Notification;
 import com.hireconnect.notification.exception.NotificationNotFoundException;
 import com.hireconnect.notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -109,4 +112,8 @@ public class NotificationServiceImp implements NotificationService {
     public List<Notification> getRecentNotifications(UUID userId) {
         return notificationRepository.findTop20ByUserIdOrderByCreatedAtDesc(userId);
     }
+
+  
+
+
 }

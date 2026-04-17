@@ -1,6 +1,8 @@
 package com.hireconnect.subscription.service;
 
-import com.hireconnect.subscription.dto.*;
+import com.hireconnect.subscription.dto.CreatePaymentRequestDTO;
+import com.hireconnect.subscription.dto.PaymentResponseDTO;
+import com.hireconnect.subscription.dto.SubscriptionAnalyticsDTO;
 import com.hireconnect.subscription.entity.Invoice;
 import com.hireconnect.subscription.entity.Subscription;
 import com.hireconnect.subscription.enums.PaymentMode;
@@ -10,7 +12,6 @@ import com.hireconnect.subscription.enums.SubscriptionStatus;
 import com.hireconnect.subscription.exception.ResourceNotFoundException;
 import com.hireconnect.subscription.repository.InvoiceRepository;
 import com.hireconnect.subscription.repository.SubscriptionRepository;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
@@ -24,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,17 +48,29 @@ public class StripePaymentService {
     @Value("${stripe.cancel.url}")
     private String defaultCancelUrl;
 
-    public PaymentResponseDTO createCheckoutSession(UUID recruiterId, CreatePaymentRequestDTO request) throws StripeException {
-        log.info("Creating checkout session for recruiter {} with plan {}", recruiterId, request.getPlan());
+    public PaymentResponseDTO createCheckoutSession(
+            UUID recruiterId,
+            CreatePaymentRequestDTO request
+    ) throws StripeException {
+
+        log.info("Creating checkout session for recruiter {} with plan {}",
+                recruiterId, request.getPlan());
 
         SubscriptionPlan plan = request.getPlan();
         long amount = getPlanAmount(plan);
-        String planName = plan.name();
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(request.getSuccessUrl() != null ? request.getSuccessUrl() : defaultSuccessUrl + "?session_id={CHECKOUT_SESSION_ID}")
-                .setCancelUrl(request.getCancelUrl() != null ? request.getCancelUrl() : defaultCancelUrl)
+                .setSuccessUrl(
+                        request.getSuccessUrl() != null
+                                ? request.getSuccessUrl() + "?session_id={CHECKOUT_SESSION_ID}"
+                                : defaultSuccessUrl + "?session_id={CHECKOUT_SESSION_ID}"
+                )
+                .setCancelUrl(
+                        request.getCancelUrl() != null
+                                ? request.getCancelUrl()
+                                : defaultCancelUrl
+                )
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
@@ -68,8 +80,8 @@ public class StripePaymentService {
                                                 .setUnitAmount(amount)
                                                 .setProductData(
                                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                .setName("HireConnect " + planName + " Plan")
-                                                                .setDescription("Subscription plan for recruiters - " + planName + " tier")
+                                                                .setName("HireConnect " + plan.name() + " Plan")
+                                                                .setDescription("Recruiter subscription - " + plan.name())
                                                                 .build()
                                                 )
                                                 .build()
@@ -77,19 +89,26 @@ public class StripePaymentService {
                                 .build()
                 )
                 .putMetadata("recruiterId", recruiterId.toString())
-                .putMetadata("plan", planName)
+                .putMetadata("plan", plan.name())
                 .build();
 
         Session session = Session.create(params);
 
-        Subscription subscription = Subscription.builder()
-                .recruiterId(recruiterId)
-                .plan(plan)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusMonths(1))
-                .status(SubscriptionStatus.ACTIVE)
-                .amountPaid(amount / 100.0)
-                .build();
+        Subscription subscription = subscriptionRepository
+                .findByRecruiterId(recruiterId)
+                .stream()
+                .findFirst()
+                .orElse(
+                        Subscription.builder()
+                                .recruiterId(recruiterId)
+                                .build()
+                );
+
+        subscription.setPlan(plan);
+        subscription.setStatus(SubscriptionStatus.PENDING);
+        subscription.setStartDate(LocalDate.now());
+        subscription.setEndDate(LocalDate.now().plusMonths(1));
+        subscription.setAmountPaid(amount / 100.0);
 
         Subscription savedSubscription = subscriptionRepository.save(subscription);
 
@@ -97,10 +116,11 @@ public class StripePaymentService {
                 .subscriptionId(savedSubscription.getSubscriptionId())
                 .recruiterId(recruiterId)
                 .amount(amount / 100.0)
-                .paymentDate(LocalDateTime.now())
                 .paymentMode(PaymentMode.CARD)
                 .paymentStatus(PaymentStatus.PENDING)
+                .paymentDate(LocalDateTime.now())
                 .stripeCheckoutSessionId(session.getId())
+                .planType(plan)
                 .build();
 
         invoiceRepository.save(invoice);
@@ -115,8 +135,13 @@ public class StripePaymentService {
                 .build();
     }
 
-    public PaymentResponseDTO createPaymentIntent(UUID recruiterId, CreatePaymentRequestDTO request) throws StripeException {
-        log.info("Creating payment intent for recruiter {} with plan {}", recruiterId, request.getPlan());
+    public PaymentResponseDTO createPaymentIntent(
+            UUID recruiterId,
+            CreatePaymentRequestDTO request
+    ) throws StripeException {
+
+        log.info("Creating payment intent for recruiter {} with plan {}",
+                recruiterId, request.getPlan());
 
         SubscriptionPlan plan = request.getPlan();
         long amount = getPlanAmount(plan);
@@ -135,14 +160,21 @@ public class StripePaymentService {
 
         PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-        Subscription subscription = Subscription.builder()
-                .recruiterId(recruiterId)
-                .plan(plan)
-                .startDate(LocalDate.now())
-                .endDate(LocalDate.now().plusMonths(1))
-                .status(SubscriptionStatus.ACTIVE)
-                .amountPaid(amount / 100.0)
-                .build();
+        Subscription subscription = subscriptionRepository
+                .findByRecruiterId(recruiterId)
+                .stream()
+                .findFirst()
+                .orElse(
+                        Subscription.builder()
+                                .recruiterId(recruiterId)
+                                .build()
+                );
+
+        subscription.setPlan(plan);
+        subscription.setStatus(SubscriptionStatus.PENDING);
+        subscription.setStartDate(LocalDate.now());
+        subscription.setEndDate(LocalDate.now().plusMonths(1));
+        subscription.setAmountPaid(amount / 100.0);
 
         Subscription savedSubscription = subscriptionRepository.save(subscription);
 
@@ -150,10 +182,11 @@ public class StripePaymentService {
                 .subscriptionId(savedSubscription.getSubscriptionId())
                 .recruiterId(recruiterId)
                 .amount(amount / 100.0)
-                .paymentDate(LocalDateTime.now())
                 .paymentMode(PaymentMode.CARD)
                 .paymentStatus(PaymentStatus.PENDING)
+                .paymentDate(LocalDateTime.now())
                 .stripePaymentIntentId(paymentIntent.getId())
+                .planType(plan)
                 .build();
 
         invoiceRepository.save(invoice);
@@ -170,60 +203,106 @@ public class StripePaymentService {
 
     @Transactional
     public void handlePaymentSuccess(String paymentIntentId) {
-        log.info("Processing successful payment: {}", paymentIntentId);
+        log.info("Handling successful payment: {}", paymentIntentId);
 
         Invoice invoice = invoiceRepository.findByStripePaymentIntentId(paymentIntentId)
-                .orElseGet(() -> invoiceRepository.findByStripeCheckoutSessionId(paymentIntentId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Invoice not found for payment: " + paymentIntentId)));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Invoice not found for payment intent: " + paymentIntentId
+                        )
+                );
 
         invoice.setPaymentStatus(PaymentStatus.COMPLETED);
         invoice.setPaymentDate(LocalDateTime.now());
         invoice.setTransactionId("TXN-" + System.currentTimeMillis());
+
         invoiceRepository.save(invoice);
 
-        log.info("Payment {} completed successfully for invoice {}", paymentIntentId, invoice.getInvoiceId());
+        Subscription subscription = subscriptionRepository
+                .findById(invoice.getSubscriptionId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Subscription not found: " + invoice.getSubscriptionId()
+                        )
+                );
+
+        subscription.setPlan(invoice.getPlanType());
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setStartDate(LocalDate.now());
+        subscription.setEndDate(LocalDate.now().plusMonths(1));
+        subscription.setAmountPaid(invoice.getAmount());
+
+        subscriptionRepository.save(subscription);
+
+        log.info(
+                "Recruiter {} upgraded successfully to {}",
+                invoice.getRecruiterId(),
+                invoice.getPlanType()
+        );
     }
 
     @Transactional
     public void handlePaymentFailure(String paymentIntentId, String failureMessage) {
-        log.error("Processing failed payment: {} - Reason: {}", paymentIntentId, failureMessage);
+        log.error("Payment failed: {} reason: {}", paymentIntentId, failureMessage);
 
         Invoice invoice = invoiceRepository.findByStripePaymentIntentId(paymentIntentId)
-                .orElseGet(() -> invoiceRepository.findByStripeCheckoutSessionId(paymentIntentId)
-                        .orElse(null));
+                .orElse(null);
 
-        if (invoice != null) {
-            invoice.setPaymentStatus(PaymentStatus.FAILED);
-            invoice.setFailureReason(failureMessage);
-            invoiceRepository.save(invoice);
+        if (invoice == null) {
+            return;
+        }
 
-            Subscription subscription = subscriptionRepository.findById(invoice.getSubscriptionId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Subscription not found"));
+        invoice.setPaymentStatus(PaymentStatus.FAILED);
+        invoice.setFailureReason(failureMessage);
+        invoiceRepository.save(invoice);
+
+        Subscription subscription = subscriptionRepository.findById(invoice.getSubscriptionId())
+                .orElse(null);
+
+        if (subscription != null) {
             subscription.setStatus(SubscriptionStatus.CANCELLED);
             subscriptionRepository.save(subscription);
-
-            log.info("Payment {} marked as failed for invoice {}", paymentIntentId, invoice.getInvoiceId());
         }
     }
 
     @Transactional
     public void handleCheckoutCompleted(String sessionId) throws StripeException {
-        log.info("Processing completed checkout session: {}", sessionId);
+        log.info("Handling checkout session completion: {}", sessionId);
 
         Session session = Session.retrieve(sessionId);
-        
-        if ("paid".equals(session.getPaymentStatus())) {
-            Invoice invoice = invoiceRepository.findByStripeCheckoutSessionId(sessionId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Invoice not found for session: " + sessionId));
 
-            invoice.setPaymentStatus(PaymentStatus.COMPLETED);
-            invoice.setPaymentDate(LocalDateTime.now());
-            invoice.setTransactionId(session.getPaymentIntent());
-            invoice.setReceiptUrl(session.getUrl());
-            invoiceRepository.save(invoice);
-
-            log.info("Checkout session {} completed successfully for invoice {}", sessionId, invoice.getInvoiceId());
+        if (!"paid".equals(session.getPaymentStatus())) {
+            return;
         }
+
+        Invoice invoice = invoiceRepository.findByStripeCheckoutSessionId(sessionId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Invoice not found for session: " + sessionId
+                        )
+                );
+
+        invoice.setPaymentStatus(PaymentStatus.COMPLETED);
+        invoice.setPaymentDate(LocalDateTime.now());
+        invoice.setTransactionId(session.getPaymentIntent());
+        invoice.setReceiptUrl(session.getUrl());
+
+        invoiceRepository.save(invoice);
+
+        Subscription subscription = subscriptionRepository.findById(invoice.getSubscriptionId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Subscription not found: " + invoice.getSubscriptionId()
+                        )
+                );
+
+        subscription.setPlan(invoice.getPlanType());
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setStartDate(LocalDate.now());
+        subscription.setEndDate(LocalDate.now().plusMonths(1));
+        subscription.setAmountPaid(invoice.getAmount());
+
+        subscriptionRepository.save(subscription);
     }
 
     private long getPlanAmount(SubscriptionPlan plan) {
@@ -239,6 +318,7 @@ public class StripePaymentService {
     }
 
     public SubscriptionAnalyticsDTO getAnalytics(UUID recruiterId) {
+
         List<Subscription> subscriptions = subscriptionRepository.findByRecruiterId(recruiterId);
         List<Invoice> invoices = invoiceRepository.findByRecruiterId(recruiterId);
 
@@ -248,47 +328,70 @@ public class StripePaymentService {
                 .orElse(null);
 
         double totalSpent = invoices.stream()
-                .filter(inv -> inv.getPaymentStatus() == PaymentStatus.COMPLETED)
+                .filter(i -> i.getPaymentStatus() == PaymentStatus.COMPLETED)
                 .mapToDouble(Invoice::getAmount)
                 .sum();
 
-        SubscriptionAnalyticsDTO.RecruiterStatsDTO stats = SubscriptionAnalyticsDTO.RecruiterStatsDTO.builder()
-                .recruiterId(recruiterId)
-                .currentPlan(activeSubscription != null ? activeSubscription.getPlan().name() : "FREE")
-                .isActive(activeSubscription != null)
-                .daysRemaining(activeSubscription != null ? 
-                    (int) java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), activeSubscription.getEndDate()) : 0)
-                .totalSpent(totalSpent)
-                .totalInvoices(invoices.size())
-                .build();
+        SubscriptionAnalyticsDTO.RecruiterStatsDTO stats =
+                SubscriptionAnalyticsDTO.RecruiterStatsDTO.builder()
+                        .recruiterId(recruiterId)
+                        .currentPlan(
+                                activeSubscription != null
+                                        ? activeSubscription.getPlan().name()
+                                        : "FREE"
+                        )
+                        .isActive(activeSubscription != null)
+                        .daysRemaining(
+                                activeSubscription != null
+                                        ? (int) ChronoUnit.DAYS.between(
+                                                LocalDate.now(),
+                                                activeSubscription.getEndDate()
+                                        )
+                                        : 0
+                        )
+                        .totalSpent(totalSpent)
+                        .totalInvoices(invoices.size())
+                        .build();
 
         return SubscriptionAnalyticsDTO.builder()
                 .totalSubscriptions(subscriptions.size())
                 .activeSubscriptions((int) subscriptions.stream().filter(Subscription::isActive).count())
-                .expiredSubscriptions((int) subscriptions.stream().filter(s -> s.getStatus() == SubscriptionStatus.EXPIRED).count())
-                .cancelledSubscriptions((int) subscriptions.stream().filter(s -> s.getStatus() == SubscriptionStatus.CANCELLED).count())
+                .expiredSubscriptions((int) subscriptions.stream()
+                        .filter(s -> s.getStatus() == SubscriptionStatus.EXPIRED)
+                        .count())
+                .cancelledSubscriptions((int) subscriptions.stream()
+                        .filter(s -> s.getStatus() == SubscriptionStatus.CANCELLED)
+                        .count())
                 .totalRevenue(totalSpent)
                 .recruiterStats(stats)
                 .build();
     }
 
     public SubscriptionAnalyticsDTO getAdminAnalytics() {
+
         List<Subscription> allSubscriptions = subscriptionRepository.findAll();
         List<Invoice> allInvoices = invoiceRepository.findAll();
 
         Map<String, Integer> planDistribution = allSubscriptions.stream()
-                .collect(Collectors.groupingBy(s -> s.getPlan().name(), Collectors.summingInt(s -> 1)));
+                .collect(Collectors.groupingBy(
+                        s -> s.getPlan().name(),
+                        Collectors.summingInt(s -> 1)
+                ));
 
         double totalRevenue = allInvoices.stream()
-                .filter(inv -> inv.getPaymentStatus() == PaymentStatus.COMPLETED)
+                .filter(i -> i.getPaymentStatus() == PaymentStatus.COMPLETED)
                 .mapToDouble(Invoice::getAmount)
                 .sum();
 
         return SubscriptionAnalyticsDTO.builder()
                 .totalSubscriptions(allSubscriptions.size())
                 .activeSubscriptions((int) allSubscriptions.stream().filter(Subscription::isActive).count())
-                .expiredSubscriptions((int) allSubscriptions.stream().filter(s -> s.getStatus() == SubscriptionStatus.EXPIRED).count())
-                .cancelledSubscriptions((int) allSubscriptions.stream().filter(s -> s.getStatus() == SubscriptionStatus.CANCELLED).count())
+                .expiredSubscriptions((int) allSubscriptions.stream()
+                        .filter(s -> s.getStatus() == SubscriptionStatus.EXPIRED)
+                        .count())
+                .cancelledSubscriptions((int) allSubscriptions.stream()
+                        .filter(s -> s.getStatus() == SubscriptionStatus.CANCELLED)
+                        .count())
                 .totalRevenue(totalRevenue)
                 .planDistribution(planDistribution)
                 .build();

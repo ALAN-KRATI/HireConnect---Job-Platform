@@ -49,4 +49,8 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
             """, nativeQuery = true)
     Double findPlatformAverageTimeToHire();
 
+    long countByRecruiterIdAndStatusIn(UUID recruiterId, List<ApplicationStatus> statuses);
+
+    long countByStatusIn(List<ApplicationStatus> statuses);
+
 }

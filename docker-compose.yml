@@ -319,11 +319,11 @@ services:
       SPRINGDOC_API_DOCS_PATH: /api-docs
       SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
 
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_example_key_12345}
-      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-pk_test_example_key_67890}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_example_webhook_secret}
-      STRIPE_SUCCESS_URL: ${STRIPE_SUCCESS_URL:-http://localhost/payment/success}
-      STRIPE_CANCEL_URL: ${STRIPE_CANCEL_URL:-http://localhost/payment/cancel}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      STRIPE_SUCCESS_URL: ${STRIPE_SUCCESS_URL}
+      STRIPE_CANCEL_URL: ${STRIPE_CANCEL_URL:-http}
 
       JWT_SECRET: ${JWT_SECRET:-hireconnect-super-secret-key-for-jwt-123456789-hireconnect-auth-service}
 

@@ -40,16 +40,13 @@ public class NotificationResource {
     }
 
     @PostMapping("/email")
-    public ResponseEntity<String> sendEmail(
-            @Valid @RequestBody EmailRequest dto) {
-
+    public ResponseEntity<String> sendEmail(@RequestBody EmailRequest request) {
         notificationService.sendEmailAlert(
-                dto.getEmail(),
-                dto.getSubject(),
-                dto.getBody()
+            request.getTo(),
+            request.getSubject(),
+            request.getBody()
         );
-
-        return ResponseEntity.ok("Email sent successfully");
+        return ResponseEntity.ok("Email sent");
     }
 
     @GetMapping
@@ -114,4 +111,6 @@ public class NotificationResource {
                 notification.getCreatedAt()
         );
     }
+
+
 }
