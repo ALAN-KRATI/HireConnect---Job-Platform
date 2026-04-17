@@ -53,8 +53,14 @@ public class NotificationResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Notification>> getMyNotifications() {
-        return ResponseEntity.ok(notificationService.getRecentNotifications());
+    public ResponseEntity<List<Notification>> getMyNotifications(
+            @RequestHeader("X-User-Id") String userId
+    ) {
+        return ResponseEntity.ok(
+                notificationService.getRecentNotifications(
+                        UUID.fromString(userId)
+                )
+        );
     }
 
     @GetMapping("/user/{userId}")

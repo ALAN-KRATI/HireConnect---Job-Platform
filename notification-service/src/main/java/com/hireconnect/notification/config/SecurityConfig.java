@@ -1,14 +1,17 @@
 package com.hireconnect.notification.config;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -21,38 +24,40 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
 
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-            .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/v3/api-docs/**"
-                ).permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
 
-                .requestMatchers(HttpMethod.GET,
-                        "/notifications/user/**"
-                ).authenticated()
+                        // frontend calls GET /notifications
+                        .requestMatchers(HttpMethod.GET, "/notifications")
+                        .authenticated()
 
-                .requestMatchers(HttpMethod.PUT,
-                        "/notifications/*/read"
-                ).authenticated()
+                        .requestMatchers(HttpMethod.GET, "/notifications/**")
+                        .authenticated()
 
-                .requestMatchers(HttpMethod.DELETE,
-                        "/notifications/*"
-                ).authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/notifications/**")
+                        .authenticated()
 
-                .anyRequest().authenticated()
-            )
+                        .requestMatchers(HttpMethod.DELETE, "/notifications/**")
+                        .authenticated()
 
-            .addFilterBefore(
-                    jwtAuthenticationFilter,
-                    UsernamePasswordAuthenticationFilter.class
-            );
+                        .anyRequest().authenticated()
+                )
+
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }

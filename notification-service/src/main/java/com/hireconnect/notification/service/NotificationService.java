@@ -21,5 +21,5 @@ public interface NotificationService {
 
     long getUnreadCount(UUID userId);
     
-    List<Notification> getRecentNotifications();
+    List<Notification> getRecentNotifications(UUID userId);
 }

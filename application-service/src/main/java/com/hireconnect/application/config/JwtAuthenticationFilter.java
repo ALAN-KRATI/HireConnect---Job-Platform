@@ -7,7 +7,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,15 +23,15 @@ import java.util.Collections;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-
     @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
 
@@ -44,7 +43,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = authorizationHeader.substring(7);
 
-            SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+            SecretKey key = Keys.hmacShaKeyFor(
+                    jwtSecret.getBytes(StandardCharsets.UTF_8)
+            );
 
             Claims claims = Jwts.parser()
                     .verifyWith(key)
@@ -55,15 +56,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String email = claims.getSubject();
             String role = claims.get("role", String.class);
 
-            if (email != null && role != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (role != null && !role.startsWith("ROLE_")) {
+                role = "ROLE_" + role;
+             }
+
+             new SimpleGrantedAuthority(role);
+
+
+
+            if (email != null
+                    && role != null
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 email,
                                 null,
                                 Collections.singletonList(
-                                        new SimpleGrantedAuthority("ROLE_" + role)
+                                        new SimpleGrantedAuthority(role)
                                 )
                         );
 

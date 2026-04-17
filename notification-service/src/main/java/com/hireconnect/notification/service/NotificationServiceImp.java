@@ -106,7 +106,7 @@ public class NotificationServiceImp implements NotificationService {
     }
     
     @Override
-    public List<Notification> getRecentNotifications() {
-        return notificationRepository.findTop20ByOrderByCreatedAtDesc();
+    public List<Notification> getRecentNotifications(UUID userId) {
+        return notificationRepository.findTop20ByUserIdOrderByCreatedAtDesc(userId);
     }
 }

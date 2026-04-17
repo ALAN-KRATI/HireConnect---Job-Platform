@@ -107,6 +107,13 @@ public class InterviewResource {
         );
     }
 
+    @GetMapping("/candidate/me")
+    public ResponseEntity<List<InterviewResponse>> getCandidateMyInterviews(
+            jakarta.servlet.http.HttpServletRequest request
+    ) {
+        return getMyInterviews(request);
+    }
+
     @GetMapping("/candidate/{candidateId}")
     public ResponseEntity<List<InterviewResponse>> getByCandidate(
             @PathVariable UUID candidateId) {
