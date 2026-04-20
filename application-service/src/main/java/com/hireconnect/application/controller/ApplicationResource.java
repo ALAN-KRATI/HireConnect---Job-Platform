@@ -2,6 +2,7 @@ package com.hireconnect.application.controller;
 
 import com.hireconnect.application.client.JobServiceClient;
 import com.hireconnect.application.client.ProfileServiceClient;
+import com.hireconnect.application.dto.ApplicationRequest;
 import com.hireconnect.application.dto.ApplicationResponse;
 import com.hireconnect.application.dto.StatusUpdateRequest;
 import com.hireconnect.application.entity.Application;
@@ -24,18 +25,14 @@ public class ApplicationResource {
         private final JobServiceClient jobServiceClient;
         private final ProfileServiceClient profileServiceClient;
 
-        public ApplicationResource(ApplicationService applicationService,
-                                   JobServiceClient jobServiceClient,
-                                   ProfileServiceClient profileServiceClient) {
+        public ApplicationResource(ApplicationService applicationService, JobServiceClient jobServiceClient,ProfileServiceClient profileServiceClient) {
                 this.applicationService = applicationService;
                 this.jobServiceClient = jobServiceClient;
                 this.profileServiceClient = profileServiceClient;
         }
 
         @PostMapping
-        public ResponseEntity<ApplicationResponse> submitApplication(
-                        @RequestBody Application application,
-                        HttpServletRequest request) {
+        public ResponseEntity<ApplicationResponse> submitApplication(@RequestBody Application application, HttpServletRequest request) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String email = authentication.getName();
 
@@ -43,6 +40,7 @@ public class ApplicationResource {
                 if (candidateIdStr != null && !candidateIdStr.isBlank()) {
                         application.setCandidateId(UUID.fromString(candidateIdStr));
                 }
+
                 application.setCandidateEmail(email);
 
                 if (application.getRecruiterId() == null && application.getJobId() != null) {
@@ -84,8 +82,7 @@ public class ApplicationResource {
         }
 
         @GetMapping("/candidate/{candidateId}")
-        public ResponseEntity<List<ApplicationResponse>> getByCandidate(
-                        @PathVariable UUID candidateId, HttpServletRequest request) {
+        public ResponseEntity<List<ApplicationResponse>> getByCandidate(@PathVariable UUID candidateId, HttpServletRequest request) {
                 String bearer = request.getHeader("Authorization");
                 List<ApplicationResponse> responses = applicationService.getByCandidate(candidateId)
                                 .stream()
@@ -262,7 +259,6 @@ public class ApplicationResource {
                                 .candidateEmail(application.getCandidateEmail())
                                 .build();
 
-                // Enrich with job details (title, company, location, type, skills)
                 if (application.getJobId() != null) {
                         var job = jobServiceClient.getJob(application.getJobId());
                         if (!job.isEmpty()) {

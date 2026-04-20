@@ -1,5 +1,6 @@
 package com.hireconnect.application.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,13 @@ public class ApplicationRequest {
 
     @NotNull(message = "Candidate ID is required")
     private UUID candidateId;
+
+    @Email
+    @NotNull(message = "Email is required")
+    private String candidateEmail;
+
+    @NotNull(message = "Recruiter ID is required")
+    private UUID recruiterId;
 
     @NotBlank(message = "Cover letter is required")
     private String coverLetter;

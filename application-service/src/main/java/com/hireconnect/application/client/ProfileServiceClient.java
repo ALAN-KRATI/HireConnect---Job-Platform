@@ -26,12 +26,7 @@ public class ProfileServiceClient {
         this.restTemplate = restTemplate;
     }
 
-    /**
-     * Fetches a candidate profile forwarding the caller's Bearer token so the
-     * profile service's @PreAuthorize passes. If token is null we fall back to
-     * an anonymous GET which will return 403 — caller should handle the empty
-     * map gracefully.
-     */
+
     @SuppressWarnings("rawtypes")
     public Map<String, Object> getCandidate(UUID userId, String bearerToken) {
         try {
