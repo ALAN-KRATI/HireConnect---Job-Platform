@@ -31,11 +31,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final RefreshTokenService refreshTokenService;
 
     @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
-
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 
         String extractedEmail = oauthUser.getAttribute("email");

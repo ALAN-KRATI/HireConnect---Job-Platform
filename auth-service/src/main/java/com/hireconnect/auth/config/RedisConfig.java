@@ -22,9 +22,7 @@ public class RedisConfig {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-
-        RedisStandaloneConfiguration configuration =
-                new RedisStandaloneConfiguration(redisHost, redisPort);
+        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisHost, redisPort);
 
         if (redisPassword != null && !redisPassword.isBlank()) {
             configuration.setPassword(RedisPassword.of(redisPassword));
@@ -34,9 +32,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public StringRedisTemplate stringRedisTemplate(
-            LettuceConnectionFactory connectionFactory) {
-
+    public StringRedisTemplate stringRedisTemplate( LettuceConnectionFactory connectionFactory) {
         return new StringRedisTemplate(connectionFactory);
     }
 }

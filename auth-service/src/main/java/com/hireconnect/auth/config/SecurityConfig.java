@@ -1,7 +1,5 @@
 package com.hireconnect.auth.config;
 
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +25,7 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",

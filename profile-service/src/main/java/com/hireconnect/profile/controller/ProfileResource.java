@@ -92,9 +92,7 @@ public class ProfileResource {
 
     @GetMapping("/candidates/{userId}")
     @PreAuthorize("hasAnyRole('CANDIDATE', 'RECRUITER')")
-    public ResponseEntity<ProfileResponse> getCandidateProfile(
-            @PathVariable UUID userId
-    ) {
+    public ResponseEntity<ProfileResponse> getCandidateProfile(@PathVariable UUID userId) {
         return ResponseEntity.ok(profileService.getCandidateProfile(userId));
     }
 
@@ -106,10 +104,7 @@ public class ProfileResource {
 
     @PutMapping("/candidates/{userId}")
     @PreAuthorize("hasRole('CANDIDATE')")
-    public ResponseEntity<ProfileResponse> updateCandidateProfile(
-            @PathVariable UUID userId,
-            @Valid @RequestBody ProfileRequest request
-    ) {
+    public ResponseEntity<ProfileResponse> updateCandidateProfile( @PathVariable UUID userId, @Valid @RequestBody ProfileRequest request) {
         return ResponseEntity.ok(
                 profileService.updateCandidateProfile(userId, request)
         );

@@ -26,7 +26,6 @@ public class JobServiceImp implements JobService {
 
     private final JobRepository repository;
     private final JobSearchRepository jobSearchRepository;
-    private final AnalyticsClient analyticsClient;
     private final JobNotificationProducer notificationProducer;
     private final JobMapper jobMapper;
 
@@ -38,13 +37,11 @@ public class JobServiceImp implements JobService {
         Job job = jobMapper.toEntity(request);
 
         Job savedJob = repository.save(job);
-        
-        // Index in Elasticsearch
+    
         try {
             JobDocument doc = toJobDocument(savedJob);
             jobSearchRepository.save(doc);
         } catch (Exception e) {
-            // Log error but don't fail the request
             System.err.println("Failed to index job in Elasticsearch: " + e.getMessage());
         }
 
@@ -160,18 +157,15 @@ public class JobServiceImp implements JobService {
             Double maxSalary,
             Integer experience) {
 
-        // Elasticsearch-based search with filtering
         List<JobDocument> jobDocs;
         
         try {
-            // Start with keyword search or get all open jobs
             if (title != null && !title.trim().isEmpty()) {
                 jobDocs = jobSearchRepository.searchByKeyword(title);
             } else {
                 jobDocs = jobSearchRepository.findByStatus("OPEN");
             }
             
-            // Apply additional filters in memory (Elasticsearch for text search, Java for complex filtering)
             return jobDocs.stream()
                     .filter(doc -> doc.getStatus().equals("OPEN"))
                     .filter(doc -> location == null || location.isEmpty() || 
@@ -184,7 +178,6 @@ public class JobServiceImp implements JobService {
                     .map(this::toJobResponse)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            // Fallback to JPA if Elasticsearch fails
             List<Job> jobs;
             if (title != null && !title.trim().isEmpty()) {
                 jobs = repository.findByTitleContainingIgnoreCase(title);
@@ -223,7 +216,6 @@ public class JobServiceImp implements JobService {
 
     @Override
     public JobResponse changeStatus(Long jobId, String status) {
-
         Job job = findJobById(jobId);
 
         try {
@@ -242,7 +234,6 @@ public class JobServiceImp implements JobService {
         return jobMapper.toResponse(updatedJob);
     }
 
-    // JobServiceImpl.java
     @Override
     public Long getJobViewCount(Long jobId) {
 

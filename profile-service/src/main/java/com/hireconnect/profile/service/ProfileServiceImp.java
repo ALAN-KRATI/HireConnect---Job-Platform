@@ -31,12 +31,7 @@ public class ProfileServiceImp implements ProfileService {
     private final JobServiceClient jobServiceClient;
 
     @Override
-    public void createDefaultProfile(
-            UUID userId,
-            String email,
-            String role,
-            String mobile) {
-
+    public void createDefaultProfile(UUID userId, String email, String role, String mobile) {
         if ("CANDIDATE".equalsIgnoreCase(role)) {
 
             if (candidateRepository.existsByUserId(userId)) {
@@ -93,9 +88,7 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public ProfileResponse getCandidateProfile(UUID userId) {
-
-        CandidateProfile profile = candidateRepository.findByUserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundException(
+        CandidateProfile profile = candidateRepository.findByUserId(userId).orElseThrow(() -> new ProfileNotFoundException(
                         "Candidate profile not found for userId: " + userId));
 
         return mapCandidate(profile);
@@ -103,9 +96,7 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public ProfileResponse getRecruiterProfile(UUID userId) {
-
-        RecruiterProfile profile = recruiterRepository.findByUserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundException(
+        RecruiterProfile profile = recruiterRepository.findByUserId(userId).orElseThrow(() -> new ProfileNotFoundException(
                         "Recruiter profile not found for userId: " + userId));
 
         return mapRecruiter(profile);
@@ -113,9 +104,7 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public ProfileResponse updateCandidateProfile(UUID userId, ProfileRequest request) {
-
-        CandidateProfile profile = candidateRepository.findByUserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundException(
+        CandidateProfile profile = candidateRepository.findByUserId(userId).orElseThrow(() -> new ProfileNotFoundException(
                         "Candidate profile not found for userId: " + userId));
 
         profile.setFullName(request.getFullName());
@@ -149,7 +138,6 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public ProfileResponse updateRecruiterProfile(UUID userId, ProfileRequest request) {
-
         RecruiterProfile profile = recruiterRepository.findByUserId(userId)
                 .orElseThrow(() -> new ProfileNotFoundException(
                         "Recruiter profile not found for userId: " + userId));
@@ -168,7 +156,6 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public void deleteCandidateProfile(UUID userId) {
-
         if (!candidateRepository.existsByUserId(userId)) {
             throw new ProfileNotFoundException(
                     "Candidate profile not found for userId: " + userId);
@@ -179,7 +166,6 @@ public class ProfileServiceImp implements ProfileService {
 
     @Override
     public void deleteRecruiterProfile(UUID userId) {
-
         if (!recruiterRepository.existsByUserId(userId)) {
             throw new ProfileNotFoundException(
                     "Recruiter profile not found for userId: " + userId);
@@ -342,9 +328,7 @@ public class ProfileServiceImp implements ProfileService {
                 .savedAt(savedJob.getSavedAt())
                 .build();
 
-        // Enrich with the live job (skills, salary range, experience required) so
-        // the SavedJobs UI can render the full card without an extra round-trip
-        // per job.
+
         try {
             Map<String, Object> job = jobServiceClient.getJobById(savedJob.getJobId());
             if (job != null && !job.isEmpty()) {
@@ -379,10 +363,10 @@ public class ProfileServiceImp implements ProfileService {
                 Object mx = job.get("maxSalary");
                 if (mx instanceof Number n) resp.setMaxSalary(n.doubleValue());
             }
-        } catch (Exception ignored) { /* fall back to stored fields */ }
-
-        return resp;
-    }
+        } 
+        catch (Exception ignored) {}
+            return resp;
+        }
 
     private ProfileResponse mapCandidate(CandidateProfile profile) {
         return ProfileResponse.builder()

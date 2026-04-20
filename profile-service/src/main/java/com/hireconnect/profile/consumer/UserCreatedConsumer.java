@@ -25,9 +25,7 @@ public class UserCreatedConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.USER_CREATED_QUEUE)
     public void consume(UserCreatedEvent event) {
-
-        log.info("Received UserCreatedEvent for userId={} role={}",
-                event.getUserId(), event.getRole());
+        log.info("Received UserCreatedEvent for userId={} role={}", event.getUserId(), event.getRole());
 
         if ("CANDIDATE".equalsIgnoreCase(event.getRole())) {
 

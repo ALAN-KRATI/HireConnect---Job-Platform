@@ -2,7 +2,6 @@ package com.hireconnect.profile.seed;
 
 import com.hireconnect.profile.entity.CandidateProfile;
 import com.hireconnect.profile.entity.RecruiterProfile;
-import com.hireconnect.profile.entity.UserProfile;
 import com.hireconnect.profile.repository.CandidateProfileRepository;
 import com.hireconnect.profile.repository.RecruiterProfileRepository;
 import lombok.RequiredArgsConstructor;

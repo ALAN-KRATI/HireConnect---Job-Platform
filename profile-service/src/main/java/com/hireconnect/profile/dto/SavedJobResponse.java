@@ -17,8 +17,6 @@ public class SavedJobResponse {
     private UUID savedJobId;
     private Long jobId;
 
-    // Expose both jobTitle and title so existing callers keep working and the
-    // candidate saved-jobs UI (which reads job.title) also has a value.
     private String jobTitle;
     private String title;
 

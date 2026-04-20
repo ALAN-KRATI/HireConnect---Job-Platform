@@ -34,8 +34,7 @@ public class RefreshTokenService {
 
     public RefreshToken validateRefreshToken(String token) {
 
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() ->
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() ->
                         new InvalidCredentialsException("Invalid refresh token"));
 
         if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {

@@ -26,10 +26,8 @@ public class JobIndexInitializer implements ApplicationRunner {
         log.info("Initializing Elasticsearch job index...");
         
         try {
-            // Clear existing index
             jobSearchRepository.deleteAll();
             
-            // Index all open jobs
             List<Job> jobs = jobRepository.findByStatus(JobStatus.OPEN);
             
             for (Job job : jobs) {

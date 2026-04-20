@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,14 +23,10 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                // CORS disabled - handled by API Gateway
-                // .cors(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-
-                        // Swagger / Docs
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
@@ -39,20 +34,14 @@ public class SecurityConfig {
                                 "/actuator/**"
                         ).permitAll()
 
-                        // Recruiter-only routes must be declared BEFORE the
-                        // blanket GET /jobs/** permitAll so first-match wins
-                        // correctly and doesn't open up /jobs/recruiter/** to
-                        // every caller.
                         .requestMatchers(HttpMethod.GET, "/jobs/recruiter/**").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.POST, "/jobs").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.PUT, "/jobs/**").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.DELETE, "/jobs/**").hasRole("RECRUITER")
                         .requestMatchers(HttpMethod.PATCH, "/jobs/*/status").hasRole("RECRUITER")
 
-                        // Public job browsing
                         .requestMatchers(HttpMethod.GET, "/jobs/**").permitAll()
 
-                        // Authenticated candidate or recruiter
                         .requestMatchers(HttpMethod.GET, "/jobs/*/views")
                         .hasAnyRole("RECRUITER", "CANDIDATE")
 

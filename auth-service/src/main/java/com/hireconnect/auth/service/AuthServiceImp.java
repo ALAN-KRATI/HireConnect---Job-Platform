@@ -91,9 +91,7 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-
-        UserCredential user = authRepository.findByEmail(request.getEmail())
-                .orElseThrow(() ->
+        UserCredential user = authRepository.findByEmail(request.getEmail()).orElseThrow(() ->
                         new InvalidCredentialsException("Invalid email or password"));
 
         if (!user.isActive()) {
@@ -142,11 +140,9 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public AuthResponse refreshToken(String refreshToken) {
-
         RefreshToken storedToken = refreshTokenService.validateRefreshToken(refreshToken);
 
-        UserCredential user = authRepository.findById(storedToken.getUserId())
-                .orElseThrow(() ->
+        UserCredential user = authRepository.findById(storedToken.getUserId()).orElseThrow(() ->
                         new InvalidCredentialsException("User not found"));
 
         String newAccessToken = jwtService.generateToken(user);

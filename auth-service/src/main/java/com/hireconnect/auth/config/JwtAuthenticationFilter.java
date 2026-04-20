@@ -26,11 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getServletPath();
 
         if (path.startsWith("/oauth2/")
@@ -50,9 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        if (Boolean.TRUE.equals(
-                redisTemplate.hasKey(BLACKLIST_PREFIX + token))) {
-
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(BLACKLIST_PREFIX + token))) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token has been logged out");
             return;

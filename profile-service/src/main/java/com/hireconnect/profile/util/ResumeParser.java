@@ -37,12 +37,9 @@ public class ResumeParser {
             "Microservices", "CI/CD", "Agile", "Scrum"
     );
 
-    private static final Pattern EMAIL_RE =
-            Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}");
-    private static final Pattern PHONE_RE =
-            Pattern.compile("(?:\\+?\\d{1,3}[\\s-]?)?[6-9]\\d{9}");
-    private static final Pattern SECTION_EXPERIENCE_RE =
-            Pattern.compile("(?i)(experience|work\\s*experience|employment|professional\\s*experience)\\s*[:\\-\\n]");
+    private static final Pattern EMAIL_RE = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}");
+    private static final Pattern PHONE_RE = Pattern.compile("(?:\\+?\\d{1,3}[\\s-]?)?[6-9]\\d{9}");
+    private static final Pattern SECTION_EXPERIENCE_RE = Pattern.compile("(?i)(experience|work\\s*experience|employment|professional\\s*experience)\\s*[:\\-\\n]");
 
     public ResumeParseResponse parse(MultipartFile file) throws IOException {
         String text = extractText(file);
@@ -56,9 +53,7 @@ public class ResumeParser {
     }
 
     private String extractText(MultipartFile file) throws IOException {
-        String name = file.getOriginalFilename() == null
-                ? ""
-                : file.getOriginalFilename().toLowerCase();
+        String name = file.getOriginalFilename() == null ? "" : file.getOriginalFilename().toLowerCase();
         String contentType = file.getContentType() == null ? "" : file.getContentType();
 
         if (name.endsWith(".pdf") || contentType.contains("pdf")) {
@@ -72,7 +67,7 @@ public class ResumeParser {
                 return ex.getText();
             }
         }
-        // Fallback: treat as plain text
+        
         return new String(file.getBytes());
     }
 
@@ -84,17 +79,17 @@ public class ResumeParser {
 
     private String extractName(String text) {
         if (text == null || text.isBlank()) return null;
-        // Heuristic: first non-empty line that doesn't look like an email/phone/URL.
+       
         for (String raw : text.split("\\r?\\n")) {
             String line = raw.trim();
             if (line.isEmpty() || line.length() > 60) continue;
             if (EMAIL_RE.matcher(line).find() || PHONE_RE.matcher(line).find()) continue;
             if (line.contains("@") || line.contains("http")) continue;
             if (!line.matches("^[A-Za-z][A-Za-z .,'\\-]*$")) continue;
-            // Avoid section headers like "EXPERIENCE"
             if (line.equalsIgnoreCase("resume") || line.equalsIgnoreCase("curriculum vitae")) continue;
             return line;
         }
+
         return null;
     }
 
@@ -115,14 +110,15 @@ public class ResumeParser {
         Matcher section = SECTION_EXPERIENCE_RE.matcher(text);
         if (!section.find()) return List.of();
         String tail = text.substring(section.end());
-        // Take up to next major section
-        String[] stop = {"EDUCATION", "Education", "SKILLS", "Skills",
-                "PROJECTS", "Projects", "CERTIFICATIONS", "Certifications"};
+    
+        String[] stop = {"EDUCATION", "Education", "SKILLS", "Skills", "PROJECTS", "Projects", "CERTIFICATIONS", "Certifications"};
+
         int cut = tail.length();
         for (String s : stop) {
             int i = tail.indexOf(s);
             if (i > 0 && i < cut) cut = i;
         }
+        
         String block = tail.substring(0, cut);
         List<String> items = new ArrayList<>();
         for (String line : block.split("\\r?\\n")) {
