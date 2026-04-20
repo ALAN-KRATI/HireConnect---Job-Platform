@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Candidate Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/candidate/dashboard}">
+                    <i class="fas fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/candidate/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Browse Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/candidate/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/candidate/profile}" class="active">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+            <div>
+                <span class="welcome-tag">Your Profile</span>
+                <h1>Professional Identity</h1>
+                <p>
+                    This is basically your career character sheet. Make it look like
+                    the final boss version of yourself.
+                </p>
+            </div>
+
+            <a th:href="@{/candidate/jobs}" class="btn-secondary">
+                <i class="fas fa-briefcase"></i>
+                Browse Jobs
+            </a>
+        </header>
+
+        <section class="profile-hero-card">
+
+            <div class="profile-main-info">
+
+                <div class="profile-avatar-large"
+                     th:text="${#strings.substring(profile.fullName,0,1)}">
+                    A
+                </div>
+
+                <div class="profile-text">
+                    <h2 th:text="${profile.fullName}">
+                        John Doe
+                    </h2>
+
+                    <p class="headline"
+                       th:text="${profile.headline} ?: 'No headline added yet'">
+                        Java Developer
+                    </p>
+
+                    <div class="profile-meta">
+
+                        <span>
+                            <i class="fas fa-envelope"></i>
+                            <span th:text="${profile.email}">
+                                john@example.com
+                            </span>
+                        </span>
+
+                        <span>
+                            <i class="fas fa-phone"></i>
+                            <span th:text="${profile.phone} ?: 'Not added'">
+                                9876543210
+                            </span>
+                        </span>
+
+                        <span>
+                            <i class="fas fa-location-dot"></i>
+                            <span th:text="${profile.location} ?: 'Location not added'">
+                                Muzaffarnagar
+                            </span>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="wallet-summary-card">
+                <span>Wallet Balance</span>
+
+                <h2>
+                    ₹<span th:text="${profile.walletBalance} ?: 0">0</span>
+                </h2>
+
+                <form th:action="@{/candidate/wallet/add}"
+                      method="post"
+                      class="wallet-form">
+
+                    <input type="number"
+                           name="amount"
+                           min="1"
+                           placeholder="Enter amount">
+
+                    <button type="submit" class="btn-primary">
+                        Add Money
+                    </button>
+                </form>
+            </div>
+
+        </section>
+
+        <section class="profile-grid">
+
+            <div class="profile-panel large-panel">
+
+                <div class="panel-header">
+                    <h2>About Me</h2>
+                </div>
+
+                <p class="about-text"
+                   th:text="${profile.summary} ?: 'No summary added yet. Time to write something that sounds impressive but still human.'">
+                    Summary
+                </p>
+
+            </div>
+
+            <div class="profile-panel">
+
+                <div class="panel-header">
+                    <h2>Skills</h2>
+                </div>
+
+                <div class="skills-list"
+                     th:if="${profile.skills != null && !#strings.isEmpty(profile.skills)}">
+
+                    <span class="skill-tag"
+                          th:each="skill : ${#strings.arraySplit(profile.skills, ',')}"
+
+                          th:text="${skill}">
+                        Java
+                    </span>
+
+                </div>
+
+                <p th:if="${profile.skills == null || #strings.isEmpty(profile.skills)}"
+                   class="empty-text">
+                    No skills added yet. Even "survived engineering" counts.
+                </p>
+
+            </div>
+
+            <div class="profile-panel">
+
+                <div class="panel-header">
+                    <h2>Experience</h2>
+                </div>
+
+                <div class="info-block">
+                    <i class="fas fa-briefcase"></i>
+
+                    <div>
+                        <h3 th:text="${profile.experience} ?: 'No experience added yet'">
+                            2 Years
+                        </h3>
+
+                        <p>Professional experience and internships</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="profile-panel">
+
+                <div class="panel-header">
+                    <h2>Education</h2>
+                </div>
+
+                <div class="info-block">
+                    <i class="fas fa-graduation-cap"></i>
+
+                    <div>
+                        <h3 th:text="${profile.education} ?: 'No education added yet'">
+                            B.Tech CSE
+                        </h3>
+
+                        <p>Academic background</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="profile-panel full-width">
+
+                <div class="panel-header">
+                    <h2>Resume</h2>
+                </div>
+
+                <div th:if="${profile.resumeUrl != null}" class="resume-card">
+                    <div>
+                        <h3>Your Resume is Ready</h3>
+                        <p>
+                            Recruiters can view your uploaded resume. Big main-character energy.
+                        </p>
+                    </div>
+
+                    <a th:href="${profile.resumeUrl}"
+                       target="_blank"
+                       class="btn-primary">
+                        <i class="fas fa-file-arrow-down"></i>
+                        View Resume
+                    </a>
+                </div>
+
+                <div th:if="${profile.resumeUrl == null}" class="empty-state">
+                    <i class="fas fa-file-circle-plus"></i>
+                    <p>No resume uploaded yet.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

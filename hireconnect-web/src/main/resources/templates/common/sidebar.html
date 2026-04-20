@@ -1,0 +1,208 @@
+<!-- templates/common/sidebar.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="candidateSidebar(activePage)" class="sidebar">
+
+    <div class="sidebar-top">
+
+        <div class="brand-section">
+            <div class="logo-circle">HC</div>
+
+            <div>
+                <h2>HireConnect</h2>
+                <p>Candidate Portal</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a th:href="@{/candidate/home}"
+               th:classappend="${activePage == 'home'} ? ' active'">
+                <i class="fas fa-house"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a th:href="@{/candidate/jobs}"
+               th:classappend="${activePage == 'jobs'} ? ' active'">
+                <i class="fas fa-briefcase"></i>
+                <span>Browse Jobs</span>
+            </a>
+
+            <a th:href="@{/candidate/applications}"
+               th:classappend="${activePage == 'applications'} ? ' active'">
+                <i class="fas fa-file-lines"></i>
+                <span>Applications</span>
+            </a>
+
+            <a th:href="@{/candidate/interviews}"
+               th:classappend="${activePage == 'interviews'} ? ' active'">
+                <i class="fas fa-calendar-check"></i>
+                <span>Interviews</span>
+            </a>
+
+            <a th:href="@{/candidate/saved-jobs}"
+               th:classappend="${activePage == 'saved'} ? ' active'">
+                <i class="fas fa-bookmark"></i>
+                <span>Saved Jobs</span>
+            </a>
+
+            <a th:href="@{/candidate/profile}"
+               th:classappend="${activePage == 'profile'} ? ' active'">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+
+        </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </button>
+        </form>
+    </div>
+
+</aside>
+
+<aside th:fragment="recruiterSidebar(activePage)" class="sidebar">
+
+    <div class="sidebar-top">
+
+        <div class="brand-section">
+            <div class="logo-circle">HC</div>
+
+            <div>
+                <h2>HireConnect</h2>
+                <p>Recruiter Portal</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a th:href="@{/recruiter/dashboard}"
+               th:classappend="${activePage == 'dashboard'} ? ' active'">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a th:href="@{/recruiter/jobs}"
+               th:classappend="${activePage == 'jobs'} ? ' active'">
+                <i class="fas fa-briefcase"></i>
+                <span>My Jobs</span>
+            </a>
+
+            <a th:href="@{/recruiter/jobs/post}"
+               th:classappend="${activePage == 'post-job'} ? ' active'">
+                <i class="fas fa-plus-circle"></i>
+                <span>Post Job</span>
+            </a>
+
+            <a th:href="@{/recruiter/applications}"
+               th:classappend="${activePage == 'applications'} ? ' active'">
+                <i class="fas fa-file-lines"></i>
+                <span>Applications</span>
+            </a>
+
+            <a th:href="@{/recruiter/interviews}"
+               th:classappend="${activePage == 'interviews'} ? ' active'">
+                <i class="fas fa-calendar-check"></i>
+                <span>Interviews</span>
+            </a>
+
+            <a th:href="@{/recruiter/subscription}"
+               th:classappend="${activePage == 'subscription'} ? ' active'">
+                <i class="fas fa-crown"></i>
+                <span>Subscription</span>
+            </a>
+
+            <a th:href="@{/recruiter/profile}"
+               th:classappend="${activePage == 'profile'} ? ' active'">
+                <i class="fas fa-building"></i>
+                <span>Company Profile</span>
+            </a>
+
+        </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </button>
+        </form>
+    </div>
+
+</aside>
+
+<aside th:fragment="adminSidebar(activePage)" class="sidebar">
+
+    <div class="sidebar-top">
+
+        <div class="brand-section">
+            <div class="logo-circle">HC</div>
+
+            <div>
+                <h2>HireConnect</h2>
+                <p>Admin Panel</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a th:href="@{/admin/dashboard}"
+               th:classappend="${activePage == 'dashboard'} ? ' active'">
+                <i class="fas fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a th:href="@{/admin/users}"
+               th:classappend="${activePage == 'users'} ? ' active'">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </a>
+
+            <a th:href="@{/admin/jobs}"
+               th:classappend="${activePage == 'jobs'} ? ' active'">
+                <i class="fas fa-briefcase"></i>
+                <span>Jobs</span>
+            </a>
+
+            <a th:href="@{/admin/analytics}"
+               th:classappend="${activePage == 'analytics'} ? ' active'">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </a>
+
+            <a th:href="@{/admin/subscriptions}"
+               th:classappend="${activePage == 'subscriptions'} ? ' active'">
+                <i class="fas fa-crown"></i>
+                <span>Subscriptions</span>
+            </a>
+
+            <a th:href="@{/admin/invoices}"
+               th:classappend="${activePage == 'invoices'} ? ' active'">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Invoices</span>
+            </a>
+
+        </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-right-from-bracket"></i>
+                Logout
+            </button>
+        </form>
+    </div>
+
+</aside>
+
+</body>
+</html>

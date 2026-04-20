@@ -1,0 +1,160 @@
+<!-- templates/admin/subscriptions.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriptions | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/admin/dashboard}">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/admin/users}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+
+                <a th:href="@{/admin/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Jobs</span>
+                </a>
+
+                <a th:href="@{/admin/analytics}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a th:href="@{/admin/subscriptions}" class="active">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscriptions</span>
+                </a>
+
+                <a th:href="@{/admin/invoices}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Invoices</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-crown"></i>
+                    Recruiter Plans
+                </span>
+
+                <h1>Subscriptions</h1>
+
+                <p>
+                    Every recruiter plan on the platform, from “free trial energy”
+                    to “we have budget now”.
+                </p>
+            </div>
+
+        </header>
+
+        <section class="dashboard-panel">
+
+            <div class="table-wrapper">
+
+                <table class="custom-table">
+
+                    <thead>
+                    <tr>
+                        <th>Recruiter ID</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Monthly Price</th>
+                        <th>Payment Method</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="subscription : ${subscriptions}">
+
+                        <td th:text="${subscription.recruiterId}">
+                            1
+                        </td>
+
+                        <td>
+                            <span class="role-pill recruiter-role"
+                                  th:text="${subscription.planName}">
+                                PROFESSIONAL
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${
+                                    subscription.status.name() == 'ACTIVE'} ? ' success' :
+                                    (${subscription.status.name() == 'EXPIRED'} ? ' warning' : ' danger')"
+                                  th:text="${subscription.status}">
+                                ACTIVE
+                            </span>
+                        </td>
+
+                        <td>
+                            ₹<span th:text="${subscription.monthlyPrice}">999</span>
+                        </td>
+
+                        <td th:text="${subscription.paymentMethod}">
+                            UPI
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

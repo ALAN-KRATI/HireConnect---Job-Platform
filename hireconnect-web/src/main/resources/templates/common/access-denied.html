@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="error-page">
+
+<div class="error-container">
+
+    <div class="error-card">
+
+        <div class="error-icon danger">
+            <i class="fas fa-lock"></i>
+        </div>
+
+        <span class="error-code">403</span>
+
+        <h1>Access Denied</h1>
+
+        <p>
+            Looks like this page is gatekeeping harder than a recruiter asking
+            for “10 years of experience” in a technology invented last Tuesday.
+        </p>
+
+        <p class="error-subtext">
+            You don't have permission to access this page with your current account.
+        </p>
+
+        <div class="error-actions">
+            <a th:href="@{/}" class="btn-primary">
+                <i class="fas fa-house"></i>
+                Go Home
+            </a>
+
+            <a href="javascript:history.back()" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Go Back
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

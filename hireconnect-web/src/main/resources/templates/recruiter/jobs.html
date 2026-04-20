@@ -1,0 +1,214 @@
+<!-- templates/recruiter/jobs.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Jobs | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Recruiter Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/recruiter/dashboard}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs}" class="active">
+                    <i class="fas fa-briefcase"></i>
+                    <span>My Jobs</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs/post}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Job</span>
+                </a>
+
+                <a th:href="@{/recruiter/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/recruiter/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/recruiter/subscription}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscription</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-briefcase"></i>
+                    Job Management
+                </span>
+
+                <h1>My Job Listings</h1>
+
+                <p>
+                    Every role you've posted, from “intern” to “please save this company”.
+                </p>
+            </div>
+
+            <a th:href="@{/recruiter/jobs/post}" class="btn-primary">
+                <i class="fas fa-plus"></i>
+                Post New Job
+            </a>
+
+        </header>
+
+        <div th:if="${success}" class="success"
+             style="margin-bottom: 20px; padding: 14px 18px; background: #dcfce7; border-radius: 14px;">
+            <span th:text="${success}">Action completed successfully.</span>
+        </div>
+
+        <div class="job-cards-grid">
+
+            <div class="job-card"
+                 th:each="job : ${jobs}">
+
+                <div class="job-card-top">
+
+                    <div>
+                        <h3 th:text="${job.title}">Java Backend Developer</h3>
+
+                        <p>
+                            <span th:text="${job.companyName}">HireConnect</span>
+                            •
+                            <span th:text="${job.location}">Remote</span>
+                        </p>
+                    </div>
+
+                    <span class="status-pill"
+                          th:classappend="${
+                                job.status.name() == 'OPEN'} ? ' success' :
+                                (${job.status.name() == 'PAUSED'} ? ' warning' : ' danger')"
+                          th:text="${job.status}">
+                        OPEN
+                    </span>
+
+                </div>
+
+                <div class="job-meta">
+
+                    <span>
+                        <i class="fas fa-layer-group"></i>
+                        <span th:text="${job.category}">Software Development</span>
+                    </span>
+
+                    <span>
+                        <i class="fas fa-user-clock"></i>
+                        <span th:text="${job.experience}">2+ Years</span>
+                    </span>
+
+                    <span>
+                        <i class="fas fa-business-time"></i>
+                        <span th:text="${job.employmentType}">FULL_TIME</span>
+                    </span>
+
+                    <span>
+                        <i class="fas fa-indian-rupee-sign"></i>
+                        ₹<span th:text="${job.salary}">1200000</span>
+                    </span>
+
+                </div>
+
+                <p class="job-description"
+                   th:text="${job.description}">
+                    Job description...
+                </p>
+
+                <div class="job-actions">
+
+                    <a th:href="@{'/recruiter/jobs/' + ${job.id} + '/edit'}"
+                       class="btn-outline">
+                        <i class="fas fa-pen"></i>
+                        Edit
+                    </a>
+
+                    <form th:action="@{'/recruiter/jobs/' + ${job.id} + '/pause'}"
+                          method="post"
+                          th:if="${job.status.name() == 'OPEN'}">
+
+                        <button type="submit" class="btn-secondary">
+                            <i class="fas fa-pause"></i>
+                            Pause
+                        </button>
+
+                    </form>
+
+                    <form th:action="@{'/recruiter/jobs/' + ${job.id} + '/close'}"
+                          method="post"
+                          th:if="${job.status.name() != 'CLOSED'}">
+
+                        <button type="submit" class="btn-outline">
+                            <i class="fas fa-circle-xmark"></i>
+                            Close
+                        </button>
+
+                    </form>
+
+                    <form th:action="@{'/recruiter/jobs/' + ${job.id} + '/delete'}"
+                          method="post">
+
+                        <button type="submit"
+                                class="btn-danger"
+                                onclick="return confirm('Delete this job permanently? This is giving irreversible energy.')">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

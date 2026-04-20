@@ -1,0 +1,178 @@
+<!-- templates/admin/jobs.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/admin/dashboard}">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/admin/users}">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+
+                <a th:href="@{/admin/jobs}" class="active">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Jobs</span>
+                </a>
+
+                <a th:href="@{/admin/analytics}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a th:href="@{/admin/subscriptions}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscriptions</span>
+                </a>
+
+                <a th:href="@{/admin/invoices}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Invoices</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-briefcase"></i>
+                    Platform Jobs
+                </span>
+
+                <h1>Manage Jobs</h1>
+
+                <p>
+                    Every job listing currently living on the platform. Some are thriving.
+                    Some are asking for 12 skills and paying in vibes.
+                </p>
+            </div>
+
+        </header>
+
+        <section class="dashboard-panel">
+
+            <div class="job-cards-grid">
+
+                <div class="job-card"
+                     th:each="job : ${jobs}">
+
+                    <div class="job-card-top">
+
+                        <div>
+                            <h3 th:text="${job.title}">
+                                Java Backend Developer
+                            </h3>
+
+                            <p>
+                                <span th:text="${job.companyName}">HireConnect</span>
+                                •
+                                <span th:text="${job.location}">Remote</span>
+                            </p>
+                        </div>
+
+                        <span class="status-pill"
+                              th:classappend="${
+                                job.status.name() == 'OPEN'} ? ' success' :
+                                (${job.status.name() == 'PAUSED'} ? ' warning' : ' danger')"
+                              th:text="${job.status}">
+                            OPEN
+                        </span>
+
+                    </div>
+
+                    <div class="job-meta">
+
+                        <span>
+                            <i class="fas fa-layer-group"></i>
+                            <span th:text="${job.category}">Software Development</span>
+                        </span>
+
+                        <span>
+                            <i class="fas fa-business-time"></i>
+                            <span th:text="${job.employmentType}">FULL_TIME</span>
+                        </span>
+
+                        <span>
+                            <i class="fas fa-indian-rupee-sign"></i>
+                            ₹<span th:text="${job.salary}">1200000</span>
+                        </span>
+
+                    </div>
+
+                    <p class="job-description"
+                       th:text="${job.description}">
+                        Description...
+                    </p>
+
+                    <div class="job-actions">
+
+                        <form th:action="@{'/admin/jobs/' + ${job.id} + '/delete'}"
+                              method="post">
+
+                            <button type="submit"
+                                    class="btn-danger"
+                                    onclick="return confirm('Delete this job permanently? No dramatic comeback arc after this.')">
+                                <i class="fas fa-trash"></i>
+                                Delete Job
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

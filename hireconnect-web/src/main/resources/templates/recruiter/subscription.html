@@ -1,0 +1,216 @@
+<!-- templates/recruiter/subscription.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Recruiter Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/recruiter/dashboard}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>My Jobs</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs/post}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Job</span>
+                </a>
+
+                <a th:href="@{/recruiter/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/recruiter/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/recruiter/subscription}" class="active">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscription</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-crown"></i>
+                    Billing & Plans
+                </span>
+
+                <h1>Subscription</h1>
+
+                <p>
+                    Pick the plan that matches your hiring ambitions and your budget’s emotional resilience.
+                </p>
+            </div>
+
+        </header>
+
+        <section class="subscription-layout">
+
+            <div class="current-plan-card">
+
+                <div class="current-plan-header">
+                    <span class="plan-label">Current Plan</span>
+
+                    <div class="plan-badge"
+                         th:text="${currentPlan.planName}">
+                        PROFESSIONAL
+                    </div>
+                </div>
+
+                <h2>
+                    ₹<span th:text="${currentPlan.monthlyPrice}">999</span>
+                    <span style="font-size: 18px; color: #64748b;">/ month</span>
+                </h2>
+
+                <p>
+                    Status:
+                    <strong th:text="${currentPlan.status}">ACTIVE</strong>
+                </p>
+
+                <p style="margin-top: 14px; color: #64748b;">
+                    Payment Method:
+                    <span th:text="${currentPlan.paymentMethod}">UPI</span>
+                </p>
+
+                <form th:action="@{/recruiter/subscription/cancel}" method="post"
+                      style="margin-top: 24px;">
+                    <button type="submit" class="btn-danger">
+                        <i class="fas fa-ban"></i>
+                        Cancel Subscription
+                    </button>
+                </form>
+
+            </div>
+
+            <div class="plans-grid">
+
+                <div class="plan-card"
+                     th:each="plan : ${availablePlans}"
+                     th:classappend="${plan == currentPlan.planName.name()} ? ' active-plan'">
+
+                    <div class="plan-top">
+                        <h3 th:text="${plan}">PROFESSIONAL</h3>
+
+                        <span th:if="${plan == currentPlan.planName.name()}"
+                              class="current-pill">
+                            Current
+                        </span>
+                    </div>
+
+                    <div class="plan-price"
+                         th:switch="${plan}">
+                        <span th:case="'FREE'">₹0/month</span>
+                        <span th:case="'PROFESSIONAL'">₹999/month</span>
+                        <span th:case="'ENTERPRISE'">₹2999/month</span>
+                    </div>
+
+                    <ul class="plan-features">
+                        <li th:if="${plan == 'FREE'}">
+                            <i class="fas fa-check"></i>
+                            Up to 2 active jobs
+                        </li>
+                        <li th:if="${plan == 'FREE'}">
+                            <i class="fas fa-check"></i>
+                            Basic analytics
+                        </li>
+
+                        <li th:if="${plan == 'PROFESSIONAL'}">
+                            <i class="fas fa-check"></i>
+                            Up to 20 active jobs
+                        </li>
+                        <li th:if="${plan == 'PROFESSIONAL'}">
+                            <i class="fas fa-check"></i>
+                            Advanced analytics
+                        </li>
+                        <li th:if="${plan == 'PROFESSIONAL'}">
+                            <i class="fas fa-check"></i>
+                            Interview scheduling
+                        </li>
+
+                        <li th:if="${plan == 'ENTERPRISE'}">
+                            <i class="fas fa-check"></i>
+                            Unlimited jobs
+                        </li>
+                        <li th:if="${plan == 'ENTERPRISE'}">
+                            <i class="fas fa-check"></i>
+                            Team access & priority support
+                        </li>
+                        <li th:if="${plan == 'ENTERPRISE'}">
+                            <i class="fas fa-check"></i>
+                            Full analytics and exports
+                        </li>
+                    </ul>
+
+                    <form th:if="${plan != currentPlan.planName.name()}"
+                          th:action="@{/recruiter/subscription/upgrade}"
+                          method="post">
+
+                        <input type="hidden" name="planName" th:value="${plan}">
+
+                        <button type="submit" class="btn-primary full-btn">
+                            <i class="fas fa-arrow-up"></i>
+                            Upgrade to <span th:text="${plan}">PROFESSIONAL</span>
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

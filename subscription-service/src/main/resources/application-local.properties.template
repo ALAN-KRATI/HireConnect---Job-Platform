@@ -1,0 +1,12 @@
+# ===========================================
+# Local Development Configuration Template
+# Copy to application-local.properties and add your keys
+# ===========================================
+
+# Stripe Keys - NEVER commit this file with real keys!
+stripe.secret.key=sk_test_your_stripe_secret_key_here
+stripe.publishable.key=pk_test_your_stripe_publishable_key_here
+stripe.webhook.secret=whsec_your_webhook_secret_here
+
+# Database (if different from default)
+# spring.datasource.password=your_local_db_password

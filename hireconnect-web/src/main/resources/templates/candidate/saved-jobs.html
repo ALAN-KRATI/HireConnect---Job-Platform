@@ -1,0 +1,189 @@
+<!-- templates/candidate/saved-jobs.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Jobs | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Candidate Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/candidate/home}">
+                    <i class="fas fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/candidate/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Browse Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>My Applications</span>
+                </a>
+
+                <a th:href="@{/candidate/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/candidate/saved-jobs}" class="active">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Saved Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/profile}">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-bookmark"></i>
+                    Saved Opportunities
+                </span>
+
+                <h1>Saved Jobs</h1>
+
+                <p>
+                    The jobs you bookmarked because they looked promising,
+                    and definitely not because you planned to “apply later” three months ago.
+                </p>
+            </div>
+        </header>
+
+        <div class="dashboard-panel">
+
+            <div th:if="${#lists.isEmpty(savedJobs)}" class="empty-state">
+                <i class="fas fa-bookmark"
+                   style="font-size: 52px; color: #94a3b8; margin-bottom: 20px;"></i>
+
+                <h2 style="margin-bottom: 12px;">No Saved Jobs Yet</h2>
+
+                <p style="margin-bottom: 24px;">
+                    You haven't saved any jobs. Go browse around and collect opportunities
+                    like Pokémon cards, but with more existential pressure.
+                </p>
+
+                <a th:href="@{/candidate/jobs}" class="btn-primary">
+                    <i class="fas fa-briefcase"></i>
+                    Browse Jobs
+                </a>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(savedJobs)}" class="job-cards-grid">
+
+                <div class="job-card"
+                     th:each="job : ${savedJobs}">
+
+                    <div class="job-card-top">
+
+                        <div>
+                            <h3 th:text="${job.title}">Java Backend Developer</h3>
+                            <p th:text="${job.companyName}">HireConnect</p>
+                        </div>
+
+                        <span class="job-badge"
+                              th:text="${job.employmentType}">
+                            FULL_TIME
+                        </span>
+
+                    </div>
+
+                    <div class="job-meta">
+
+                        <span>
+                            <i class="fas fa-location-dot"></i>
+                            <span th:text="${job.location}">Remote</span>
+                        </span>
+
+                        <span>
+                            <i class="fas fa-indian-rupee-sign"></i>
+                            ₹<span th:text="${job.salary}">1200000</span>
+                        </span>
+
+                        <span th:if="${job.experience != null}">
+                            <i class="fas fa-user-clock"></i>
+                            <span th:text="${job.experience}">2+ Years</span>
+                        </span>
+
+                    </div>
+
+                    <p class="job-description"
+                       th:text="${job.description}">
+                        Job description...
+                    </p>
+
+                    <div class="job-tags">
+                        <span class="tag" th:text="${job.category}">Software</span>
+                    </div>
+
+                    <div class="job-actions">
+
+                        <form th:action="@{'/candidate/jobs/' + ${job.id} + '/apply'}"
+                              method="post">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Apply Now
+                            </button>
+                        </form>
+
+                        <form th:action="@{'/candidate/jobs/' + ${job.id} + '/remove-bookmark'}"
+                              method="post">
+                            <button type="submit" class="btn-outline">
+                                <i class="fas fa-bookmark-slash"></i>
+                                Remove
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

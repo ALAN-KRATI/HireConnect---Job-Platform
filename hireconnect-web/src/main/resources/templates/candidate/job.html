@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Candidate Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/candidate/dashboard}">
+                    <i class="fas fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/candidate/jobs}" class="active">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Browse Jobs</span>
+                </a>
+
+                <a th:href="@{/candidate/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/candidate/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/candidate/profile}">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">Explore Opportunities</span>
+                <h1>Browse Jobs</h1>
+                <p>
+                    Fresh opportunities from recruiters who swear this is an “entry-level”
+                    role and definitely don't want 17 years of experience in Java 25.
+                </p>
+            </div>
+
+            <div class="page-actions">
+                <a th:href="@{/candidate/applications}" class="btn-secondary">
+                    <i class="fas fa-file-lines"></i>
+                    My Applications
+                </a>
+            </div>
+
+        </header>
+
+        <section class="search-filter-panel">
+
+            <form th:action="@{/candidate/jobs}" method="get" class="search-form">
+
+                <div class="search-input-group">
+                    <i class="fas fa-magnifying-glass"></i>
+
+                    <input type="text"
+                           name="keyword"
+                           th:value="${keyword}"
+                           placeholder="Search by title, company or skill">
+                </div>
+
+                <div class="search-input-group">
+                    <i class="fas fa-location-dot"></i>
+
+                    <input type="text"
+                           name="location"
+                           th:value="${location}"
+                           placeholder="Location or Remote">
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="jobs-results-header">
+            <h2>
+                <span th:text="${#lists.size(jobs)}">0</span>
+                Jobs Found
+            </h2>
+
+            <p>Because doomscrolling LinkedIn wasn't chaotic enough.</p>
+        </section>
+
+        <section class="jobs-grid">
+
+            <div class="job-card" th:each="job : ${jobs}">
+
+                <div class="job-card-top">
+
+                    <div>
+                        <div class="company-avatar"
+                             th:text="${#strings.substring(job.title,0,1)}">
+                            H
+                        </div>
+
+                        <h3 th:text="${job.title}">Backend Developer</h3>
+
+                        <p class="company-name"
+                           th:text="${job.companyName}">
+                            HireConnect
+                        </p>
+                    </div>
+
+                    <span class="job-badge"
+                          th:text="${job.type}">
+                        FULL_TIME
+                    </span>
+
+                </div>
+
+                <div class="job-meta">
+
+                    <span>
+                        <i class="fas fa-location-dot"></i>
+                        <span th:text="${job.location}">Remote</span>
+                    </span>
+
+                    <span>
+                        <i class="fas fa-layer-group"></i>
+                        <span th:text="${job.category}">Software</span>
+                    </span>
+
+                    <span th:text="'₹' + ${job.minSalary} + ' - ₹' + ${job.maxSalary}">
+                        ₹500000 - ₹1200000
+                    </span>
+
+                </div>
+
+                <p class="job-description"
+                   th:text="${#strings.abbreviate(job.description, 180)}">
+                    Job description goes here...
+                </p>
+
+                <div class="job-tags">
+                    <span class="tag">Remote Friendly</span>
+                    <span class="tag"
+                        th:text="${job.experienceRequired} + '+ Years Experience'">
+                        2+ Years Experience
+                    </span>
+                </div>
+
+                <div class="job-actions">
+
+                    <a th:href="@{'/candidate/jobs/' + ${job.jobId}}"
+                       class="btn-outline">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </a>
+
+                    <div class="action-buttons">
+
+                        <form th:action="@{'/candidate/jobs/' + ${job.jobId} + '/bookmark'}"
+                              method="post">
+                            <button type="submit" class="icon-btn">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                        </form>
+
+                        <form th:action="@{'/candidate/jobs/' + ${job.jobId} + '/apply'}"
+                              method="post">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Apply
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

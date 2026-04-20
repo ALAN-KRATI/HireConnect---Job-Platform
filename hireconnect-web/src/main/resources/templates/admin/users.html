@@ -1,0 +1,186 @@
+<!-- templates/admin/users.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/admin/dashboard}">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/admin/users}" class="active">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+
+                <a th:href="@{/admin/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Jobs</span>
+                </a>
+
+                <a th:href="@{/admin/analytics}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a th:href="@{/admin/subscriptions}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscriptions</span>
+                </a>
+
+                <a th:href="@{/admin/invoices}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Invoices</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-users"></i>
+                    User Management
+                </span>
+
+                <h1>Manage Users</h1>
+
+                <p>
+                    Every candidate, recruiter, and occasional chaos goblin on the platform.
+                </p>
+            </div>
+        </header>
+
+        <section class="dashboard-panel">
+
+            <div class="table-wrapper">
+
+                <table class="custom-table">
+
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="user : ${users}">
+
+                        <td>
+                            <div class="table-user">
+                                <div class="table-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+
+                                <div>
+                                    <strong th:text="${user.fullName}">John Doe</strong>
+                                    <p th:text="${user.location}">Delhi</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td th:text="${user.email}">
+                            john@example.com
+                        </td>
+
+                        <td th:text="${user.phone}">
+                            9876543210
+                        </td>
+
+                        <td>
+                            <span class="role-pill"
+                                  th:classappend="${user.role.name() == 'RECRUITER'} ? ' recruiter-role' : ' candidate-role'"
+                                  th:text="${user.role}">
+                                CANDIDATE
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${user.status.name() == 'ACTIVE'} ? ' success' : ' danger'"
+                                  th:text="${user.status}">
+                                ACTIVE
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <form th:if="${user.status.name() == 'ACTIVE'}"
+                                  th:action="@{'/admin/users/' + ${user.userId} + '/suspend'}"
+                                  method="post">
+
+                                <button type="submit" class="btn-danger small-btn">
+                                    <i class="fas fa-ban"></i>
+                                    Suspend
+                                </button>
+                            </form>
+
+                            <form th:if="${user.status.name() != 'ACTIVE'}"
+                                  th:action="@{'/admin/users/' + ${user.userId} + '/activate'}"
+                                  method="post">
+
+                                <button type="submit" class="btn-primary small-btn">
+                                    <i class="fas fa-check"></i>
+                                    Activate
+                                </button>
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

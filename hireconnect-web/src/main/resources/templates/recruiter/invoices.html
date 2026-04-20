@@ -1,0 +1,174 @@
+<!-- templates/recruiter/invoices.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices | HireConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand-section">
+                <div class="logo-circle">HC</div>
+
+                <div>
+                    <h2>HireConnect</h2>
+                    <p>Recruiter Portal</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a th:href="@{/recruiter/dashboard}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs}">
+                    <i class="fas fa-briefcase"></i>
+                    <span>My Jobs</span>
+                </a>
+
+                <a th:href="@{/recruiter/jobs/post}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Post Job</span>
+                </a>
+
+                <a th:href="@{/recruiter/applications}">
+                    <i class="fas fa-file-lines"></i>
+                    <span>Applications</span>
+                </a>
+
+                <a th:href="@{/recruiter/interviews}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+
+                <a th:href="@{/recruiter/subscription}">
+                    <i class="fas fa-crown"></i>
+                    <span>Subscription</span>
+                </a>
+
+                <a th:href="@{/recruiter/invoices}" class="active">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Invoices</span>
+                </a>
+
+            </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="page-header">
+
+            <div>
+                <span class="welcome-tag">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Billing History
+                </span>
+
+                <h1>Invoices</h1>
+
+                <p>
+                    Every payment your company has made to keep the hiring machine running.
+                    Slightly less exciting than payday, but still important.
+                </p>
+            </div>
+
+        </header>
+
+        <section class="dashboard-panel">
+
+            <div th:if="${#lists.isEmpty(invoices)}" class="empty-state">
+                <i class="fas fa-receipt"
+                   style="font-size: 52px; color: #94a3b8; margin-bottom: 20px;"></i>
+
+                <h2>No Invoices Yet</h2>
+
+                <p style="margin-top: 12px;">
+                    You don't have any invoices right now.
+                    Which is either great or mildly suspicious.
+                </p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(invoices)}" class="table-wrapper">
+
+                <table class="custom-table">
+
+                    <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Issued Date</th>
+                        <th>Due Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="invoice : ${invoices}">
+
+                        <td th:text="${invoice.invoiceNumber}">
+                            INV-2026-001
+                        </td>
+
+                        <td th:text="${invoice.issuedDate}">
+                            2026-04-01
+                        </td>
+
+                        <td th:text="${invoice.dueDate}">
+                            2026-04-10
+                        </td>
+
+                        <td>
+                            ₹<span th:text="${invoice.amount}">999</span>
+                        </td>
+
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${
+                                    invoice.status.name() == 'PAID'} ? ' success' :
+                                    (${invoice.status.name() == 'PENDING'} ? ' warning' : ' danger')"
+                                  th:text="${invoice.status}">
+                                PAID
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

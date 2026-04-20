@@ -1,0 +1,18 @@
+**/target/
+**/.idea/
+**/.mvn/
+**/node_modules/
+*.iml
+.env
+.env.local
+application-local.properties
+.vscode
+
+# Secrets and local config
+secrets/
+config.local/
+*.secret
+
+# Logs
+*.log
+logs/
