@@ -103,4 +103,4 @@ INSERT INTO job_skills (job_id, skill) VALUES
 (11, 'Azure'), (11, 'AWS'), (11, 'GCP'), (11, 'Architecture'),
 (12, 'Kotlin'), (12, 'Android'), (12, 'Jetpack Compose'), (12, 'Firebase');
 
-SELECT '✅ Data seeding completed successfully!' AS status;
+SELECT 'Data seeding completed successfully!' AS status;

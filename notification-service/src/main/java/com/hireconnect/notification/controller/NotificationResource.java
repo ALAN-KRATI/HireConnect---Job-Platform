@@ -24,8 +24,7 @@ public class NotificationResource {
     }
 
     @PostMapping
-    public ResponseEntity<NotificationResponse> sendNotification(
-            @Valid @RequestBody NotificationRequest dto) {
+    public ResponseEntity<NotificationResponse> sendNotification(@Valid @RequestBody NotificationRequest dto) {
 
         Notification notification = new Notification();
         notification.setUserId(dto.getUserId());

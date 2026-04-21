@@ -26,10 +26,7 @@ public class InterviewServiceImp implements InterviewService {
     private final ApplicationServiceClient applicationServiceClient;
     private final NotificationClient notificationClient;
 
-    public InterviewServiceImp(InterviewRepository repository,
-                               RabbitTemplate rabbitTemplate,
-                               ApplicationServiceClient applicationServiceClient,
-                               NotificationClient notificationClient) {
+    public InterviewServiceImp(InterviewRepository repository, RabbitTemplate rabbitTemplate, ApplicationServiceClient applicationServiceClient, NotificationClient notificationClient) {
         this.repository = repository;
         this.rabbitTemplate = rabbitTemplate;
         this.applicationServiceClient = applicationServiceClient;
