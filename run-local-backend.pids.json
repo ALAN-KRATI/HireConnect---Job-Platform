@@ -1,0 +1,51 @@
+﻿{
+    "Services":  [
+                     {
+                         "Service":  "discover-server",
+                         "Pid":  4104
+                     },
+                     {
+                         "Service":  "auth-service",
+                         "Pid":  12092
+                     },
+                     {
+                         "Service":  "profile-service",
+                         "Pid":  16164
+                     },
+                     {
+                         "Service":  "job-service",
+                         "Pid":  12248
+                     },
+                     {
+                         "Service":  "notification-service",
+                         "Pid":  19216
+                     },
+                     {
+                         "Service":  "application-service",
+                         "Pid":  16492
+                     },
+                     {
+                         "Service":  "interview-microservice",
+                         "Pid":  15228
+                     },
+                     {
+                         "Service":  "subscription-service",
+                         "Pid":  12476
+                     },
+                     {
+                         "Service":  "analytics-service",
+                         "Pid":  27840
+                     },
+                     {
+                         "Service":  "api-gateway",
+                         "Pid":  2540
+                     },
+                     {
+                         "Service":  "hireconnect-web",
+                         "Pid":  19316
+                     }
+                 ],
+    "Infrastructure":  [
+
+                       ]
+}

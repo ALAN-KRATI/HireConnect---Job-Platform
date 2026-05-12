@@ -18,14 +18,21 @@ public class NotificationConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.APPLICATION_QUEUE)
     public void consumeApplicationEvent(ApplicationStatusChangedEvent event) {
-
-        Notification notification = new Notification();
-        notification.setUserId(event.getCandidateId());
-        notification.setTitle("Application Status Updated");
-        notification.setMessage(
-                "Your application status is now: " + event.getStatus());
-
-        notificationService.sendNotification(notification);
+        if ("APPLIED".equals(event.getStatus())) {
+            // Notify recruiter of new application
+            Notification recruiterNotification = new Notification();
+            recruiterNotification.setUserId(event.getRecruiterId());
+            recruiterNotification.setTitle("New Application Received");
+            recruiterNotification.setMessage("A new application has been submitted for job ID: " + event.getJobId());
+            notificationService.sendNotification(recruiterNotification);
+        } else {
+            // Notify candidate of status update
+            Notification notification = new Notification();
+            notification.setUserId(event.getCandidateId());
+            notification.setTitle("Application Status Updated");
+            notification.setMessage("Your application status is now: " + event.getStatus());
+            notificationService.sendNotification(notification);
+        }
     }
 
     @RabbitListener(queues = RabbitMQConfig.INTERVIEW_QUEUE)
@@ -62,5 +69,12 @@ public class NotificationConsumer {
         }
 
         notificationService.sendNotification(notification);
+
+        // Notify recruiter as well
+        Notification recruiterNotification = new Notification();
+        recruiterNotification.setUserId(event.getRecruiterId());
+        recruiterNotification.setTitle("Interview " + event.getStatus().toLowerCase());
+        recruiterNotification.setMessage(event.getMessage());
+        notificationService.sendNotification(recruiterNotification);
     }
 }
